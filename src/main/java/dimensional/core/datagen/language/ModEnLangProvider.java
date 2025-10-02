@@ -30,8 +30,5 @@ public class ModEnLangProvider extends LanguageProvider implements IDataProvider
 
     protected void addManualStrings() {
         add("itemGroup." + DimensionalCore.MODID, DimensionalCore.NAME);
-        add("multiblock.formed", "Multiblock formed: %s");
-        add("multiblock.destroyed", "Multiblock destroyed: %s");
-        add("multiblock.cobblestone_cube", "Cobblestone Cube");
     }
 }

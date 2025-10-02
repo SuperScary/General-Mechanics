@@ -110,7 +110,7 @@ public abstract class Multiblock {
     public InteractionResult onInteract(Level level, BlockPos anchorPos, Direction facing, boolean mirrored, 
                                        Player player, InteractionHand hand, ItemStack itemInHand, BlockPos hitPos) {
         // Default: do nothing
-        return InteractionResult.CONSUME;
+        return InteractionResult.PASS;
     }
 
     /**

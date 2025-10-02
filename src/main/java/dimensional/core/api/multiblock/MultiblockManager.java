@@ -76,19 +76,17 @@ public class MultiblockManager {
                 
                 // Check if this multiblock would conflict with existing multiblocks
                 if (hasMultiblockConflict(level, pos, definition, validation.facing(), validation.mirrored())) {
-                    System.out.println("DEBUG: Multiblock conflict detected at " + pos + " for " + definition.id());
-                    continue; // Try next definition
+                    continue; // Try the next definition
                 }
                 
                 // Check if this multiblock is already tracked
                 if (!isMultiblockActive(pos, definition, validation.facing(), validation.mirrored())) {
-                    System.out.println("DEBUG: New multiblock formed at anchor " + pos + " with facing " + validation.facing() + " mirrored=" + validation.mirrored());
                     
                     // New multiblock formed!
                     MultiblockFormedEvent event = new MultiblockFormedEvent(definition, level, pos, validation.facing(), validation.mirrored());
                     activeMultiblocks.put(pos, new MultiblockInfo(definition, pos, validation.facing(), validation.mirrored()));
                     
-                    // Create multiblock object if the definition supports it
+                    // Create a multiblock object if the definition supports it
                     if (definition.hasObject()) {
                         Multiblock multiblockObject = (Multiblock) definition.createObject();
                         if (multiblockObject != null) {
@@ -187,11 +185,9 @@ public class MultiblockManager {
             
             // Check if the changed position affects this multiblock
             if (isPositionInMultiblock(anchorPos, info, changedPos)) {
-                System.out.println("DEBUG: Block break at " + changedPos + " affects multiblock at anchor " + anchorPos);
                 
                 // Check if removing this block would make the multiblock invalid
                 if (wouldBreakMultiblock(level, anchorPos, info, changedPos)) {
-                    System.out.println("DEBUG: Multiblock will be destroyed by breaking block at " + changedPos);
                     
                     // Destroy multiblock object if it exists
                     Multiblock multiblockObject = activeMultiblockObjects.remove(anchorPos);
@@ -205,8 +201,6 @@ public class MultiblockManager {
                     );
                     NeoForge.EVENT_BUS.post(destroyEvent);
                     toRemove.add(entry);
-                } else {
-                    System.out.println("DEBUG: Multiblock remains valid after breaking block at " + changedPos);
                 }
             }
         }
