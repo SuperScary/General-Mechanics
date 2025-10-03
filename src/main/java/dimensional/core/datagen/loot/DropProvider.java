@@ -43,6 +43,8 @@ public class DropProvider extends BlockLootSubProvider {
                 .put(CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block(), CoreItems.RAW_DRAKIUM_ORE.asItem()))
                 .put(CoreBlocks.END_STONE_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.END_STONE_DRAKIUM_ORE.block(), CoreItems.RAW_DRAKIUM_ORE.asItem()))
                 .put(CoreBlocks.NETHER_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.NETHER_DRAKIUM_ORE.block(), CoreItems.DRAKIUM_NUGGET.asItem()))
+                .put(CoreBlocks.VANADIUM_ORE.block(), oreBlock(CoreBlocks.VANADIUM_ORE.block(), CoreItems.RAW_VANADIUM_ORE.asItem()))
+                .put(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), oreBlock(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), CoreItems.RAW_VANADIUM_ORE.asItem()))
                 .build();
     }
 

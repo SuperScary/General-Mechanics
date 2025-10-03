@@ -15,6 +15,10 @@ public class OreBlock extends DropExperienceBlock {
         this(UniformInt.of(min, max), type.getProperties());
     }
 
+    public OreBlock (int min, int max, Properties properties) {
+        this(UniformInt.of(min, max), properties);
+    }
+
     public enum Type {
         STONE(Blocks.IRON_ORE.properties()),
         DEEPSLATE(Blocks.DEEPSLATE_IRON_ORE.properties()),

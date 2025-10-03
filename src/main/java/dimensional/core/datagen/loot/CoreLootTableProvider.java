@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class ModLootTableProvider extends LootTableProvider {
+public class CoreLootTableProvider extends LootTableProvider {
 
     private static final List<SubProviderEntry> SUB_PROVIDERS = List.of(new SubProviderEntry(DropProvider::new, LootContextParamSets.BLOCK));
 
-    public ModLootTableProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider) {
+    public CoreLootTableProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider) {
         super(packOutput, Set.of(), SUB_PROVIDERS, provider);
     }
 

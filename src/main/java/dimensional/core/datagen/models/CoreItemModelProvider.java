@@ -11,9 +11,9 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-public class ModItemModelProvider extends ItemModelProvider implements IDataProvider {
+public class CoreItemModelProvider extends ItemModelProvider implements IDataProvider {
 
-    public ModItemModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+    public CoreItemModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
         super(packOutput, DimensionalCore.MODID, existingFileHelper);
     }
 

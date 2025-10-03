@@ -7,9 +7,9 @@ import dimensional.core.registries.CoreItems;
 import net.minecraft.data.DataGenerator;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
-public class ModEnLangProvider extends LanguageProvider implements IDataProvider {
+public class CoreEnLangProvider extends LanguageProvider implements IDataProvider {
 
-    public ModEnLangProvider(DataGenerator generator) {
+    public CoreEnLangProvider(DataGenerator generator) {
         super(generator.getPackOutput(), DimensionalCore.MODID, "en_us");
     }
 

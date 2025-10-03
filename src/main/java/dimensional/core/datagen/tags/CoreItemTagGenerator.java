@@ -15,9 +15,9 @@ import java.util.concurrent.CompletableFuture;
 
 import static dimensional.core.registries.CoreItems.*;
 
-public class ModItemTagGenerator extends ItemTagsProvider implements IDataProvider {
+public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvider {
 
-    public ModItemTagGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> future, CompletableFuture<TagLookup<Block>> completableFuture, @Nullable ExistingFileHelper existingFileHelper) {
+    public CoreItemTagGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> future, CompletableFuture<TagLookup<Block>> completableFuture, @Nullable ExistingFileHelper existingFileHelper) {
         super(packOutput, future, completableFuture, DimensionalCore.MODID, existingFileHelper);
     }
 

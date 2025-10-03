@@ -29,12 +29,7 @@ public class MultiblockManager {
     
     private static final Map<BlockPos, MultiblockInfo> activeMultiblocks = new HashMap<>();
     private static final Map<BlockPos, Multiblock> activeMultiblockObjects = new HashMap<>();
-    private static final int CHECK_RADIUS = 5; // Check for multiblocks within 5 blocks of any change
     
-    /**
-     * Information about an active multiblock.
-     */
-    public record MultiblockInfo(MultiblockDefinition definition, BlockPos anchorPos, Direction facing, boolean mirrored) {}
     
     /**
      * Initialize the multiblock manager by registering event handlers.
@@ -50,6 +45,9 @@ public class MultiblockManager {
         
         // Register player interaction event for multiblock interactions
         NeoForge.EVENT_BUS.addListener(MultiblockManager::onPlayerInteract);
+        
+        // Register world load event to restore multiblocks from saved data
+        NeoForge.EVENT_BUS.addListener(MultiblockManager::onWorldLoad);
     }
     
     /**
@@ -84,7 +82,13 @@ public class MultiblockManager {
                     
                     // New multiblock formed!
                     MultiblockFormedEvent event = new MultiblockFormedEvent(definition, level, pos, validation.facing(), validation.mirrored());
-                    activeMultiblocks.put(pos, new MultiblockInfo(definition, pos, validation.facing(), validation.mirrored()));
+                    MultiblockInfo info = new MultiblockInfo(definition, pos, validation.facing(), validation.mirrored());
+                    activeMultiblocks.put(pos, info);
+                    
+                    // Save to world data
+                    if (level instanceof ServerLevel serverLevel) {
+                        saveMultiblockToWorldData(serverLevel, pos, info);
+                    }
                     
                     // Create a multiblock object if the definition supports it
                     if (definition.hasObject()) {
@@ -117,9 +121,6 @@ public class MultiblockManager {
         
         // Check for destroyed multiblocks BEFORE the block is broken
         checkForDestroyedMultiblocksBeforeBreak(serverLevel, changedPos);
-        
-        // Don't check for new multiblocks after breaking - this causes immediate re-formation
-        // The multiblock will be re-detected when blocks are placed, not when they're broken
     }
     
     /**
@@ -207,7 +208,14 @@ public class MultiblockManager {
         
         // Remove destroyed multiblocks
         for (var entry : toRemove) {
-            activeMultiblocks.remove(entry.getKey());
+            BlockPos pos = entry.getKey();
+            activeMultiblocks.remove(pos);
+            activeMultiblockObjects.remove(pos);
+            
+            // Remove from world data
+            if (level instanceof ServerLevel serverLevel) {
+                removeMultiblockFromWorldData(serverLevel, pos);
+            }
         }
     }
     
@@ -238,7 +246,12 @@ public class MultiblockManager {
         
         // Remove destroyed multiblocks
         for (var entry : toRemove) {
-            activeMultiblocks.remove(entry.getKey());
+            BlockPos pos = entry.getKey();
+            activeMultiblocks.remove(pos);
+            activeMultiblockObjects.remove(pos);
+            
+            // Remove from world data
+            removeMultiblockFromWorldData(level, pos);
         }
     }
     
@@ -483,5 +496,64 @@ public class MultiblockManager {
         }
         
         return InteractionResult.PASS;
+    }
+    
+    /**
+     * Handle world load event to restore multiblocks from saved data.
+     */
+    public static void onWorldLoad(net.neoforged.neoforge.event.level.LevelEvent.Load event) {
+        if (event.getLevel() instanceof ServerLevel level) {
+            loadMultiblocksFromWorldData(level);
+        }
+    }
+    
+    /**
+     * Save a multiblock to world data.
+     */
+    private static void saveMultiblockToWorldData(ServerLevel level, BlockPos pos, MultiblockInfo info) {
+        MultiblockWorldData worldData = MultiblockWorldData.get(level);
+        worldData.addMultiblock(pos, info);
+    }
+    
+    /**
+     * Remove a multiblock from world data.
+     */
+    private static void removeMultiblockFromWorldData(ServerLevel level, BlockPos pos) {
+        MultiblockWorldData worldData = MultiblockWorldData.get(level);
+        worldData.removeMultiblock(pos);
+    }
+    
+    /**
+     * Load all multiblocks from world data and validate them.
+     */
+    private static void loadMultiblocksFromWorldData(ServerLevel level) {
+        MultiblockWorldData worldData = MultiblockWorldData.get(level);
+        
+        for (Map.Entry<BlockPos, MultiblockInfo> entry : worldData.getMultiblocks().entrySet()) {
+            BlockPos pos = entry.getKey();
+            MultiblockInfo info = entry.getValue();
+            
+            // Validate that the multiblock still exists in the world
+            Optional<MultiblockValidator.ValidationResult> result = info.definition().findMatch(level, pos);
+            if (result.isPresent() && result.get().success()) {
+                // Multiblock is still valid, restore it
+                activeMultiblocks.put(pos, info);
+                
+                // Create multiblock object if the definition supports it
+                if (info.definition().hasObject()) {
+                    Multiblock multiblockObject = (Multiblock) info.definition().createObject();
+                    if (multiblockObject != null) {
+                        activeMultiblockObjects.put(pos, multiblockObject);
+                        multiblockObject.onCreate(level, pos, info.facing(), info.mirrored());
+                    }
+                }
+                
+                System.out.println("DEBUG: Restored multiblock at " + pos + " from world data");
+            } else {
+                // Multiblock is no longer valid, remove it from world data
+                worldData.removeMultiblock(pos);
+                System.out.println("DEBUG: Removed invalid multiblock at " + pos + " from world data");
+            }
+        }
     }
 }

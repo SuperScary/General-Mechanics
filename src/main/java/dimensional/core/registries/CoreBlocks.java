@@ -5,6 +5,7 @@ import dimensional.core.api.block.BlockDefinition;
 import dimensional.core.api.block.base.BaseBlock;
 import dimensional.core.api.block.base.DecorativeBlock;
 import dimensional.core.api.block.base.OreBlock;
+import dimensional.core.api.block.ice.Ice7Block;
 import dimensional.core.api.item.ItemDefinition;
 import dimensional.core.api.item.base.BaseBlockItem;
 import dimensional.core.tab.CoreTab;
@@ -12,6 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,13 +34,24 @@ public class CoreBlocks {
 
     public static final List<BlockDefinition<?>> BLOCKS = new ArrayList<>();
 
-    // ORES
+    //################################
+    //||            Ores            ||
+    //################################
+    // Drakium
     public static final BlockDefinition<DecorativeBlock> DRAKIUM_BLOCK = reg("Drakium Block", DecorativeBlock::new);
     public static final BlockDefinition<DecorativeBlock> DRAKIUM_BLOCK_RAW = reg("Block of Raw Drakium", "raw_drakium_block", DecorativeBlock::new);
     public static final BlockDefinition<OreBlock> DRAKIUM_ORE = reg("Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.STONE));
     public static final BlockDefinition<OreBlock> DEEPSLATE_DRAKIUM_ORE = reg("Deepslate Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.DEEPSLATE));
     public static final BlockDefinition<OreBlock> END_STONE_DRAKIUM_ORE = reg("End Stone Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.END));
     public static final BlockDefinition<OreBlock> NETHER_DRAKIUM_ORE = reg("Nether Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.NETHER));
+
+    // Vanadium
+    public static final BlockDefinition<DecorativeBlock> VANADIUM_BLOCK = reg("Vanadium Block", DecorativeBlock::new);
+    //public static final BlockDefinition<DecorativeBlock> VANADIUM_BLOCK_RAW = reg("Block of Raw Vanadium", "raw_vanadium_block", DecorativeBlock::new);
+    public static final BlockDefinition<OreBlock> VANADIUM_ORE = reg("Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.STONE.getProperties().explosionResistance(500).strength(25)));
+    public static final BlockDefinition<OreBlock> DEEPSLATE_VANADIUM_ORE = reg("Deepslate Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.DEEPSLATE.getProperties().explosionResistance(500).strength(25)));
+
+    public static final BlockDefinition<Ice7Block> ICE7 = reg("Ice-7", "ice_7", () -> new Ice7Block(BlockBehaviour.Properties.ofFullCopy(Blocks.ICE)));
 
     public static List<BlockDefinition<?>> getBlocks () {
         return Collections.unmodifiableList(BLOCKS);

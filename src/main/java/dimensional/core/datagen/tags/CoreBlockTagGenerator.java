@@ -15,9 +15,9 @@ import java.util.concurrent.CompletableFuture;
 
 import static dimensional.core.registries.CoreBlocks.*;
 
-public class ModBlockTagGenerator extends BlockTagsProvider implements IDataProvider {
+public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataProvider {
 
-    public ModBlockTagGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+    public CoreBlockTagGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, DimensionalCore.MODID, existingFileHelper);
     }
 
@@ -29,7 +29,10 @@ public class ModBlockTagGenerator extends BlockTagsProvider implements IDataProv
                 .add(END_STONE_DRAKIUM_ORE.block())
                 .add(NETHER_DRAKIUM_ORE.block())
                 .add(DRAKIUM_BLOCK.block())
-                .add(DRAKIUM_BLOCK_RAW.block());
+                .add(DRAKIUM_BLOCK_RAW.block())
+                .add(VANADIUM_ORE.block())
+                .add(VANADIUM_BLOCK.block())
+                .add(DEEPSLATE_VANADIUM_ORE.block());
 
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(DRAKIUM_ORE.block())
@@ -37,12 +40,18 @@ public class ModBlockTagGenerator extends BlockTagsProvider implements IDataProv
                 .add(END_STONE_DRAKIUM_ORE.block())
                 .add(NETHER_DRAKIUM_ORE.block())
                 .add(DRAKIUM_BLOCK.block())
-                .add(DRAKIUM_BLOCK_RAW.block());
+                .add(DRAKIUM_BLOCK_RAW.block())
+                .add(VANADIUM_ORE.block())
+                .add(VANADIUM_BLOCK.block())
+                .add(DEEPSLATE_VANADIUM_ORE.block());
 
         this.tag(Tags.Blocks.ORES)
                 .add(DRAKIUM_ORE.block())
                 .add(END_STONE_DRAKIUM_ORE.block())
                 .add(DEEPSLATE_DRAKIUM_ORE.block())
-                .add(NETHER_DRAKIUM_ORE.block());
+                .add(NETHER_DRAKIUM_ORE.block())
+                .add(VANADIUM_ORE.block())
+                .add(VANADIUM_BLOCK.block())
+                .add(DEEPSLATE_VANADIUM_ORE.block());
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -14,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import static dimensional.core.registries.CoreBlocks.*;
 import static dimensional.core.registries.CoreItems.*;
 
-public class CraftingRecipes extends ModRecipeProvider {
+public class CraftingRecipes extends CoreRecipeProvider {
 
     public CraftingRecipes(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider) {
         super(packOutput, provider);
@@ -29,12 +30,22 @@ public class CraftingRecipes extends ModRecipeProvider {
     protected void buildRecipes(@NotNull RecipeOutput consumer) {
         block(consumer);
         misc(consumer);
+        test(consumer);
     }
 
     private void block(RecipeOutput consumer) {
     }
 
+    protected void test (RecipeOutput consumer) {
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Blocks.COBBLESTONE, 1)
+                .requires(COPPER_WIRE_SPOOL)
+                .unlockedBy("has_copper_wire_spool", has(COPPER_WIRE_SPOOL))
+                .save(consumer, DimensionalCore.getResource("crafting/test_copper_wire_spool_to_cobblestone"));
+    }
+
     protected void misc (RecipeOutput consumer) {
+
+        // Drakium
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, DRAKIUM_BLOCK, 1)
                 .pattern("III")
                 .pattern("III")
@@ -73,5 +84,32 @@ public class CraftingRecipes extends ModRecipeProvider {
                 .requires(DRAKIUM_BLOCK_RAW)
                 .unlockedBy("has_drakium_block_raw", has(DRAKIUM_BLOCK_RAW))
                 .save(consumer, DimensionalCore.getResource("crafting/raw_drakium_from_raw_drakium_block"));
+
+        // Vanadium
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, VANADIUM_BLOCK, 1)
+                .pattern("III")
+                .pattern("III")
+                .pattern("III")
+                .define('I', VANADIUM_INGOT)
+                .unlockedBy("has_vanadium_ingot", has(VANADIUM_INGOT))
+                .save(consumer, DimensionalCore.getResource("crafting/vanadium_block_from_ingot"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, VANADIUM_INGOT, 1)
+                .pattern("III")
+                .pattern("III")
+                .pattern("III")
+                .define('I', VANADIUM_NUGGET)
+                .unlockedBy("has_vanadium_nugget", has(VANADIUM_NUGGET))
+                .save(consumer, DimensionalCore.getResource("crafting/vanadium_ingot_from_nugget"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, VANADIUM_NUGGET, 9)
+                .requires(VANADIUM_INGOT)
+                .unlockedBy("has_vanadium_ingot", has(VANADIUM_INGOT))
+                .save(consumer, DimensionalCore.getResource("crafting/vanadium_nugget_from_ingot"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, VANADIUM_INGOT, 9)
+                .requires(VANADIUM_BLOCK)
+                .unlockedBy("has_vanadium_block", has(VANADIUM_BLOCK))
+                .save(consumer, DimensionalCore.getResource("crafting/vanadium_ingot_from_block"));
     }
 }

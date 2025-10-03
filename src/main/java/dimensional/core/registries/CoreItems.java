@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import dimensional.core.DimensionalCore;
 import dimensional.core.api.item.ItemDefinition;
 import dimensional.core.api.item.base.BaseItem;
+import dimensional.core.api.item.base.CircuitItem;
+import dimensional.core.api.item.base.WireSpoolItem;
 import dimensional.core.tab.CoreTab;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +34,19 @@ public class CoreItems {
     public static final ItemDefinition<BaseItem> RAW_DRAKIUM_ORE = item("Raw Drakium Ore", BaseItem::new);
     public static final ItemDefinition<BaseItem> DRAKIUM_INGOT = item("Drakium Ingot", BaseItem::new);
     public static final ItemDefinition<BaseItem> DRAKIUM_NUGGET = item("Drakium Nugget", BaseItem::new);
+
+    // Vanadium
+    public static final ItemDefinition<BaseItem> RAW_VANADIUM_ORE = item("Raw Vanadium Ore", BaseItem::new);
+    public static final ItemDefinition<BaseItem> VANADIUM_INGOT = item("Vanadium Ingot", BaseItem::new);
+    public static final ItemDefinition<BaseItem> VANADIUM_NUGGET = item("Vanadium Nugget", BaseItem::new);
+
+    // Circuits
+    public static final ItemDefinition<CircuitItem> BASIC_CIRCUIT = item("Basic Circuit", CircuitItem::new);
+
+    // Wire
+    public static final ItemDefinition<BaseItem> WIRE_SPOOL = item("Wire Spool", "spool", BaseItem::new);
+    public static final ItemDefinition<WireSpoolItem> COPPER_WIRE_SPOOL = item("Copper Wire Spool", WireSpoolItem::new);
+    public static final ItemDefinition<WireSpoolItem> REDSTONE_WIRE_SPOOL = item("Redstone Wire Spool", WireSpoolItem::new);
 
     public static List<ItemDefinition<?>> getItems () {
         return Collections.unmodifiableList(ITEMS);

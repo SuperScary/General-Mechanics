@@ -15,12 +15,12 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ModBlockStateProvider extends BlockStateProvider implements IDataProvider {
+public abstract class CoreBlockStateProvider extends BlockStateProvider implements IDataProvider {
 
     private static final VariantProperty<VariantProperties.Rotation> Z_ROT = new VariantProperty<>(DimensionalCore.MODID + ":z", r -> new JsonPrimitive(r.ordinal() * 90));
     public ExistingFileHelper existingFileHelper;
 
-    public ModBlockStateProvider(PackOutput packOutput, String modid, ExistingFileHelper existingFileHelper) {
+    public CoreBlockStateProvider(PackOutput packOutput, String modid, ExistingFileHelper existingFileHelper) {
         super(packOutput, modid, existingFileHelper);
         this.existingFileHelper = existingFileHelper;
     }

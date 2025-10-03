@@ -4,6 +4,7 @@ import dimensional.core.DimensionalCore;
 import dimensional.core.api.block.BlockDefinition;
 import dimensional.core.api.block.base.DecorativeBlock;
 import dimensional.core.api.block.base.OreBlock;
+import dimensional.core.api.block.ice.IceBlock;
 import dimensional.core.registries.CoreBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -20,7 +21,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class BlockModelProvider extends ModBlockStateProvider {
+public class BlockModelProvider extends CoreBlockStateProvider {
 
     public static final ResourceLocation MACHINE_BOTTOM = DimensionalCore.getResource("block/machine_states/machine_bottom");
     public static final ResourceLocation MACHINE_TOP = DimensionalCore.getResource("block/machine_states/machine_top");
@@ -35,6 +36,8 @@ public class BlockModelProvider extends ModBlockStateProvider {
         for (var block : CoreBlocks.getBlocks()) {
             if (block.block() instanceof OreBlock || block.block() instanceof DecorativeBlock) {
                 blockWithItem(block);
+            } else if (block.block() instanceof IceBlock) {
+                iceBlockWithItem(block);
             }
         }
     }
@@ -42,6 +45,13 @@ public class BlockModelProvider extends ModBlockStateProvider {
     private void blockWithItem (BlockDefinition<?> block) {
         err(List.of(block.id()));
         simpleBlockWithItem(block.block(), cubeAll(block.block()));
+    }
+
+    private void iceBlockWithItem (BlockDefinition<?> block) {
+        err(List.of(block.id()));
+        var model = models().cubeAll(block.id().getPath(), DimensionalCore.getResource("block/" + block.id().getPath())).renderType("translucent").texture("particle", DimensionalCore.getResource("block/" + block.id().getPath()));
+
+        simpleBlockWithItem(block.block(), model);
     }
 
     private void machine (BlockDefinition<?> block, String name) {

@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import static dimensional.core.registries.CoreBlocks.*;
 import static dimensional.core.registries.CoreItems.*;
 
-public class SmeltingRecipes extends ModRecipeProvider {
+public class SmeltingRecipes extends CoreRecipeProvider {
 
     private static final int DEFAULT_SMELTING_TIME = 200;
 
@@ -30,14 +30,19 @@ public class SmeltingRecipes extends ModRecipeProvider {
     @Override
     public void buildRecipes (@NotNull RecipeOutput consumer) {
         SimpleCookingRecipeBuilder
-                .smelting(Ingredient.of(RAW_DRAKIUM_ORE), RecipeCategory.BREWING, DRAKIUM_INGOT, 0, DEFAULT_SMELTING_TIME)
+                .smelting(Ingredient.of(RAW_DRAKIUM_ORE), RecipeCategory.BREWING, DRAKIUM_INGOT, 0.6f, DEFAULT_SMELTING_TIME)
                 .unlockedBy("has_raw_drakium", has(RAW_DRAKIUM_ORE))
                 .save(consumer, DimensionalCore.getResource("smelting/drakium_ingot_from_raw_drakium_ore"));
 
         SimpleCookingRecipeBuilder
-                .smelting(Ingredient.of(DRAKIUM_BLOCK_RAW), RecipeCategory.BREWING, DRAKIUM_BLOCK, 0, DEFAULT_SMELTING_TIME * 9)
+                .smelting(Ingredient.of(DRAKIUM_BLOCK_RAW), RecipeCategory.BREWING, DRAKIUM_BLOCK, 0.6f * 9f, DEFAULT_SMELTING_TIME * 9)
                 .unlockedBy("has_raw_drakium_block", has(DRAKIUM_BLOCK_RAW))
                 .save(consumer, DimensionalCore.getResource("smelting/drakium_block_from_raw_drakium_block"));
+
+        SimpleCookingRecipeBuilder
+                .smelting(Ingredient.of(RAW_VANADIUM_ORE), RecipeCategory.BREWING, VANADIUM_INGOT, 0.6f, DEFAULT_SMELTING_TIME)
+                .unlockedBy("has_raw_vanadium", has(RAW_VANADIUM_ORE))
+                .save(consumer, DimensionalCore.getResource("smelting/vanadium_ingot_from_raw_vanadium_ore"));
     }
 
 }

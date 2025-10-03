@@ -7,9 +7,9 @@ import net.minecraft.data.recipes.RecipeProvider;
 
 import java.util.concurrent.CompletableFuture;
 
-public abstract class ModRecipeProvider extends RecipeProvider implements IDataProvider {
+public abstract class CoreRecipeProvider extends RecipeProvider implements IDataProvider {
 
-    public ModRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider) {
+    public CoreRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider) {
         super(packOutput, provider);
     }
 
