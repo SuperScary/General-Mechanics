@@ -5,6 +5,7 @@ import dimensional.core.api.block.BlockDefinition;
 import dimensional.core.api.block.base.DecorativeBlock;
 import dimensional.core.api.block.base.OreBlock;
 import dimensional.core.api.block.ice.IceBlock;
+import dimensional.core.api.block.plastic.PlasticBlock;
 import dimensional.core.registries.CoreBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -27,34 +28,52 @@ public class BlockModelProvider extends CoreBlockStateProvider {
     public static final ResourceLocation MACHINE_TOP = DimensionalCore.getResource("block/machine_states/machine_top");
     public static final ResourceLocation MACHINE_SIDE = DimensionalCore.getResource("block/machine_states/machine_side");
 
-    public BlockModelProvider (PackOutput output, ExistingFileHelper exFileHelper) {
+    public BlockModelProvider(PackOutput output, ExistingFileHelper exFileHelper) {
         super(output, DimensionalCore.MODID, exFileHelper);
     }
 
     @Override
-    protected void registerStatesAndModels () {
+    protected void registerStatesAndModels() {
         for (var block : CoreBlocks.getBlocks()) {
             if (block.block() instanceof OreBlock || block.block() instanceof DecorativeBlock) {
                 blockWithItem(block);
             } else if (block.block() instanceof IceBlock) {
                 iceBlockWithItem(block);
+            } else if (block.block() instanceof PlasticBlock) {
+                plasticBlockWithItem(block);
             }
         }
     }
 
-    private void blockWithItem (BlockDefinition<?> block) {
+    private void blockWithItem(BlockDefinition<?> block) {
         err(List.of(block.id()));
         simpleBlockWithItem(block.block(), cubeAll(block.block()));
     }
 
-    private void iceBlockWithItem (BlockDefinition<?> block) {
+    private void iceBlockWithItem(BlockDefinition<?> block) {
         err(List.of(block.id()));
         var model = models().cubeAll(block.id().getPath(), DimensionalCore.getResource("block/" + block.id().getPath())).renderType("translucent").texture("particle", DimensionalCore.getResource("block/" + block.id().getPath()));
 
         simpleBlockWithItem(block.block(), model);
     }
 
-    private void machine (BlockDefinition<?> block, String name) {
+    private void plasticBlockWithItem(BlockDefinition<?> block) {
+        err(List.of(block.id()));
+        var model = models().cubeAll(block.id().getPath(), DimensionalCore.getResource("block/plastic_block")).texture("particle", DimensionalCore.getResource("block/plastic_block"))
+                .element()
+                .from(0, 0, 0)
+                .to(16, 16, 16)
+                .face(Direction.NORTH).texture("#all").tintindex(0).cullface(Direction.NORTH).end()
+                .face(Direction.EAST).texture("#all").tintindex(0).cullface(Direction.EAST).end()
+                .face(Direction.SOUTH).texture("#all").tintindex(0).cullface(Direction.SOUTH).end()
+                .face(Direction.WEST).texture("#all").tintindex(0).cullface(Direction.WEST).end()
+                .face(Direction.UP).texture("#all").tintindex(0).cullface(Direction.UP).end()
+                .face(Direction.DOWN).texture("#all").tintindex(0).cullface(Direction.DOWN).end()
+                .end();
+        simpleBlockWithItem(block.block(), model);
+    }
+
+    private void machine(BlockDefinition<?> block, String name) {
         var on = modLoc("block/" + name + "/" + name + "_on");
         var off = modLoc("block/" + name + "/" + name + "_off");
 
@@ -65,7 +84,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         directionBlock(block.block(), (state, builder) -> builder.modelFile(state.getValue(BlockStateProperties.POWERED) ? modelOn : modelOff));
     }
 
-    private VariantBlockStateBuilder directionBlock (Block block, BiConsumer<BlockState, ConfiguredModel.Builder<?>> model) {
+    private VariantBlockStateBuilder directionBlock(Block block, BiConsumer<BlockState, ConfiguredModel.Builder<?>> model) {
         VariantBlockStateBuilder builder = getVariantBuilder(block);
         builder.forAllStates(state -> {
             ConfiguredModel.Builder<?> bld = ConfiguredModel.builder();
@@ -76,7 +95,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         return builder;
     }
 
-    private void applyRotationBld (ConfiguredModel.Builder<?> builder, Direction direction) {
+    private void applyRotationBld(ConfiguredModel.Builder<?> builder, Direction direction) {
         switch (direction) {
             case DOWN -> builder.rotationX(90);
             case UP -> builder.rotationX(-90);
@@ -90,9 +109,10 @@ public class BlockModelProvider extends CoreBlockStateProvider {
 
     /**
      * Ignores missing textures so we can still build data without the texture present.
+     *
      * @param list a list of ResourceLocations that we know will exist but currently don't.
      */
-    private void err (List<ResourceLocation> list) {
+    private void err(List<ResourceLocation> list) {
         for (var res : list) {
             existingFileHelper.trackGenerated(res, PackType.CLIENT_RESOURCES, ".png", "textures");
 

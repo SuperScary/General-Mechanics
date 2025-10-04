@@ -5,13 +5,21 @@ import dimensional.core.api.block.base.BaseBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nullable;
 
 public class IceBlock extends BaseBlock {
 
@@ -28,11 +36,8 @@ public class IceBlock extends BaseBlock {
                 .explosionResistance(0));
     }
 
-    @Override
-    protected void onPlace(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean movedByPiston) {
-        if (!level.isClientSide()) {
-            level.scheduleTick(pos, this, 20); // 20 ticks = 1 second
-        }
+    public IceBlock() {
+        this(Blocks.ICE.properties());
     }
 
     public boolean canMelt() {
@@ -41,6 +46,33 @@ public class IceBlock extends BaseBlock {
 
     public static BlockState meltsInto() {
         return Blocks.WATER.defaultBlockState();
+    }
+
+    @Override
+    public void playerDestroy(@NotNull Level level, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity te, @NotNull ItemStack stack) {
+        super.playerDestroy(level, player, pos, state, te, stack);
+        if (!EnchantmentHelper.hasTag(stack, EnchantmentTags.PREVENTS_ICE_MELTING)) {
+            if (level.dimensionType().ultraWarm()) {
+                level.removeBlock(pos, false);
+                return;
+            }
+            level.setBlockAndUpdate(pos, meltsInto());
+        }
+    }
+
+    @Override
+    public void onDestroyedByPushReaction(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Direction pushDirection, @NotNull FluidState fluid) {
+        super.onDestroyedByPushReaction(state, level, pos, pushDirection, fluid);
+        if (level.dimensionType().ultraWarm()) {
+            level.removeBlock(pos, false);
+            return;
+        }
+        level.setBlockAndUpdate(pos, meltsInto());
+    }
+
+    @Override
+    public @Nullable PushReaction getPistonPushReaction(@NotNull BlockState state) {
+        return PushReaction.DESTROY;
     }
 
     @Override

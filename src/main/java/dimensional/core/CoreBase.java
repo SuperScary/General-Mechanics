@@ -4,6 +4,7 @@ import dimensional.core.api.multiblock.MultiblockManager;
 import dimensional.core.api.multiblock.MultiblockRegistry;
 import dimensional.core.api.multiblock.feedback.MultiblockFeedbackHandler;
 import dimensional.core.registries.CoreBlocks;
+import dimensional.core.registries.CoreComponents;
 import dimensional.core.registries.CoreItems;
 import dimensional.core.registries.CoreMultiblocks;
 import dimensional.core.tab.CoreTab;
@@ -51,6 +52,7 @@ public abstract class CoreBase implements DimensionalCore {
     }
 
     private void register(IEventBus modEventBus) {
+        CoreComponents.REGISTRY.register(modEventBus);
         CoreBlocks.REGISTRY.register(modEventBus);
         CoreItems.REGISTRY.register(modEventBus);
         CoreMultiblocks.REGISTRY.register(modEventBus);

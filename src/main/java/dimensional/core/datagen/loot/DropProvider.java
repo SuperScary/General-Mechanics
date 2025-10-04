@@ -12,6 +12,7 @@ import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -45,6 +46,12 @@ public class DropProvider extends BlockLootSubProvider {
                 .put(CoreBlocks.NETHER_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.NETHER_DRAKIUM_ORE.block(), CoreItems.DRAKIUM_NUGGET.asItem()))
                 .put(CoreBlocks.VANADIUM_ORE.block(), oreBlock(CoreBlocks.VANADIUM_ORE.block(), CoreItems.RAW_VANADIUM_ORE.asItem()))
                 .put(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), oreBlock(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), CoreItems.RAW_VANADIUM_ORE.asItem()))
+                .put(CoreBlocks.ICE2.block(), oreBlock(CoreBlocks.ICE2.block(), ItemStack.EMPTY.getItem()))
+                .put(CoreBlocks.ICE3.block(), oreBlock(CoreBlocks.ICE3.block(), ItemStack.EMPTY.getItem()))
+                .put(CoreBlocks.ICE4.block(), oreBlock(CoreBlocks.ICE4.block(), ItemStack.EMPTY.getItem()))
+                .put(CoreBlocks.ICE5.block(), oreBlock(CoreBlocks.ICE5.block(), ItemStack.EMPTY.getItem()))
+                .put(CoreBlocks.ICE6.block(), oreBlock(CoreBlocks.ICE6.block(), ItemStack.EMPTY.getItem()))
+                .put(CoreBlocks.ICE7.block(), oreBlock(CoreBlocks.ICE7.block(), ItemStack.EMPTY.getItem()))
                 .build();
     }
 

@@ -32,7 +32,21 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(DRAKIUM_BLOCK_RAW.block())
                 .add(VANADIUM_ORE.block())
                 .add(VANADIUM_BLOCK.block())
-                .add(DEEPSLATE_VANADIUM_ORE.block());
+                .add(DEEPSLATE_VANADIUM_ORE.block())
+                .add(ICE2.block())
+                .add(ICE3.block())
+                .add(ICE4.block())
+                .add(ICE5.block())
+                .add(ICE6.block())
+                .add(ICE7.block());
+
+        this.tag(BlockTags.NEEDS_STONE_TOOL)
+                .add(ICE2.block())
+                .add(ICE3.block())
+                .add(ICE4.block())
+                .add(ICE5.block())
+                .add(ICE6.block())
+                .add(ICE7.block());
 
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(DRAKIUM_ORE.block())
@@ -53,5 +67,13 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(VANADIUM_ORE.block())
                 .add(VANADIUM_BLOCK.block())
                 .add(DEEPSLATE_VANADIUM_ORE.block());
+
+        this.tag(BlockTags.ICE)
+                .add(ICE2.block())
+                .add(ICE3.block())
+                .add(ICE4.block())
+                .add(ICE5.block())
+                .add(ICE6.block())
+                .add(ICE7.block());
     }
 }

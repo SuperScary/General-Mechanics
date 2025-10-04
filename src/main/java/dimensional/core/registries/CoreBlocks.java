@@ -6,11 +6,14 @@ import dimensional.core.api.block.base.BaseBlock;
 import dimensional.core.api.block.base.DecorativeBlock;
 import dimensional.core.api.block.base.OreBlock;
 import dimensional.core.api.block.ice.Ice7Block;
+import dimensional.core.api.block.ice.IceBlock;
+import dimensional.core.api.block.plastic.PlasticBlock;
 import dimensional.core.api.item.ItemDefinition;
 import dimensional.core.api.item.base.BaseBlockItem;
 import dimensional.core.tab.CoreTab;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -51,7 +54,31 @@ public class CoreBlocks {
     public static final BlockDefinition<OreBlock> VANADIUM_ORE = reg("Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.STONE.getProperties().explosionResistance(500).strength(25)));
     public static final BlockDefinition<OreBlock> DEEPSLATE_VANADIUM_ORE = reg("Deepslate Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.DEEPSLATE.getProperties().explosionResistance(500).strength(25)));
 
-    public static final BlockDefinition<Ice7Block> ICE7 = reg("Ice-7", "ice_7", () -> new Ice7Block(BlockBehaviour.Properties.ofFullCopy(Blocks.ICE)));
+    // Plastic
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK = reg("Plastic Block", "plastic_block", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.WHITE));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_ORANGE = reg("Orange Plastic Block", "plastic_block_orange", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.ORANGE));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_MAGENTA = reg("Magenta Plastic Block", "plastic_block_magenta", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.MAGENTA));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_LIGHT_BLUE = reg("Light Blue Plastic Block", "plastic_block_light_blue", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.LIGHT_BLUE));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_YELLOW = reg("Yellow Plastic Block", "plastic_block_yellow", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.YELLOW));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_LIME = reg("Lime Plastic Block", "plastic_block_lime", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.LIME));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_PINK = reg("Pink Plastic Block", "plastic_block_pink", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.PINK));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_GRAY = reg("Gray Plastic Block", "plastic_block_gray", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.GRAY));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_LIGHT_GRAY = reg("Light Gray Plastic Block", "plastic_block_light_gray", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.LIGHT_GRAY));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_CYAN = reg("Cyan Plastic Block", "plastic_block_cyan", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.CYAN));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_PURPLE = reg("Purple Plastic Block", "plastic_block_purple", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.PURPLE));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_BLUE = reg("Blue Plastic Block", "plastic_block_blue", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.BLUE));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_BROWN = reg("Brown Plastic Block", "plastic_block_brown", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.BROWN));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_GREEN = reg("Green Plastic Block", "plastic_block_green", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.GREEN));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_RED = reg("Red Plastic Block", "plastic_block_red", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.RED));
+    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_BLACK = reg("Black Plastic Block", "plastic_block_black", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.BLACK));
+
+    // Ice
+    public static final BlockDefinition<IceBlock> ICE2 = reg("Ice II", "ice_2", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE3 = reg("Ice III", "ice_3", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE4 = reg("Ice IV", "ice_4", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE5 = reg("Ice V", "ice_5", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE6 = reg("Ice VI", "ice_6", IceBlock::new);
+    public static final BlockDefinition<Ice7Block> ICE7 = reg("Ice VII", "ice_7", () -> new Ice7Block(BlockBehaviour.Properties.ofFullCopy(Blocks.ICE)));
 
     public static List<BlockDefinition<?>> getBlocks () {
         return Collections.unmodifiableList(BLOCKS);

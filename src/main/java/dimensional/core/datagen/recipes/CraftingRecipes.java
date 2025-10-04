@@ -1,13 +1,14 @@
 package dimensional.core.datagen.recipes;
 
 import dimensional.core.DimensionalCore;
+import dimensional.core.api.item.plastic.RawPlasticItem;
+import dimensional.core.api.tags.CoreTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -30,17 +31,17 @@ public class CraftingRecipes extends CoreRecipeProvider {
     protected void buildRecipes(@NotNull RecipeOutput consumer) {
         block(consumer);
         misc(consumer);
-        test(consumer);
+        color(consumer);
     }
 
     private void block(RecipeOutput consumer) {
     }
 
-    protected void test (RecipeOutput consumer) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Blocks.COBBLESTONE, 1)
-                .requires(COPPER_WIRE_SPOOL)
-                .unlockedBy("has_copper_wire_spool", has(COPPER_WIRE_SPOOL))
-                .save(consumer, DimensionalCore.getResource("crafting/test_copper_wire_spool_to_cobblestone"));
+    protected void color (RecipeOutput consumer) {
+        // Lazily creating all recipes for raw plastic item dyes.
+        for (var rawPlastic : RawPlasticItem.getPlasticItems()) {
+            RawPlasticItem.getRecipeFrom(rawPlastic, consumer, has(CoreTags.Items.RAW_PLASTIC));
+        }
     }
 
     protected void misc (RecipeOutput consumer) {
