@@ -1,6 +1,7 @@
 package dimensional.core.datagen.tags;
 
 import dimensional.core.DimensionalCore;
+import dimensional.core.api.block.plastic.PlasticBlock;
 import dimensional.core.api.util.IDataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -47,6 +48,11 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(ICE5.block())
                 .add(ICE6.block())
                 .add(ICE7.block());
+
+        for (var block : PlasticBlock.getPlasticBlocks()) {
+            this.tag(BlockTags.NEEDS_STONE_TOOL).add(block);
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+        }
 
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(DRAKIUM_ORE.block())

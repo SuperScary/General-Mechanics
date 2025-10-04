@@ -31,4 +31,9 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
     protected void addManualStrings() {
         add("itemGroup." + DimensionalCore.MODID, DimensionalCore.NAME);
     }
+
+    protected void addSubtitles() {
+        add("subtitles.dimensionalcore.plastic_block_place", "Block Placed");
+        add("subtitles.dimensionalcore.plastic_block_break", "Block Break");
+    }
 }

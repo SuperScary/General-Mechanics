@@ -1,6 +1,8 @@
 package dimensional.core.datagen.recipes;
 
 import dimensional.core.DimensionalCore;
+import dimensional.core.api.block.plastic.PlasticBlock;
+import dimensional.core.api.item.plastic.PlasticItem;
 import dimensional.core.api.item.plastic.RawPlasticItem;
 import dimensional.core.api.tags.CoreTags;
 import net.minecraft.core.HolderLookup;
@@ -41,6 +43,12 @@ public class CraftingRecipes extends CoreRecipeProvider {
         // Lazily creating all recipes for raw plastic item dyes.
         for (var rawPlastic : RawPlasticItem.getPlasticItems()) {
             RawPlasticItem.getRecipeFrom(rawPlastic, consumer, has(CoreTags.Items.RAW_PLASTIC));
+        }
+
+        // Lazily creating all recipes for plastic blocks.
+        for (int i = 0; i < PlasticBlock.getPlasticBlocks().size(); i++) {
+            var plasticBlock = PlasticBlock.getPlasticBlocks().get(i);
+            PlasticBlock.getRecipeFrom(plasticBlock, PlasticItem.getPlasticItems().get(i), consumer, has(plasticBlock));
         }
     }
 

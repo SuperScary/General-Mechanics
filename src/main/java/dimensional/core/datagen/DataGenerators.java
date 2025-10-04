@@ -1,6 +1,7 @@
 package dimensional.core.datagen;
 
 import dimensional.core.DimensionalCore;
+import dimensional.core.datagen.data.SoundProvider;
 import dimensional.core.datagen.language.CoreEnLangProvider;
 import dimensional.core.datagen.loot.CoreLootTableProvider;
 import dimensional.core.datagen.models.BlockModelProvider;
@@ -35,6 +36,9 @@ public class DataGenerators {
 
         // WORLD GENERATION
         pack.addProvider(output -> new WorldGenProvider(output, registries));
+
+        // SOUNDS
+        pack.addProvider(packOutput -> new SoundProvider(packOutput, existingFileHelper));
 
         // LOOT TABLE
         pack.addProvider(bindRegistries(CoreLootTableProvider::new, registries));

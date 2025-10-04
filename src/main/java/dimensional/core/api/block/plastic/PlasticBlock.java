@@ -3,6 +3,7 @@ package dimensional.core.api.block.plastic;
 import dimensional.core.DimensionalCore;
 import dimensional.core.api.block.base.BaseBlock;
 import dimensional.core.api.item.plastic.PlasticItem;
+import dimensional.core.registries.CoreSounds;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.BlockPos;
@@ -22,13 +23,15 @@ import java.util.ArrayList;
 
 public class PlasticBlock extends BaseBlock {
 
-    private static final ArrayList<PlasticItem> PLASTIC_BLOCKS = new ArrayList<>();
+    private static final ArrayList<PlasticBlock> PLASTIC_BLOCKS = new ArrayList<>();
 
     private final DyeColor color;
 
     public PlasticBlock(Properties properties, DyeColor color) {
-        super(properties);
+        super(properties
+                .sound(CoreSounds.PLASTIC_BLOCK));
         this.color = color;
+        PLASTIC_BLOCKS.add(this);
     }
 
     public DyeColor getColor() {
@@ -54,7 +57,7 @@ public class PlasticBlock extends BaseBlock {
     }
 
     public static void getRecipeFrom(PlasticBlock item, PlasticItem creator, RecipeOutput consumer, Criterion<InventoryChangeTrigger.TriggerInstance> criterion) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, item, 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, item, 2)
                 .pattern("SS")
                 .pattern("SS")
                 .define('S', creator)
@@ -62,7 +65,7 @@ public class PlasticBlock extends BaseBlock {
                 .save(consumer, DimensionalCore.getResource("crafting/plastic/" + item.getRegistryName().getPath() + "_from_" + creator.getRegistryName().getPath()));
     }
 
-    public static ArrayList<PlasticItem> getPlasticBlocks() {
+    public static ArrayList<PlasticBlock> getPlasticBlocks() {
         return PLASTIC_BLOCKS;
     }
 

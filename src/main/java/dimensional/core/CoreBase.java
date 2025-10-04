@@ -3,10 +3,7 @@ package dimensional.core;
 import dimensional.core.api.multiblock.MultiblockManager;
 import dimensional.core.api.multiblock.MultiblockRegistry;
 import dimensional.core.api.multiblock.feedback.MultiblockFeedbackHandler;
-import dimensional.core.registries.CoreBlocks;
-import dimensional.core.registries.CoreComponents;
-import dimensional.core.registries.CoreItems;
-import dimensional.core.registries.CoreMultiblocks;
+import dimensional.core.registries.*;
 import dimensional.core.tab.CoreTab;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -56,6 +53,7 @@ public abstract class CoreBase implements DimensionalCore {
         CoreBlocks.REGISTRY.register(modEventBus);
         CoreItems.REGISTRY.register(modEventBus);
         CoreMultiblocks.REGISTRY.register(modEventBus);
+        CoreSounds.REGISTRY.register(modEventBus);
     }
 
     @Override
