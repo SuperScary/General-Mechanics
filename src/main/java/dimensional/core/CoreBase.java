@@ -1,7 +1,6 @@
 package dimensional.core;
 
 import dimensional.core.api.multiblock.MultiblockManager;
-import dimensional.core.api.multiblock.MultiblockRegistry;
 import dimensional.core.api.multiblock.feedback.MultiblockFeedbackHandler;
 import dimensional.core.registries.*;
 import dimensional.core.tab.CoreTab;
@@ -11,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -32,32 +32,36 @@ public abstract class CoreBase implements DimensionalCore {
         register(modEventBus);
 
         modEventBus.addListener((RegisterEvent event) -> {
-            if (event.getRegistryKey() == Registries.CREATIVE_MODE_TAB) CoreTab.init(BuiltInRegistries.CREATIVE_MODE_TAB);
+            if (event.getRegistryKey() == Registries.CREATIVE_MODE_TAB)
+                CoreTab.init(BuiltInRegistries.CREATIVE_MODE_TAB);
         });
 
         modEventBus.addListener(this::registerRegistries);
-        
-        // Initialize multiblock system
+
+
         MultiblockManager.init(modEventBus);
-        // Register feedback handler on NeoForge event bus since our custom events are not mod bus events
-        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.register(MultiblockFeedbackHandler.class);
+        NeoForge.EVENT_BUS.register(MultiblockFeedbackHandler.class);
 
     }
 
-    private void registerRegistries (NewRegistryEvent event) {
-           event.register(MultiblockRegistry.REGISTRY);
+    private void registerRegistries(NewRegistryEvent event) {
+        CoreRegistries.registerRegistries(event);
     }
 
     private void register(IEventBus modEventBus) {
         CoreComponents.REGISTRY.register(modEventBus);
         CoreBlocks.REGISTRY.register(modEventBus);
         CoreItems.REGISTRY.register(modEventBus);
+        CoreBlockEntities.REGISTRY.register(modEventBus);
         CoreMultiblocks.REGISTRY.register(modEventBus);
         CoreSounds.REGISTRY.register(modEventBus);
+        CoreRecipes.SERIALIZER_REGISTRY.register(modEventBus);
+        CoreRecipes.RECIPE_REGISTRY.register(modEventBus);
+        CoreMenus.REGISTRY.register(modEventBus);
     }
 
     @Override
-    public Collection<ServerPlayer> getPlayers () {
+    public Collection<ServerPlayer> getPlayers() {
         var server = getCurrentServer();
 
         if (server != null) {
@@ -69,7 +73,7 @@ public abstract class CoreBase implements DimensionalCore {
 
     @Nullable
     @Override
-    public MinecraftServer getCurrentServer () {
+    public MinecraftServer getCurrentServer() {
         return ServerLifecycleHooks.getCurrentServer();
     }
 

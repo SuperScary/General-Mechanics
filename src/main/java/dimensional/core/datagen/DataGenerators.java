@@ -7,6 +7,7 @@ import dimensional.core.datagen.loot.CoreLootTableProvider;
 import dimensional.core.datagen.models.BlockModelProvider;
 import dimensional.core.datagen.models.CoreItemModelProvider;
 import dimensional.core.datagen.recipes.CraftingRecipes;
+import dimensional.core.datagen.recipes.MachineRecipes;
 import dimensional.core.datagen.recipes.SmeltingRecipes;
 import dimensional.core.datagen.tags.CoreBlockTagGenerator;
 import dimensional.core.datagen.tags.CoreItemTagGenerator;
@@ -57,6 +58,7 @@ public class DataGenerators {
         // RECIPES
         pack.addProvider(bindRegistries(CraftingRecipes::new, registries));
         pack.addProvider(bindRegistries(SmeltingRecipes::new, registries));
+        pack.addProvider(bindRegistries(MachineRecipes::new, registries));
 
         // LOCALIZATION MUST RUN LAST
         pack.addProvider(output -> localization);

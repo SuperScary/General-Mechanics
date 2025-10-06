@@ -1,5 +1,6 @@
 package dimensional.core.api.multiblock;
 
+import dimensional.core.registries.CoreRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -57,7 +58,7 @@ public class MultiblockWorldData extends SavedData {
             
             // Load definition ID
             ResourceLocation definitionId = ResourceLocation.parse(multiblockTag.getString("definition"));
-            MultiblockDefinition definition = MultiblockRegistry.REGISTRY.get(definitionId);
+            MultiblockDefinition definition = CoreRegistries.MULTIBLOCK_DEFINITIONS.get(definitionId);
             if (definition == null) {
                 System.err.println("WARNING: Could not find multiblock definition " + definitionId + " when loading world data");
                 continue;

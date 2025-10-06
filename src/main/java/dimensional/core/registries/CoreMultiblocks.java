@@ -1,17 +1,10 @@
 package dimensional.core.registries;
 
 import dimensional.core.DimensionalCore;
-import dimensional.core.api.multiblock.Layout;
 import dimensional.core.api.multiblock.MultiblockDefinition;
-import dimensional.core.api.multiblock.MultiblockRegistry;
 import dimensional.core.api.multiblock.base.Multiblock;
 import dimensional.core.multiblocks.DrakiumCrafterMultiblock;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -19,7 +12,7 @@ import java.util.function.Supplier;
 
 public class CoreMultiblocks {
 
-    public static final DeferredRegister<MultiblockDefinition> REGISTRY = DeferredRegister.create(MultiblockRegistry.REGISTRY, DimensionalCore.MODID);
+    public static final DeferredRegister<MultiblockDefinition> REGISTRY = DeferredRegister.create(CoreRegistries.MULTIBLOCK_DEFINITIONS, DimensionalCore.MODID);
 
     public static final DeferredHolder<MultiblockDefinition, MultiblockDefinition> DRAKIUM_CRAFTER =
             reg("Drakium Crafter", DrakiumCrafterMultiblock::new);

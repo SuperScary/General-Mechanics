@@ -3,11 +3,14 @@ package dimensional.core;
 import dimensional.core.api.block.plastic.PlasticBlock;
 import dimensional.core.api.item.plastic.PlasticItem;
 import dimensional.core.api.item.plastic.RawPlasticItem;
+import dimensional.core.gui.screen.RefabricatorScreen;
+import dimensional.core.registries.CoreMenus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 import static dimensional.core.registries.CoreBlocks.*;
 import static dimensional.core.registries.CoreItems.*;
@@ -18,6 +21,7 @@ public class CoreClient extends CoreBase {
         super(container, modEventBus);
         modEventBus.addListener(this::registerItemColors);
         modEventBus.addListener(this::registerBlockColors);
+        modEventBus.addListener(this::registerMenuScreens);
     }
 
     public void registerItemColors(RegisterColorHandlersEvent.Item event) {
@@ -42,6 +46,10 @@ public class CoreClient extends CoreBase {
                 PLASTIC_BLOCK_LIGHT_BLUE.block(), PLASTIC_BLOCK_YELLOW.block(), PLASTIC_BLOCK_LIME.block(), PLASTIC_BLOCK_PINK.block(), PLASTIC_BLOCK_GRAY.block(),
                 PLASTIC_BLOCK_LIGHT_GRAY.block(), PLASTIC_BLOCK_CYAN.block(), PLASTIC_BLOCK_PURPLE.block(), PLASTIC_BLOCK_BLUE.block(), PLASTIC_BLOCK_BROWN.block(),
                 PLASTIC_BLOCK_GREEN.block(), PLASTIC_BLOCK_RED.block(), PLASTIC_BLOCK_BLACK.block());
+    }
+
+    private void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(CoreMenus.REFABRICATOR_MENU.get(), RefabricatorScreen::new);
     }
 
     @Override

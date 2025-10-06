@@ -16,6 +16,7 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
     @Override
     protected void addTranslations() {
         addManualStrings();
+        addSubtitles();
 
         // ITEMS
         for (var item : CoreItems.getItems()) {
@@ -30,6 +31,15 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
 
     protected void addManualStrings() {
         add("itemGroup." + DimensionalCore.MODID, DimensionalCore.NAME);
+        add("gui.dimensionalcore.progress", "Progress: "); // the space is important!!!!
+        add("gui.dimensionalcore.idle", "Idle");
+        add("gui.dimensionalcore.gui.settings.right", "Right Click to Expand");
+        add("gui.dimensionalcore.gui.settings.left", "Left Click to Expand");
+        add("gui.dimensionalcore.gui.settings", "Settings");
+        add("gui.dimensionalcore.itemlist", "Slot %s: %sx %s");
+        add("gui.dimensionalcore.press_shift", "Hold §e[SHIFT]§r for more info.");
+        add("gui.dimensionalcore.upgrade_tooltip", "Compatible Upgrades");
+        add("gui.dimensionalcore.upgrade_tooltip.item", "§7§o- §7§o%s §7§ox%s");
     }
 
     protected void addSubtitles() {

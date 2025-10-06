@@ -3,6 +3,7 @@ package dimensional.core.api.multiblock;
 import dimensional.core.api.multiblock.event.MultiblockDestroyedEvent;
 import dimensional.core.api.multiblock.event.MultiblockFormedEvent;
 import dimensional.core.api.multiblock.base.Multiblock;
+import dimensional.core.registries.CoreRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -65,7 +66,7 @@ public class MultiblockManager {
         }
         
         // Check all registered multiblocks
-        for (var definition : MultiblockRegistry.REGISTRY) {
+        for (var definition : CoreRegistries.MULTIBLOCK_DEFINITIONS) {
             if (definition == null) continue;
             
             Optional<MultiblockValidator.ValidationResult> result = definition.findMatch(level, pos);

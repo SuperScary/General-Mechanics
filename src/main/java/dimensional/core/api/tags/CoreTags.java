@@ -11,6 +11,8 @@ public class CoreTags {
         public static final TagKey<Item> RAW_PLASTIC = createTag("raw_plastic");
         public static final TagKey<Item> PLASTIC = createTag("plastic");
 
+        public static final TagKey<Item> WRENCHES = createTag("wrenches");
+
         private static TagKey<Item> createTag (String key) {
             return ItemTags.create(DimensionalCore.getResource(key));
         }
