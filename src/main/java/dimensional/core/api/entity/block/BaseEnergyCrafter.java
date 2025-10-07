@@ -1,11 +1,11 @@
 package dimensional.core.api.entity.block;
 
+import dimensional.core.DimensionalCore;
 import dimensional.core.api.attributes.Attribute;
 import dimensional.core.api.energy.EnergizedCrafter;
 import dimensional.core.api.recipe.CoreRecipe;
 import dimensional.core.api.util.Range;
 import dimensional.core.api.util.data.Keys;
-import dimensional.core.api.util.data.PropertyHelper;
 import dimensional.core.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -46,22 +46,16 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
         var recipeType = getRecipeType();
         var inputSlots = getInputSlots();
 
-        // Use raw types to bypass generic type checking since CoreRecipe extends Recipe
         for (var recipe : recipeManager.getAllRecipesFor((RecipeType) recipeType)) {
             RecipeHolder<?> recipeHolder = (RecipeHolder<?>) recipe;
             var recipeValue = recipeHolder.value();
-            
-            // Create a recipe input from our input slots
+
             var recipeInput = createRecipeInput(inputSlots.toArray());
-            
-            // Check if this recipe matches our current inputs
-            // Use raw types to bypass generic type checking
             try {
                 if (((Recipe) recipeValue).matches((RecipeInput) recipeInput, level)) {
                     return Optional.of((RecipeHolder<T>) recipe);
                 }
             } catch (ClassCastException e) {
-                // If the recipe input type doesn't match, skip this recipe
                 continue;
             }
         }
@@ -74,7 +68,6 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
      * This method should be overridden by subclasses to create the appropriate RecipeInput type.
      */
     protected Object createRecipeInput(int[] inputSlots) {
-        // Default implementation creates a simple list of ItemStacks
         List<ItemStack> inputs = new ArrayList<>();
         for (int slot : inputSlots) {
             inputs.add(getInventory().getStackInSlot(slot));
@@ -94,25 +87,23 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
 
     @Override
     public boolean hasEnoughEnergy (int required) {
-        var hasEnergy = this.getEnergyStorage().getEnergyStored() >= required;
-        if (hasEnergy) this.getEnergyStorage().extractEnergy(required, false);
-        return hasEnergy;
+        return this.getEnergyStorage().getEnergyStored() >= required;
     }
 
     @Override
     public void tick (Level level, BlockPos pos, BlockState state) {
         if (Utils.isDevEnvironment()) getEnergyStorage().receiveEnergy(10_000, false); // TODO: Dev only environment
+        if (level.isClientSide()) {
+            return;
+        }
 
         // Check if any input slots have items
         boolean hasInputs = Arrays.stream(getInputSlots().toArray())
                 .anyMatch(slot -> getInventory().getStackInSlot(slot) != ItemStack.EMPTY);
 
-        if (!hasInputs) {
-            progress.set(0f);
-            updateBlockState(state.setValue(BlockStateProperties.CRAFTING, false));
-        }
-
-        if (hasRecipe(state)) {
+        boolean canCraft = hasRecipe(state) && hasInputs && hasEnoughEnergy(getEnergyAmount());
+        
+        if (canCraft) {
             isCrafting.set(true);
             increaseCraftingProgress();
             getEnergyStorage().extractEnergy(getEnergyAmount(), false);
@@ -123,26 +114,47 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
                 isCrafting.set(false);
             }
         }
+
+        // Update block state based on current crafting status
+        updateCraftingState(state, canCraft);
     }
 
     @Override
     public boolean hasRecipe (BlockState state) {
         var recipe = getCurrentRecipe();
         if (recipe.isEmpty()) {
-            updateBlockState(state.setValue(BlockStateProperties.CRAFTING, false));
             return false;
         }
         var result = getRecipeResultItem(Objects.requireNonNull(getLevel()));
-        isCrafting.set(result != null);
+        if (result == null) {
+            return false;
+        }
         
         // Check if we can insert the result into any output slot
         boolean canInsert = canInsertResult(result);
-        boolean hasEnergy = hasEnoughEnergy(getEnergyAmount());
+        // Check energy without extracting it (pure query)
+        boolean hasEnergy = this.getEnergyStorage().getEnergyStored() >= getEnergyAmount();
         
-        var hasRecipe = canInsert && hasEnergy;
-        updateBlockState(state.setValue(BlockStateProperties.CRAFTING, hasRecipe));
-        PropertyHelper.setValues(state, isCrafting(), BlockStateProperties.POWERED);
-        return hasRecipe;
+        return canInsert && hasEnergy;
+    }
+
+    /**
+     * Updates the block state based on the current crafting status.
+     * This method handles both the CRAFTING and POWERED properties.
+     */
+    protected void updateCraftingState(BlockState state, boolean canCraft) {
+        boolean currentlyCrafting = isCrafting.getAsBoolean();
+        boolean shouldBePowered = canCraft || currentlyCrafting;
+        
+        // Update CRAFTING property
+        if (state.getValue(BlockStateProperties.CRAFTING) != canCraft) {
+            updateBlockState(state.setValue(BlockStateProperties.CRAFTING, canCraft));
+        }
+        
+        // Update POWERED property
+        if (state.getValue(BlockStateProperties.POWERED) != shouldBePowered) {
+            updateBlockState(state.setValue(BlockStateProperties.POWERED, shouldBePowered));
+        }
     }
 
     /**
@@ -166,7 +178,6 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
         
         isCrafting.set(false);
         progress.set(0f);
-        PropertyHelper.setValues(getBlockState(), isCrafting(), BlockStateProperties.POWERED);
     }
 
     /**

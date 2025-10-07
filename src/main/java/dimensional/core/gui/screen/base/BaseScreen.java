@@ -102,7 +102,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         int y = (height - imageHeight) / 2;
 
         if (isConfigurable() && Minecraft.getInstance().screen == this) {
-            if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y + 82, 0, 0, 12, 84) && !isSideTabOpen) {
+            if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y/* + 82*/, 0, 0, 12, 176) && !isSideTabOpen) {
                 guiGraphics.blit(sideTabSelected, x , y, 0, 0, 256, 256);
             } else if (!isSideTabOpen) {
                 guiGraphics.blit(sideTabClosed, x, y, 0, 0, 256, 256);
@@ -311,7 +311,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      * @param y Y position
      */
     private void renderOptionsAreaTooltips (GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
-        if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y + 82, 0, 0, 12, 84)) {
+        if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y/* + 82*/, 0, 0, 12, 176)) {
             guiGraphics.renderTooltip(this.font, getOptionsTooltips(), Optional.empty(), mouseX - x + (guiOffset / 2), mouseY - y);
         }
     }

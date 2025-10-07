@@ -74,6 +74,11 @@ public class Attribute {
             return cachedValue;
         }
 
+        @Override
+        public String toString () {
+            return this.get().toString();
+        }
+
         public T getDefault () {
             return this.defaultSupplier.get();
         }
