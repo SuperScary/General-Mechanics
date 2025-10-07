@@ -6,6 +6,7 @@ import dimensional.core.api.item.ItemDefinition;
 import dimensional.core.api.item.base.BaseItem;
 import dimensional.core.api.item.base.CircuitItem;
 import dimensional.core.api.item.base.WireSpoolItem;
+import dimensional.core.api.item.base.Wrench;
 import dimensional.core.api.item.plastic.PlasticItem;
 import dimensional.core.api.item.plastic.RawPlasticItem;
 import dimensional.core.tab.CoreTab;
@@ -85,6 +86,8 @@ public class CoreItems {
     public static final ItemDefinition<PlasticItem> PLASTIC_GREEN = item("Green Plastic", "plastic_green", (properties) -> new PlasticItem(properties, DyeColor.GREEN));
     public static final ItemDefinition<PlasticItem> PLASTIC_RED = item("Red Plastic", "plastic_red", (properties) -> new PlasticItem(properties, DyeColor.RED));
     public static final ItemDefinition<PlasticItem> PLASTIC_BLACK = item("Black Plastic", "plastic_black", (properties) -> new PlasticItem(properties, DyeColor.BLACK));
+
+    public static final ItemDefinition<Wrench> WRENCH = item("Wrench", Wrench::new);
 
     public static List<ItemDefinition<?>> getItems () {
         return Collections.unmodifiableList(ITEMS);

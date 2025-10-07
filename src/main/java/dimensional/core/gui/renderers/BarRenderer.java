@@ -39,6 +39,7 @@ public abstract class BarRenderer {
 		BRIGHT_RED (0xFFB51500),
 		ORANGE (0xFFFF4500),
 		GREEN (0xFF00FF00),
+        BRIGHT_GREEN (0xFF00B500),
 		BLUE  (0xFF0000FF),
 		YELLOW(0xFFFFFF00),
 		BLACK (0xFF000000),

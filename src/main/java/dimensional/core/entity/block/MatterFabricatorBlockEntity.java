@@ -5,8 +5,8 @@ import dimensional.core.api.entity.block.BaseEnergyCrafter;
 import dimensional.core.api.inventory.CoreItemStackHandler;
 import dimensional.core.api.util.Range;
 import dimensional.core.api.util.data.Keys;
-import dimensional.core.gui.menu.RefabricatorMenu;
-import dimensional.core.recipes.RefabricationRecipe;
+import dimensional.core.gui.menu.MatterFabricatorMenu;
+import dimensional.core.recipes.FabricationRecipe;
 import dimensional.core.registries.CoreRecipes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,13 +22,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefabricatorBlockEntity extends BaseEnergyCrafter<RefabricationRecipe> {
+public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRecipe> {
 
-    public RefabricatorBlockEntity (BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    public MatterFabricatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         this(type, pos, blockState, 0);
     }
 
-    public RefabricatorBlockEntity (BlockEntityType<?> type, BlockPos pos, BlockState blockState, int current) {
+    public MatterFabricatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState, int current) {
         super(type, pos, blockState, Attribute.Builder.of(Keys.MAX_POWER, 100_000), Attribute.Builder.of(Keys.MAX_DRAIN, 256), Attribute.Builder.of(Keys.POWER, current));
     }
 
@@ -40,12 +39,7 @@ public class RefabricatorBlockEntity extends BaseEnergyCrafter<RefabricationReci
 
     @Override
     public AbstractContainerMenu menu (int id, Inventory playerInventory, Player player) {
-        return new RefabricatorMenu(id, playerInventory, this);
-    }
-
-    @Override
-    public void tick (Level level, BlockPos pos, BlockState state) {
-        super.tick(level, pos, state);
+        return new MatterFabricatorMenu(id, playerInventory, this);
     }
 
     @Override
@@ -77,7 +71,7 @@ public class RefabricatorBlockEntity extends BaseEnergyCrafter<RefabricationReci
         for (int i = 0; i < inputSlots.length; i++) {
             stacks[i] = getInventory().getStackInSlot(inputSlots[i]);
         }
-        return new RefabricationRecipe.RefabricationRecipeInput(stacks);
+        return new FabricationRecipe.FabricationRecipeInput(stacks);
     }
 
     @Override
@@ -113,8 +107,8 @@ public class RefabricatorBlockEntity extends BaseEnergyCrafter<RefabricationReci
     }
 
     @Override
-    public RecipeType<RefabricationRecipe> getRecipeType() {
-        return CoreRecipes.REFABRICATION_RECIPE_TYPE.get();
+    public RecipeType<FabricationRecipe> getRecipeType() {
+        return CoreRecipes.FABRICATION_RECIPE_TYPE.get();
     }
 
 }

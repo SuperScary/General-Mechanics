@@ -6,7 +6,7 @@ import dimensional.core.api.block.BlockDefinition;
 import dimensional.core.api.entity.DeferredBlockEntityType;
 import dimensional.core.api.entity.block.BaseBlockEntity;
 import dimensional.core.api.entity.block.BaseEntityBlock;
-import dimensional.core.entity.block.RefabricatorBlockEntity;
+import dimensional.core.entity.block.MatterFabricatorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,7 +25,7 @@ public class CoreBlockEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, DimensionalCore.MODID);
 
-    public static final DeferredBlockEntityType<RefabricatorBlockEntity> FABRICATOR = create("fabricator", RefabricatorBlockEntity.class, RefabricatorBlockEntity::new, CoreBlocks.REFABRICATOR);
+    public static final DeferredBlockEntityType<MatterFabricatorBlockEntity> FABRICATOR = create("fabricator", MatterFabricatorBlockEntity.class, MatterFabricatorBlockEntity::new, CoreBlocks.MATTER_FABRICATOR);
 
     /**
      * Get all block entity types whose implementations extend the given base class.

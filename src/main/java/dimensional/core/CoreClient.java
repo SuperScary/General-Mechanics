@@ -3,7 +3,7 @@ package dimensional.core;
 import dimensional.core.api.block.plastic.PlasticBlock;
 import dimensional.core.api.item.plastic.PlasticItem;
 import dimensional.core.api.item.plastic.RawPlasticItem;
-import dimensional.core.gui.screen.RefabricatorScreen;
+import dimensional.core.gui.screen.MatterFabricatorScreen;
 import dimensional.core.registries.CoreMenus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.Level;
@@ -49,7 +49,7 @@ public class CoreClient extends CoreBase {
     }
 
     private void registerMenuScreens(RegisterMenuScreensEvent event) {
-        event.register(CoreMenus.REFABRICATOR_MENU.get(), RefabricatorScreen::new);
+        event.register(CoreMenus.MATTER_FABRICATOR_MENU.get(), MatterFabricatorScreen::new);
     }
 
     @Override

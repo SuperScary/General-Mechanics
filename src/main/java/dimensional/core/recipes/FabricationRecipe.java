@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public record RefabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack output) implements CoreRecipe<RefabricationRecipe.RefabricationRecipeInput> {
+public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack output) implements CoreRecipe<FabricationRecipe.FabricationRecipeInput> {
 
     private static final int MAX_INGREDIENTS = 3;
 
@@ -28,7 +28,7 @@ public record RefabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack 
     }
 
     @Override
-    public boolean matches(@NotNull RefabricationRecipeInput in, @NotNull Level level) {
+    public boolean matches(@NotNull FabricationRecipe.FabricationRecipeInput in, @NotNull Level level) {
         if (level.isClientSide()) return false;
 
         List<ItemStack> provided = new ArrayList<>();
@@ -64,7 +64,7 @@ public record RefabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack 
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull RefabricationRecipeInput refabricationRecipeInput, HolderLookup.@NotNull Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull FabricationRecipe.FabricationRecipeInput fabricationRecipeInput, HolderLookup.@NotNull Provider provider) {
         return output.copy();
     }
 
@@ -82,26 +82,26 @@ public record RefabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack 
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return CoreRecipes.REFABRICATION_SERIALIZER.get();
+        return CoreRecipes.FABRICATION_SERIALIZER.get();
     }
 
     @Override
     public @NotNull RecipeType<?> getType() {
-        return CoreRecipes.REFABRICATION_RECIPE_TYPE.get();
+        return CoreRecipes.FABRICATION_RECIPE_TYPE.get();
     }
 
-    public record RefabricationRecipeInput(ItemStack... slots) implements RecipeInput {
+    public record FabricationRecipeInput(ItemStack... slots) implements RecipeInput {
 
-        public static RefabricationRecipeInput of(Container container) {
+        public static FabricationRecipeInput of(Container container) {
             int size = container.getContainerSize();
             ItemStack[] arr = new ItemStack[size];
             for (int i = 0; i < size; i++) arr[i] = container.getItem(i);
-            return new RefabricationRecipeInput(arr);
+            return new FabricationRecipeInput(arr);
         }
 
-        public static RefabricationRecipeInput of(List<ItemStack> stacks) {
+        public static FabricationRecipeInput of(List<ItemStack> stacks) {
             ItemStack[] arr = stacks.toArray(new ItemStack[0]);
-            return new RefabricationRecipeInput(arr);
+            return new FabricationRecipeInput(arr);
         }
 
         @Override
@@ -115,27 +115,27 @@ public record RefabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack 
         }
     }
 
-    public static class RefabricationRecipeSerializer implements RecipeSerializer<RefabricationRecipe> {
+    public static class FabricationRecipeSerializer implements RecipeSerializer<FabricationRecipe> {
 
-        public static final MapCodec<RefabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+        public static final MapCodec<FabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").xmap(
                         list -> {
                             if (list.size() > MAX_INGREDIENTS) {
-                                throw new IllegalArgumentException("Refabrication recipe supports at most " + MAX_INGREDIENTS + " ingredients");
+                                throw new IllegalArgumentException("Fabrication recipe supports at most " + MAX_INGREDIENTS + " ingredients");
                             }
                             NonNullList<Ingredient> nn = NonNullList.create();
                             nn.addAll(list);
                             return nn;
                         },
                         List::copyOf
-                ).forGetter(RefabricationRecipe::inputItems),
-                ItemStack.CODEC.fieldOf("result").forGetter(RefabricationRecipe::output)
-        ).apply(inst, RefabricationRecipe::new));
+                ).forGetter(FabricationRecipe::inputItems),
+                ItemStack.CODEC.fieldOf("result").forGetter(FabricationRecipe::output)
+        ).apply(inst, FabricationRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, RefabricationRecipe> SIMPLE_STREAM_CODEC =
+        public static final StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> SIMPLE_STREAM_CODEC =
                 new StreamCodec<>() {
                     @Override
-                    public void encode(RegistryFriendlyByteBuf buf, RefabricationRecipe recipe) {
+                    public void encode(RegistryFriendlyByteBuf buf, FabricationRecipe recipe) {
                         NonNullList<Ingredient> ingredients = recipe.inputItems();
                         buf.writeByte(ingredients.size());
                         for (Ingredient ing : ingredients) {
@@ -145,7 +145,7 @@ public record RefabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack 
                     }
 
                     @Override
-                    public @NotNull RefabricationRecipe decode(RegistryFriendlyByteBuf buf) {
+                    public @NotNull FabricationRecipe decode(RegistryFriendlyByteBuf buf) {
                         int size = buf.readUnsignedByte();
                         if (size < 0 || size > MAX_INGREDIENTS)
                             throw new IllegalArgumentException("Invalid ingredient count: " + size);
@@ -154,17 +154,17 @@ public record RefabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack 
                             ingredients.set(i, Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
                         }
                         ItemStack out = ItemStack.STREAM_CODEC.decode(buf);
-                        return new RefabricationRecipe(ingredients, out);
+                        return new FabricationRecipe(ingredients, out);
                     }
                 };
 
         @Override
-        public @NotNull MapCodec<RefabricationRecipe> codec() {
+        public @NotNull MapCodec<FabricationRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, RefabricationRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> streamCodec() {
             return SIMPLE_STREAM_CODEC;
         }
     }

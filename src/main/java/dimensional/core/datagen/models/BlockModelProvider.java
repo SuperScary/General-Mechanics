@@ -24,9 +24,9 @@ import java.util.function.BiConsumer;
 
 public class BlockModelProvider extends CoreBlockStateProvider {
 
-    public static final ResourceLocation MACHINE_BOTTOM = DimensionalCore.getResource("block/machine_states/machine_bottom");
-    public static final ResourceLocation MACHINE_TOP = DimensionalCore.getResource("block/machine_states/machine_top");
-    public static final ResourceLocation MACHINE_SIDE = DimensionalCore.getResource("block/machine_states/machine_side");
+    public static final ResourceLocation MACHINE_BOTTOM = DimensionalCore.getResource("block/machine/machine_bottom");
+    public static final ResourceLocation MACHINE_TOP = DimensionalCore.getResource("block/machine/machine_top");
+    public static final ResourceLocation MACHINE_SIDE = DimensionalCore.getResource("block/machine/machine_side");
 
     public BlockModelProvider(PackOutput output, ExistingFileHelper exFileHelper) {
         super(output, DimensionalCore.MODID, exFileHelper);
@@ -43,6 +43,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 plasticBlockWithItem(block);
             }
         }
+
+        machine(CoreBlocks.MATTER_FABRICATOR);
     }
 
     private void blockWithItem(BlockDefinition<?> block) {
@@ -73,15 +75,17 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         simpleBlockWithItem(block.block(), model);
     }
 
-    private void machine(BlockDefinition<?> block, String name) {
-        var on = modLoc("block/" + name + "/" + name + "_on");
-        var off = modLoc("block/" + name + "/" + name + "_off");
+    private void machine(BlockDefinition<?> block) {
+        var on = modLoc("block/machine/" + block.id().getPath() + "/on");
+        var off = modLoc("block/machine/" + block.id().getPath() + "/off");
 
         err(List.of(on, off));
 
-        BlockModelBuilder modelOn = models().cube("block/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
-        BlockModelBuilder modelOff = models().cube("block/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
+        BlockModelBuilder modelOn = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
+        BlockModelBuilder modelOff = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
         directionBlock(block.block(), (state, builder) -> builder.modelFile(state.getValue(BlockStateProperties.POWERED) ? modelOn : modelOff));
+
+        simpleBlockItem(block.block(), modelOn);
     }
 
     private VariantBlockStateBuilder directionBlock(Block block, BiConsumer<BlockState, ConfiguredModel.Builder<?>> model) {

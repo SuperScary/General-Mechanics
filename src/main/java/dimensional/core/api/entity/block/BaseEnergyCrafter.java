@@ -1,6 +1,5 @@
 package dimensional.core.api.entity.block;
 
-import dimensional.core.DimensionalCore;
 import dimensional.core.api.attributes.Attribute;
 import dimensional.core.api.energy.EnergizedCrafter;
 import dimensional.core.api.recipe.CoreRecipe;
@@ -107,15 +106,26 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
             isCrafting.set(true);
             increaseCraftingProgress();
             getEnergyStorage().extractEnergy(getEnergyAmount(), false);
+            setChanged();
 
             if (hasFinished()) {
                 craftItem(Objects.requireNonNull(getRecipeResultItem(level)));
                 progress.set(0f);
                 isCrafting.set(false);
+                setChanged();
             }
         }
 
-        // Update block state based on current crafting status
+        if (!canCraft && isCrafting.getAsBoolean()) {
+            isCrafting.set(false);
+            progress.set(0f);
+            setChanged();
+        }
+
+        if (isCrafting.getAsBoolean() && getProgress() > 0) {
+            setChanged();
+        }
+
         updateCraftingState(state, canCraft);
     }
 
@@ -129,10 +139,8 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
         if (result == null) {
             return false;
         }
-        
-        // Check if we can insert the result into any output slot
+
         boolean canInsert = canInsertResult(result);
-        // Check energy without extracting it (pure query)
         boolean hasEnergy = this.getEnergyStorage().getEnergyStored() >= getEnergyAmount();
         
         return canInsert && hasEnergy;
@@ -145,15 +153,14 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
     protected void updateCraftingState(BlockState state, boolean canCraft) {
         boolean currentlyCrafting = isCrafting.getAsBoolean();
         boolean shouldBePowered = canCraft || currentlyCrafting;
-        
-        // Update CRAFTING property
+
         if (state.getValue(BlockStateProperties.CRAFTING) != canCraft) {
-            updateBlockState(state.setValue(BlockStateProperties.CRAFTING, canCraft));
+            setChanged();
         }
-        
-        // Update POWERED property
+
         if (state.getValue(BlockStateProperties.POWERED) != shouldBePowered) {
             updateBlockState(state.setValue(BlockStateProperties.POWERED, shouldBePowered));
+            setChanged();
         }
     }
 
@@ -220,15 +227,21 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
     @Override
     public void saveClientData (CompoundTag tag, HolderLookup.Provider registries) {
         super.saveClientData(tag, registries);
-        tag.putFloat(Keys.PROGRESS, getProgress());
-        tag.putBoolean(Keys.CRAFTING, isCrafting());
+        float currentProgress = getProgress();
+        boolean currentCrafting = isCrafting();
+        
+        tag.putFloat(Keys.PROGRESS, currentProgress);
+        tag.putBoolean(Keys.CRAFTING, currentCrafting);
     }
 
     @Override
     public void loadClientData (CompoundTag tag, HolderLookup.Provider registries) {
         super.loadClientData(tag, registries);
-        progress.set(tag.getFloat(Keys.PROGRESS));
-        isCrafting.set(tag.getBoolean(Keys.CRAFTING));
+        float newProgress = tag.getFloat(Keys.PROGRESS);
+        boolean newCrafting = tag.getBoolean(Keys.CRAFTING);
+        
+        progress.set(newProgress);
+        isCrafting.set(newCrafting);
     }
 
     @Override
@@ -246,6 +259,7 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
         var progress = (int) getProgress();
         var max = getMaxProgress();
         var arrowSize = 26;
+
         return max != 0 && progress != 0 ? progress * arrowSize / max : 0;
     }
 

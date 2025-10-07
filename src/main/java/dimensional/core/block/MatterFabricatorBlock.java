@@ -5,7 +5,7 @@ import dimensional.core.api.block.base.BaseBlock;
 import dimensional.core.api.entity.block.BaseBlockEntity;
 import dimensional.core.api.entity.block.BaseEntityBlock;
 import dimensional.core.api.util.data.PropertyHelper;
-import dimensional.core.entity.block.RefabricatorBlockEntity;
+import dimensional.core.entity.block.MatterFabricatorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -32,27 +32,27 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RefabricatorBlock extends BaseEntityBlock<RefabricatorBlockEntity> {
+public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlockEntity> {
 
-    public RefabricatorBlock () {
+    public MatterFabricatorBlock() {
         super(Blocks.IRON_BLOCK.properties());
     }
 
-    public RefabricatorBlock (Properties properties) {
+    public MatterFabricatorBlock(Properties properties) {
         this();
     }
 
     @Override
     public MapCodec<BaseBlock> getCodec () {
-        return simpleCodec(RefabricatorBlock::new);
+        return simpleCodec(MatterFabricatorBlock::new);
     }
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn (ItemStack stack, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
         if (!level.isClientSide()) {
             BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof RefabricatorBlockEntity blockEntity) {
-                player.openMenu(new SimpleMenuProvider(blockEntity, Component.translatable("block.dimensionalcore.refabricator")), pos);
+            if (entity instanceof MatterFabricatorBlockEntity blockEntity) {
+                player.openMenu(new SimpleMenuProvider(blockEntity, Component.translatable("block.dimensionalcore.matter_fabricator")), pos);
             } else {
                 throw new IllegalStateException("Container provider is missing.");
             }
@@ -77,7 +77,7 @@ public class RefabricatorBlock extends BaseEntityBlock<RefabricatorBlockEntity> 
 
     @Override
     public int getLightEmission (@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 10 : 0;
+        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 16 : super.getLightEmission(state, level, pos);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class RefabricatorBlock extends BaseEntityBlock<RefabricatorBlockEntity> 
         double yOffsets = random.nextDouble() * 6.0 / 8.0;
         double zOffsets = axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52 : defaultOffset;
 
-        if (level.getBlockEntity(pos) instanceof RefabricatorBlockEntity entity && !entity.getInventory().getStackInSlot(0).isEmpty()) {
+        if (level.getBlockEntity(pos) instanceof MatterFabricatorBlockEntity entity && !entity.getInventory().getStackInSlot(0).isEmpty()) {
             var stack = entity.getInventory().getStackInSlot(0);
             level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), xPos + xOffsets, yPos + yOffsets, zPos + zOffsets, 0d, 0d, 0d);
         }

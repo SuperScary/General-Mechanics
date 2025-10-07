@@ -1,7 +1,7 @@
 package dimensional.core.compat.jei.categories;
 
 import dimensional.core.DimensionalCore;
-import dimensional.core.recipes.RefabricationRecipe;
+import dimensional.core.recipes.FabricationRecipe;
 import dimensional.core.registries.CoreBlocks;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -20,29 +20,29 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RefabricationCategory implements IRecipeCategory<RefabricationRecipe> {
+public class MatterFabricatorCategory implements IRecipeCategory<FabricationRecipe> {
     public static final ResourceLocation UID = DimensionalCore.getResource("refabrication");
-    public static final ResourceLocation TEXTURE = DimensionalCore.getResource("textures/gui/refabricator.png");
+    public static final ResourceLocation TEXTURE = DimensionalCore.getResource("textures/gui/matter_fabricator.png");
 
-    public static final RecipeType<RefabricationRecipe> TYPE =
-            new RecipeType<>(UID, RefabricationRecipe.class);
+    public static final RecipeType<FabricationRecipe> TYPE =
+            new RecipeType<>(UID, FabricationRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
 
-    public RefabricationCategory(IGuiHelper helper) {
+    public MatterFabricatorCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(TEXTURE, 0, 0, 176, 80);
-        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CoreBlocks.REFABRICATOR));
+        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(CoreBlocks.MATTER_FABRICATOR));
     }
 
     @Override
-    public @NotNull RecipeType<RefabricationRecipe> getRecipeType() {
+    public @NotNull RecipeType<FabricationRecipe> getRecipeType() {
         return TYPE;
     }
 
     @Override
     public @NotNull Component getTitle() {
-        return Component.translatable("block.dimensionalcore.refabricator");
+        return Component.translatable("block.dimensionalcore.matter_fabricator");
     }
 
     @Override
@@ -61,13 +61,13 @@ public class RefabricationCategory implements IRecipeCategory<RefabricationRecip
     }
 
     @Override
-    public void draw(@NotNull RefabricationRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(@NotNull FabricationRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
         background.draw(guiGraphics);
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, RefabricationRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, FabricationRecipe recipe, @NotNull IFocusGroup focuses) {
         final int baseX = 20, baseY = 35, step = 18, cols = 3;
 
         var ingredients = recipe.getIngredients();

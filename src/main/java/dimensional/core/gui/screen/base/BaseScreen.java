@@ -9,6 +9,7 @@ import dimensional.core.gui.GuiPower;
 import dimensional.core.gui.menu.base.BaseMenu;
 import dimensional.core.gui.renderers.EnergyDisplayTooltipArea;
 import dimensional.core.gui.renderers.FluidTankRenderer;
+import dimensional.core.gui.renderers.ProgressDisplayTooltipArea;
 import dimensional.core.util.MouseUtil;
 import dimensional.core.util.Utils;
 import net.minecraft.client.Minecraft;
@@ -43,12 +44,15 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     public static int settingsPanelXHalf;
 
     private EnergyDisplayTooltipArea energyInfoArea;
+    private ProgressDisplayTooltipArea progressDisplayTooltipArea;
     //private UpgradeSlotTooltipArea upgradeSlotTooltipArea;
 
     private final ResourceLocation sideTabClosed = DimensionalCore.getResource("textures/gui/elements/side_tab_closed.png");
     private final ResourceLocation sideTabSelected = DimensionalCore.getResource("textures/gui/elements/side_tab_selected.png");
     private final ResourceLocation sideTabOpen = DimensionalCore.getResource("textures/gui/elements/side_tab_open.png");
     private final ResourceLocation upgradeSlotGui = DimensionalCore.getResource("textures/gui/elements/upgrade_slot.png");
+    private final ResourceLocation arrowGui = DimensionalCore.getResource("textures/gui/elements/arrow.png");
+    private final ResourceLocation progressBar = DimensionalCore.getResource("textures/gui/elements/progress_bar.png");
 
     protected int imageWidth;
 
@@ -74,6 +78,8 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         if (getMenu().isUpgradeable()) {
             assignUpgradeSlotTooltipArea();
         }
+
+        assignProgressBarArea();
 
         settingsPanelX = ((width - imageWidth) / 2) + imageWidth - 14;
         settingsPanelY = ((height - imageHeight) / 2) + imageHeight - 84;
@@ -102,7 +108,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         int y = (height - imageHeight) / 2;
 
         if (isConfigurable() && Minecraft.getInstance().screen == this) {
-            if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y/* + 82*/, 0, 0, 12, 176) && !isSideTabOpen) {
+            if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y, 0, 0, 12, 176) && !isSideTabOpen) {
                 guiGraphics.blit(sideTabSelected, x , y, 0, 0, 256, 256);
             } else if (!isSideTabOpen) {
                 guiGraphics.blit(sideTabClosed, x, y, 0, 0, 256, 256);
@@ -116,6 +122,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
         renderArrow(guiGraphics, x, y);
         renderEnergyArea(guiGraphics);
+        renderProgressBar(guiGraphics, x, y);
         addAdditionalScreenElements(guiGraphics, v, mouseX, mouseY);
     }
 
@@ -143,6 +150,8 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         if (menu.isUpgradeable()) {
             renderUpgradeSlotTooltips(graphics, mouseX, mouseY, x, y);
         }
+
+        renderProgressAreaTooltips(graphics, mouseX, mouseY, x, y);
     }
 
     public void renderTitles (GuiGraphics graphics, int mouseX, int mouseY) {
@@ -276,10 +285,29 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      * @param posY Y position of the arrow
      */
     public void renderArrow (GuiGraphics graphics, int posX, int posY) {
-        if (menu.blockEntity instanceof Crafter<?> entity) {
-            if (entity.isCrafting()) {
-                graphics.blit(getGuiTexture(), posX + 79, posY + 35, 203, 0, entity.getScaledProgress(), 17);
+        if (menu.blockEntity instanceof Crafter<?>) {
+            int progress = menu.getSyncedProgress();
+            int maxProgress = 176;
+            int arrowSize = 26;
+            
+            int scaledProgress = progress != 0 ? progress * arrowSize / maxProgress : 0;
+            
+            if (scaledProgress >= 0) {
+                graphics.blit(arrowGui, posX + 79, posY + 35, 0, 0, scaledProgress, 17, 24, 17);
             }
+        }
+    }
+
+    public void renderProgressBar (GuiGraphics graphics, int posX, int posY) {
+        if (menu.blockEntity instanceof Crafter<?>) {
+            graphics.blit(progressBar, posX + 138, posY + 31, 0, 0, 5, 24, 5, 24);
+
+            int left = leftPos + (139 - guiOffset / 2) + guiOffset;
+            int top = topPos + 32;
+            int progress = menu.getSyncedProgress();
+            float prog = progress != 0 ? (progress * 22f) / 176 + 1 : 0; // Add 1 or else it technically never reaches the top.
+
+            progressDisplayTooltipArea.render(graphics, (int) prog, left, top);
         }
     }
 
@@ -302,6 +330,10 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         //this.upgradeSlotTooltipArea = new UpgradeSlotTooltipArea(182, 5, 16, 16, 4, 2, menu.block);
     }
 
+    private void assignProgressBarArea() {
+        this.progressDisplayTooltipArea = new ProgressDisplayTooltipArea(138, 31, 3, 22);
+    }
+
     /**
      * Renders the settings area tooltip
      * @param guiGraphics {@link GuiGraphics}
@@ -311,8 +343,17 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      * @param y Y position
      */
     private void renderOptionsAreaTooltips (GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
-        if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y/* + 82*/, 0, 0, 12, 176)) {
+        if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y, 0, 0, 12, 176)) {
             guiGraphics.renderTooltip(this.font, getOptionsTooltips(), Optional.empty(), mouseX - x + (guiOffset / 2), mouseY - y);
+        }
+    }
+
+    private void renderProgressAreaTooltips (GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
+        int left = leftPos + (139 - guiOffset / 2) + guiOffset;
+        int top = topPos + 32;
+
+        if (isMouseAboveArea(mouseX, mouseY, left, top, 0, 0, 5, 22)) {
+            guiGraphics.renderTooltip(this.font, progressDisplayTooltipArea.getTooltips(), Optional.empty(), mouseX - x + (guiOffset / 2), mouseY - y);
         }
     }
 
@@ -390,6 +431,10 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     @SuppressWarnings("unused")
     public EnergyDisplayTooltipArea getEnergyInfoArea () {
         return energyInfoArea;
+    }
+
+    public ProgressDisplayTooltipArea getProgressBarArea() {
+        return progressDisplayTooltipArea;
     }
 
     public ResourceLocation getUpgradeSlotGui () {

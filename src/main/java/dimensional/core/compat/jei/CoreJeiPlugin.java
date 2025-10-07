@@ -1,8 +1,8 @@
 package dimensional.core.compat.jei;
 
 import dimensional.core.DimensionalCore;
-import dimensional.core.compat.jei.categories.RefabricationCategory;
-import dimensional.core.gui.screen.RefabricatorScreen;
+import dimensional.core.compat.jei.categories.MatterFabricatorCategory;
+import dimensional.core.gui.screen.MatterFabricatorScreen;
 import dimensional.core.registries.CoreBlocks;
 import dimensional.core.registries.CoreRecipes;
 import mezz.jei.api.IModPlugin;
@@ -27,24 +27,24 @@ public class CoreJeiPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
-        registration.addRecipeCategories(new RefabricationCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new MatterFabricatorCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         var recipeManager = Minecraft.getInstance().level.getRecipeManager();
 
-        var refabricationRecipeList = recipeManager.getAllRecipesFor(CoreRecipes.REFABRICATION_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
-        registration.addRecipes(RefabricationCategory.TYPE, refabricationRecipeList);
+        var fabricationRecipeList = recipeManager.getAllRecipesFor(CoreRecipes.FABRICATION_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        registration.addRecipes(MatterFabricatorCategory.TYPE, fabricationRecipeList);
     }
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addRecipeClickArea(RefabricatorScreen.class, 80, 35, 22, 15, RefabricationCategory.TYPE);
+        registration.addRecipeClickArea(MatterFabricatorScreen.class, 80, 35, 22, 15, MatterFabricatorCategory.TYPE);
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(CoreBlocks.REFABRICATOR), RefabricationCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(CoreBlocks.MATTER_FABRICATOR), MatterFabricatorCategory.TYPE);
     }
 }

@@ -10,7 +10,7 @@ import dimensional.core.api.block.ice.IceBlock;
 import dimensional.core.api.block.plastic.PlasticBlock;
 import dimensional.core.api.item.ItemDefinition;
 import dimensional.core.api.item.base.BaseBlockItem;
-import dimensional.core.block.RefabricatorBlock;
+import dimensional.core.block.MatterFabricatorBlock;
 import dimensional.core.tab.CoreTab;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -82,7 +82,7 @@ public class CoreBlocks {
     public static final BlockDefinition<Ice7Block> ICE7 = reg("Ice VII", "ice_7", () -> new Ice7Block(BlockBehaviour.Properties.ofFullCopy(Blocks.ICE)));
 
     // Crafting Machines
-    public static final BlockDefinition<RefabricatorBlock> REFABRICATOR = reg("Refabricator", RefabricatorBlock::new);
+    public static final BlockDefinition<MatterFabricatorBlock> MATTER_FABRICATOR = reg("Matter Fabricator", MatterFabricatorBlock::new);
 
     public static List<BlockDefinition<?>> getBlocks () {
         return Collections.unmodifiableList(BLOCKS);

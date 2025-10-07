@@ -1,5 +1,6 @@
 package dimensional.core.gui.menu.base;
 
+import dimensional.core.api.entity.Crafter;
 import dimensional.core.api.entity.block.BaseBlockEntity;
 import dimensional.core.api.entity.block.BaseEntityBlock;
 import dimensional.core.gui.util.QuickMoveStack;
@@ -8,6 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -22,6 +24,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
     private final Level level;
     private int index = 0;
     private final int upgradeableMoveFactor;
+    public ContainerData data;
 
     public BaseMenu(MenuType<?> type, int containerId, Inventory inventory, B block, T blockEntity) {
         super(type, containerId);
@@ -29,6 +32,9 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
         this.blockEntity = blockEntity;
         this.level = inventory.player.level();
         this.upgradeableMoveFactor = isUpgradeable() ? -14 : 0;
+
+        // Initialize container data for syncing progress if the block entity is a crafter
+        initializeContainerData(inventory);
 
         addPlayerInventory(inventory);
         addPlayerHotbar(inventory);
@@ -122,6 +128,76 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
      */
     public boolean isUpgradeable() {
         return false; //blockEntity instanceof Upgradeable;
+    }
+
+    /**
+     * Initializes container data for syncing progress and other data from server to client.
+     * This method automatically sets up data synchronization for crafting block entities.
+     */
+    protected void initializeContainerData(Inventory inventory) {
+        if (blockEntity instanceof Crafter<?> crafter) {
+            this.data = new ContainerData() {
+                private int[] data = new int[2];
+                
+                @Override
+                public int get(int index) {
+                    if (inventory.player.level().isClientSide()) {
+                        return data[index];
+                    } else {
+                        int value = (int) switch (index) {
+                            case 0 -> crafter.getProgress();
+                            case 1 -> crafter.isCrafting() ? 1 : 0;
+                            default -> 0;
+                        };
+                        data[index] = value;
+                        return value;
+                    }
+                }
+
+                @Override
+                public void set(int index, int value) {
+                    data[index] = value;
+                }
+
+                @Override
+                public int getCount() {
+                    return 2;
+                }
+            };
+            addDataSlots(this.data);
+        }
+    }
+
+    /**
+     * Gets the synchronized progress from the container data.
+     * This method should be used in GUIs to get real-time progress updates.
+     * @return the current progress as an integer
+     */
+    public int getSyncedProgress() {
+        if (data != null && data.getCount() >= 1) {
+            return data.get(0);
+        }
+
+        if (blockEntity instanceof Crafter<?> crafter) {
+            return (int) crafter.getProgress();
+        }
+        return 0;
+    }
+
+    /**
+     * Gets the synchronized crafting state from the container data.
+     * This method should be used in GUIs to get real-time crafting state updates.
+     * @return true if the block entity is currently crafting
+     */
+    public boolean getSyncedCraftingState() {
+        if (data != null && data.getCount() >= 2) {
+            return data.get(1) == 1;
+        }
+
+        if (blockEntity instanceof Crafter<?> crafter) {
+            return crafter.isCrafting();
+        }
+        return false;
     }
 
 }

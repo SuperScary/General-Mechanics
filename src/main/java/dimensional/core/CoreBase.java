@@ -2,6 +2,7 @@ package dimensional.core;
 
 import dimensional.core.api.multiblock.MultiblockManager;
 import dimensional.core.api.multiblock.feedback.MultiblockFeedbackHandler;
+import dimensional.core.hooks.WrenchHooks;
 import dimensional.core.registries.*;
 import dimensional.core.tab.CoreTab;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -41,6 +42,7 @@ public abstract class CoreBase implements DimensionalCore {
 
         MultiblockManager.init(modEventBus);
         NeoForge.EVENT_BUS.register(MultiblockFeedbackHandler.class);
+        NeoForge.EVENT_BUS.addListener(WrenchHooks::onPlayerUseBlockEvent);
 
     }
 

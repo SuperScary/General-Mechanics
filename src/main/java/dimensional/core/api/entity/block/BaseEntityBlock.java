@@ -173,7 +173,7 @@ public abstract class BaseEntityBlock<T extends BaseBlockEntity> extends BaseBlo
 
     @Override
     protected int getSignal (@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull Direction direction) {
-        return PropertyHelper.sameValue(state, POWERED) ? 15 : 0;
+        return PropertyHelper.sameValue(state, CRAFTING) ? 15 : 0;
     }
 
     @Override

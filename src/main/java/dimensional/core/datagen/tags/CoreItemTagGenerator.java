@@ -72,6 +72,9 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
                 .add(PLASTIC_RED.asItem())
                 .add(PLASTIC_BLACK.asItem());
 
+        this.tag(CoreTags.Items.WRENCHES)
+                .add(WRENCH.asItem());
+
     }
 
     @Override
