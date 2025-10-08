@@ -1,0 +1,49 @@
+package fluxmachines.core.datagen.language;
+
+import fluxmachines.core.FluxMachines;
+import fluxmachines.core.api.util.IDataProvider;
+import fluxmachines.core.registries.CoreBlocks;
+import fluxmachines.core.registries.CoreItems;
+import net.minecraft.data.DataGenerator;
+import net.neoforged.neoforge.common.data.LanguageProvider;
+
+public class CoreEnLangProvider extends LanguageProvider implements IDataProvider {
+
+    public CoreEnLangProvider(DataGenerator generator) {
+        super(generator.getPackOutput(), FluxMachines.MODID, "en_us");
+    }
+
+    @Override
+    protected void addTranslations() {
+        addManualStrings();
+        addSubtitles();
+
+        // ITEMS
+        for (var item : CoreItems.getItems()) {
+            add(item.asItem(), item.getEnglishName());
+        }
+
+        // BLOCKS
+        for (var block : CoreBlocks.getBlocks()) {
+            add(block.block(), block.getEnglishName());
+        }
+    }
+
+    protected void addManualStrings() {
+        add("itemGroup." + FluxMachines.MODID, FluxMachines.NAME);
+        add("gui.fluxmachines.progress", "Progress: "); // the space is important!!!!
+        add("gui.fluxmachines.idle", "Idle");
+        add("gui.fluxmachines.gui.settings.right", "Right Click to Expand");
+        add("gui.fluxmachines.gui.settings.left", "Left Click to Expand");
+        add("gui.fluxmachines.gui.settings", "Settings");
+        add("gui.fluxmachines.itemlist", "Slot %s: %sx %s");
+        add("gui.fluxmachines.press_shift", "Hold §e[SHIFT]§r for more info.");
+        add("gui.fluxmachines.upgrade_tooltip", "Compatible Upgrades");
+        add("gui.fluxmachines.upgrade_tooltip.item", "§7§o- §7§o%s §7§ox%s");
+    }
+
+    protected void addSubtitles() {
+        add("subtitles.fluxmachines.plastic_block_place", "Block Placed");
+        add("subtitles.fluxmachines.plastic_block_break", "Block Break");
+    }
+}
