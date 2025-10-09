@@ -40,6 +40,15 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
         add("gui.fluxmachines.press_shift", "Hold §e[SHIFT]§r for more info.");
         add("gui.fluxmachines.upgrade_tooltip", "Compatible Upgrades");
         add("gui.fluxmachines.upgrade_tooltip.item", "§7§o- §7§o%s §7§ox%s");
+        add("gui.fluxmachines.gui.redstone_mode", "Redstone Mode");
+        add("gui.fluxmachines.gui.auto_export", "Auto Export");
+        add("gui.fluxmachines.gui.auto_import", "Auto Import");
+        add("gui.fluxmachines.gui.enabled", "Enabled");
+        add("gui.fluxmachines.gui.side_config", "Side Config");
+        add("gui.fluxmachines.gui.status", "Status: %s");
+        add("gui.fluxmachines.gui.status.active", "Active");
+        add("gui.fluxmachines.gui.status.inactive", "Inactive");
+        add("gui.fluxmachines.gui.status.error", "Error");
     }
 
     protected void addSubtitles() {
