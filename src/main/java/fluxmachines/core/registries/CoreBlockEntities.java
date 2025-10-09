@@ -25,7 +25,7 @@ public class CoreBlockEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, FluxMachines.MODID);
 
-    public static final DeferredBlockEntityType<MatterFabricatorBlockEntity> FABRICATOR = create("fabricator", MatterFabricatorBlockEntity.class, MatterFabricatorBlockEntity::new, CoreBlocks.MATTER_FABRICATOR);
+    public static final DeferredBlockEntityType<MatterFabricatorBlockEntity> MATTER_FABRICATOR = create("fabricator", MatterFabricatorBlockEntity.class, MatterFabricatorBlockEntity::new, CoreBlocks.MATTER_FABRICATOR);
 
     /**
      * Get all block entity types whose implementations extend the given base class.

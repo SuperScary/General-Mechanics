@@ -3,6 +3,7 @@ package fluxmachines.core.gui.menu.base;
 import fluxmachines.core.api.entity.Crafter;
 import fluxmachines.core.api.entity.block.BaseBlockEntity;
 import fluxmachines.core.api.entity.block.BaseEntityBlock;
+import fluxmachines.core.api.upgrade.Upgradeable;
 import fluxmachines.core.gui.util.QuickMoveStack;
 import fluxmachines.core.gui.util.UpgradeSlot;
 import net.minecraft.network.FriendlyByteBuf;
@@ -127,7 +128,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
      * @return true is upgradeable.
      */
     public boolean isUpgradeable() {
-        return false; //blockEntity instanceof Upgradeable;
+        return blockEntity instanceof Upgradeable;
     }
 
     /**

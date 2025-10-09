@@ -83,8 +83,8 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
     public BaseScreen(T menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
-        this.imageWidth = menu.isUpgradeable() ? 203 : 176;
-        this.guiOffset = menu.isUpgradeable() ? Utils.guiScaleOffset() : 0;
+        this.imageWidth = /*menu.isUpgradeable() ? 203 : */176;
+        this.guiOffset = /*menu.isUpgradeable() ? Utils.guiScaleOffset() : */0;
         this.energyLeft = 158 - guiOffset / 2;
         this.energyWidth = 8;
         this.energyTop = 9;
@@ -344,11 +344,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
         graphics.drawCenteredString(this.font, Component.translatable("gui.fluxmachines.gui.settings"), posX + (panelWidth / 2), posY, 0xFFFFFF);
 
-        // Upgrade Slots
-        graphics.blit(upgradeSlotGui, posX + 1, posY + 10, 0, 0, 18, 18, 18, 18);
-        graphics.blit(upgradeSlotGui, posX + 1, posY + 28, 0, 0, 18, 18, 18, 18);
-        graphics.blit(upgradeSlotGui, posX + 1, posY + 46, 0, 0, 18, 18, 18, 18);
-        graphics.blit(upgradeSlotGui, posX + 1, posY + 64, 0, 0, 18, 18, 18, 18);
+        drawSlotWithDesc(graphics, mouseX, mouseY, x, y, posX, posY, panelWidth);
 
         if (isSideTabOpen && menu.blockEntity.isSettingsPanelOpen()) {
             redstoneMode.render(graphics, mouseX, mouseY, 0);
@@ -359,6 +355,17 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         }
 
         addAdditionalTabElements(graphics, mouseX, mouseY, x, y);
+    }
+
+    private void drawSlotWithDesc(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int posX, int posY, int panelWidth) {
+        // Upgrade Slots
+        graphics.blit(getUpgradeSlotGui(), posX + 1, posY + 10, 0, 0, 18, 18, 18, 18);
+        graphics.blit(getUpgradeSlotGui(), posX + 1, posY + 28, 0, 0, 18, 18, 18, 18);
+        graphics.blit(getUpgradeSlotGui(), posX + 1, posY + 46, 0, 0, 18, 18, 18, 18);
+        graphics.blit(getUpgradeSlotGui(), posX + 1, posY + 64, 0, 0, 18, 18, 18, 18);
+
+        if (upgradeSlotTooltipArea == null) return;
+        upgradeSlotTooltipArea.render(this.font, graphics, mouseX, mouseY, x, y);
     }
 
     /**

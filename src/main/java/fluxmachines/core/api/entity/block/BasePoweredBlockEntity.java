@@ -3,6 +3,7 @@ package fluxmachines.core.api.entity.block;
 import fluxmachines.core.api.attributes.Attribute;
 import fluxmachines.core.api.energy.CoreEnergyStorage;
 import fluxmachines.core.api.energy.PoweredBlock;
+import fluxmachines.core.api.upgrade.Upgradeable;
 import fluxmachines.core.api.util.data.Keys;
 import fluxmachines.core.api.util.data.PropertyComponent;
 import fluxmachines.core.registries.CoreComponents;
@@ -18,11 +19,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements PoweredBlock {
+public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements PoweredBlock, Upgradeable {
 
     private final CoreEnergyStorage energyStorage;
     private ArrayList<PropertyComponent<?>> dataComponents = new ArrayList<>();
@@ -80,6 +82,11 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
             getEnergyStorage().setMaxStorage(max);
         }
         super.setData(stack);
+    }
+
+    @Override
+    public ItemStackHandler getUpgradeInventory() {
+        return new ItemStackHandler(4);
     }
 
 }

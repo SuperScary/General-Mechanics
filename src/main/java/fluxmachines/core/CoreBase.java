@@ -61,6 +61,7 @@ public abstract class CoreBase implements FluxMachines {
         CoreRecipes.RECIPE_REGISTRY.register(modEventBus);
         CoreMenus.REGISTRY.register(modEventBus);
         CoreUpgrades.REGISTRY.register(modEventBus);
+        CoreUpgradeRegistry.REGISTRY.register(modEventBus);
     }
 
     @Override
