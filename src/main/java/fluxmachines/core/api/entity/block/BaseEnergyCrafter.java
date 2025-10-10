@@ -277,4 +277,30 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
      */
     public abstract Range getOutputSlots();
 
+    @Override
+    public MachineState getMachineState() {
+        if (getEnergyStorage().getEnergyStored() <= 0) {
+            return MachineState.ERROR;
+        }
+
+        var recipe = getCurrentRecipe();
+        if (recipe.isPresent()) {
+            var result = getRecipeResultItem(Objects.requireNonNull(getLevel()));
+            if (result != null && !canInsertResult(result)) {
+                return MachineState.ERROR;
+            }
+        }
+
+        if (isCrafting()) {
+            return MachineState.ACTIVE;
+        }
+
+        if (hasRecipe(this.getBlockState())) {
+            return MachineState.ACTIVE;
+        }
+
+        // Default to inactive
+        return MachineState.INACTIVE;
+    }
+
 }

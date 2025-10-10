@@ -13,11 +13,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.apache.commons.lang3.function.TriFunction;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class CoreUpgrades {
@@ -27,22 +29,22 @@ public class CoreUpgrades {
     private static final List<ItemDefinition<?>> UPGRADES = new ArrayList<>();
     private static final List<Pair<ItemDefinition<?>, UpgradeFunction<?, ?>>> FUNCTIONS = new ArrayList<>();
 
-    public static final ItemDefinition<UpgradeBase> EMPTY = create("upgrade_base", UpgradeEmpty::new, null);
-    public static final ItemDefinition<UpgradeBase> SPEED = create("speed_upgrade", UpgradeBase::new, SpeedUpgrade::new);
-    public static final ItemDefinition<UpgradeBase> CAPACITY = create("capacity_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> EFFICIENCY = create("efficiency_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> OVERCLOCK = create("overclock_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> THERMAL_BUFFER = create("thermal_buffer_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> AUTO_EJECTOR = create("auto_ejector_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> INPUT_EXPANDER = create("input_expander_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> MULTI_PROCESSOR_UNIT = create("mpu_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> SILENCING_COIL = create("silencing_coil_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> NANITE_INJECTOR = create("nanite_injector_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> PRECISION_GEARBOX = create("precision_gearbox_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> REDSTONE_INTERFACE = create("redstone_interface_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> ECO_DRIVE = create("eco_drive_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> VOID_MOD = create("void_mod_upgrade", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> REPLICATION_NODE = create("replication_node_upgrade", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> EMPTY = create("Upgrade Base", "", UpgradeEmpty::new, null);
+    public static final ItemDefinition<UpgradeBase> SPEED = create("Speed Upgrade", "Increases machine operation speed.", UpgradeBase::new, SpeedUpgrade::new);
+    public static final ItemDefinition<UpgradeBase> CAPACITY = create("Capacity Upgrade", "Expands the operational size of machines.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> EFFICIENCY = create("Efficiency Upgrade", "Reduces power consumption per operation.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> OVERCLOCK = create("Overclock Upgrade", "Greatly increases speed but at a power efficiency cost.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> THERMAL_BUFFER = create("Thermal Buffer", "Allows the machine to operate under extreme conditions.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> AUTO_EJECTOR = create("Auto Ejector", "Automatically pushes output to connected inventories.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> INPUT_EXPANDER = create("Input Expander", "Allows the machine to accept input from multiple sides.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> MULTI_PROCESSOR_UNIT = create("Multi-Processor Unit", "Enables running multiple operations at once.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> SILENCING_COIL = create("Silencing Coil", "Suppresses sounds emitted from the machine.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> NANITE_INJECTOR = create("Nanite Injector", "Increases yield of byproducts or rare drops.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> PRECISION_GEARBOX = create("Precision Gearbox", "Increases accuracy for machines with chance-based outputs.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> REDSTONE_INTERFACE = create("Redstone Interface", "Adds advanced redstone control options.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> ECO_DRIVE = create("Eco-Drive", "Idle machines draw near-zero power.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> VOID_MOD = create("Void Mod", "Destroys overflow items instead of clogging the machine.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> REPLICATION_NODE = create("Replication Node", "Duplicates output at a high power cost.", UpgradeBase::new, null);
 
     public static List<ItemDefinition<?>> getUpgrades () {
         return Collections.unmodifiableList(UPGRADES);
@@ -64,11 +66,31 @@ public class CoreUpgrades {
         return upgradeMap != null && !upgradeMap.upgrades().isEmpty() ? upgradeMap.upgrades() : ImmutableList.of();
     }
 
-    public static <T extends UpgradeBase, I> ItemDefinition<T> create (String id, Function<Item.Properties, T> factory, @Nullable UpgradeFunctionBuilder<T, I> caller) {
-        return create(id, FluxMachines.getResource(id), factory, caller);
+    public static <T extends UpgradeBase, I> ItemDefinition<T> create (String id, String desc, BiFunction<Item.Properties, String, T> factory, @Nullable UpgradeFunctionBuilder<T, I> caller) {
+        String resourceFriendly = id.toLowerCase().replace(' ', '_');
+        return create(id, desc, FluxMachines.getResource(resourceFriendly), factory, caller);
     }
 
-    public static <T extends UpgradeBase, I> ItemDefinition<T> create (String name, ResourceLocation id, Function<Item.Properties, T> factory, @Nullable UpgradeFunctionBuilder<T, I> caller) {
+    // Overloaded method for standard Function (backward compatibility)
+    public static <T extends UpgradeBase, I> ItemDefinition<T> create (String id, String desc, Function<Item.Properties, T> factory, @Nullable UpgradeFunctionBuilder<T, I> caller) {
+        String resourceFriendly = id.toLowerCase().replace(' ', '_');
+        return create(id, desc, FluxMachines.getResource(resourceFriendly), factory, caller);
+    }
+
+    public static <T extends UpgradeBase, I> ItemDefinition<T> create (String name, String desc, ResourceLocation id, BiFunction<Item.Properties, String, T> factory, @Nullable UpgradeFunctionBuilder<T, I> caller) {
+        // Convert BiFunction to Function by providing the description as the second parameter
+        Function<Item.Properties, T> registryFactory = properties -> factory.apply(properties, desc);
+        
+        var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), registryFactory));
+        CoreTab.add(definition);
+
+        UPGRADES.add(definition);
+        if (caller != null) FUNCTIONS.add(new Pair<>(definition, caller.build()));
+        return definition;
+    }
+
+    // Overloaded method for standard Function (backward compatibility)
+    public static <T extends UpgradeBase, I> ItemDefinition<T> create (String name, String desc, ResourceLocation id, Function<Item.Properties, T> factory, @Nullable UpgradeFunctionBuilder<T, I> caller) {
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
         CoreTab.add(definition);
 

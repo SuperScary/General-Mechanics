@@ -15,8 +15,11 @@ public class UpgradeBase extends BaseItem {
 
     private boolean hasBeenApplied = false;
 
-    public UpgradeBase (Item.Properties properties) {
+    private final String description;
+
+    public UpgradeBase (Item.Properties properties, String description) {
         super(properties);
+        this.description = description;
     }
 
     public void functionalUpgrade (BaseEntityBlock<?> block, BlockState state) {
@@ -40,6 +43,10 @@ public class UpgradeBase extends BaseItem {
         } else {
             tooltipComponents.add(Component.translatable("gui.fluxmachines.press_shift"));
         }
+    }
+
+    public String getEnglishDescription () {
+        return this.description;
     }
 
 }

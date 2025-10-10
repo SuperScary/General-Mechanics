@@ -18,6 +18,10 @@ public class Range {
         this(from, to, false);
     }
 
+    public Range(int value) {
+        this(value, value, true);
+    }
+
     public int getFrom() {
         return from;
     }

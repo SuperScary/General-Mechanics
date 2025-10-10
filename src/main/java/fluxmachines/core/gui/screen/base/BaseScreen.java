@@ -5,16 +5,15 @@ import fluxmachines.core.FluxMachines;
 import fluxmachines.core.api.energy.CoreEnergyStorage;
 import fluxmachines.core.api.energy.PoweredBlock;
 import fluxmachines.core.api.entity.Crafter;
+import fluxmachines.core.api.entity.block.BasePoweredBlockEntity;
 import fluxmachines.core.gui.GuiFluid;
 import fluxmachines.core.gui.GuiPower;
 import fluxmachines.core.gui.menu.base.BaseMenu;
 import fluxmachines.core.gui.renderers.EnergyDisplayTooltipArea;
 import fluxmachines.core.gui.renderers.FluidTankRenderer;
 import fluxmachines.core.gui.renderers.ProgressDisplayTooltipArea;
-import fluxmachines.core.gui.renderers.UpgradeSlotTooltipArea;
 import fluxmachines.core.gui.util.IconButton;
 import fluxmachines.core.util.MouseUtil;
-import fluxmachines.core.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -25,7 +24,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -53,7 +51,6 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
     private EnergyDisplayTooltipArea energyInfoArea;
     private ProgressDisplayTooltipArea progressDisplayTooltipArea;
-    private UpgradeSlotTooltipArea upgradeSlotTooltipArea;
 
     private IconButton redstoneMode = null;
     private IconButton autoExport = null;
@@ -100,9 +97,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
             assignEnergyInfoArea();
         }
 
-        if (getMenu().isUpgradeable()) {
-            assignUpgradeSlotTooltipArea();
-        }
+        // Upgrade slot tooltips are now handled directly by the slots themselves
 
         assignProgressBarArea();
 
@@ -198,6 +193,8 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     }
 
     protected void renderMachineStatus(GuiGraphics graphics, float v, int mouseX, int mouseY) {
+        if (!showMachineStatus()) return;
+
         final int x = leftPos + 5;
         final int y = topPos + 5;
 
@@ -208,12 +205,20 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         pose.translate(x, y, 0);
         pose.scale(scale, scale, 1.0f);
 
-        graphics.blit(machineInactive, 0, 0, 0, 0, 16, 16, 16, 16);
+        // Get the machine state from the block entity and render appropriate texture
+        var machineState = ((BasePoweredBlockEntity) menu.blockEntity).getMachineState();
+        ResourceLocation texture = switch (machineState) {
+            case ACTIVE -> machineActive;
+            case INACTIVE -> machineInactive;
+            case ERROR -> machineError;
+        };
+
+        graphics.blit(texture, 0, 0, 0, 0, 16, 16, 16, 16);
 
         pose.popPose();
 
         if (MouseUtil.isMouseOver(mouseX, mouseY, x, y, (int) (16 * scale), (int) (16 * scale))) {
-            graphics.renderTooltip(this.font, Component.translatable("gui.fluxmachines.gui.status"), mouseX, mouseY); // TODO: Add translation for machine status.
+            graphics.renderTooltip(this.font, Component.translatable("gui.fluxmachines.gui.status", Component.translatable("gui.fluxmachines.gui.status." + machineState.name().toLowerCase())), mouseX, mouseY);
         }
     }
 
@@ -344,9 +349,8 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
         graphics.drawCenteredString(this.font, Component.translatable("gui.fluxmachines.gui.settings"), posX + (panelWidth / 2), posY, 0xFFFFFF);
 
-        drawSlotWithDesc(graphics, mouseX, mouseY, x, y, posX, posY, panelWidth);
-
         if (isSideTabOpen && menu.blockEntity.isSettingsPanelOpen()) {
+            drawSlotWithDesc(graphics, mouseX, mouseY, x, y, posX, posY, panelWidth);
             redstoneMode.render(graphics, mouseX, mouseY, 0);
             autoExport.render(graphics, mouseX, mouseY, 0);
             autoImport.render(graphics, mouseX, mouseY, 0);
@@ -363,9 +367,6 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         graphics.blit(getUpgradeSlotGui(), posX + 1, posY + 28, 0, 0, 18, 18, 18, 18);
         graphics.blit(getUpgradeSlotGui(), posX + 1, posY + 46, 0, 0, 18, 18, 18, 18);
         graphics.blit(getUpgradeSlotGui(), posX + 1, posY + 64, 0, 0, 18, 18, 18, 18);
-
-        if (upgradeSlotTooltipArea == null) return;
-        upgradeSlotTooltipArea.render(this.font, graphics, mouseX, mouseY, x, y);
     }
 
     /**
@@ -454,9 +455,6 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         this.energyInfoArea = new EnergyDisplayTooltipArea(energyLeft, energyTop, getEnergyStorage(), energyWidth, energyHeight);
     }
 
-    private void assignUpgradeSlotTooltipArea() {
-        this.upgradeSlotTooltipArea = new UpgradeSlotTooltipArea(182, 5, 16, 16, 4, 2, menu.block);
-    }
 
     private void assignProgressBarArea() {
         this.progressDisplayTooltipArea = new ProgressDisplayTooltipArea(138, 31, 3, 22);
@@ -502,7 +500,19 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     }
 
     private void renderUpgradeSlotTooltips(GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
-        upgradeSlotTooltipArea.render(this.font, graphics, mouseX, mouseY, x, y);
+        if (!menu.isUpgradeable() || !menu.blockEntity.isSettingsPanelOpen()) {
+            return;
+        }
+        
+        // Find upgrade slots and render their tooltips
+        for (var slot : menu.slots) {
+            if (slot instanceof fluxmachines.core.gui.util.UpgradeSlot upgradeSlot && upgradeSlot.isActive()) {
+                if (isMouseAboveArea(mouseX, mouseY, x, y, slot.x - 1, slot.y - 1, 18, 18)) {
+                    graphics.renderTooltip(this.font, upgradeSlot.getTooltip(), Optional.empty(), mouseX - x, mouseY - y);
+                    break; // Only show one tooltip at a time
+                }
+            }
+        }
     }
 
     /**
@@ -582,6 +592,10 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
     public int getImageHeight() {
         return imageHeight;
+    }
+
+    public boolean showMachineStatus() {
+        return true;
     }
 
 }

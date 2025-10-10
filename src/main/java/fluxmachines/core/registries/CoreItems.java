@@ -57,7 +57,7 @@ public class CoreItems {
     public static final ItemDefinition<CircuitItem> BASIC_CIRCUIT = item("Basic Circuit", CircuitItem::new);
 
     // Upgrades
-    public static final ItemDefinition<CircuitItem> UPGRADE_BASE = item("Upgrade Base", CircuitItem::new);
+    //public static final ItemDefinition<CircuitItem> UPGRADE_BASE = item("Upgrade Base", CircuitItem::new);
 
     // Plastic
     public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC = item("Raw Plastic", (properties) -> new RawPlasticItem(properties, DyeColor.WHITE));

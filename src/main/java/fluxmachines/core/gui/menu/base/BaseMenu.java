@@ -69,10 +69,11 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
             return;
         }
 
-        this.addSlot(new UpgradeSlot(this.block, this.blockEntity.getInventory(), getNextIndex(), 182 + getUpgradeableMoveFactor(), 5));
-        this.addSlot(new UpgradeSlot(this.block, this.blockEntity.getInventory(), getNextIndex(), 182 + getUpgradeableMoveFactor(), 23));
-        this.addSlot(new UpgradeSlot(this.block, this.blockEntity.getInventory(), getNextIndex(), 182 + getUpgradeableMoveFactor(), 41));
-        this.addSlot(new UpgradeSlot(this.block, this.blockEntity.getInventory(), getNextIndex(), 182 + getUpgradeableMoveFactor(), 59));
+        Upgradeable upgradeable = (Upgradeable) this.blockEntity;
+        this.addSlot(new UpgradeSlot(this.block, upgradeable.getUpgradeInventory(), 0, 176 + getUpgradeableMoveFactor() + 2, 7 + 10, this.blockEntity));
+        this.addSlot(new UpgradeSlot(this.block, upgradeable.getUpgradeInventory(), 1, 176 + getUpgradeableMoveFactor() + 2, 7 + 28, this.blockEntity));
+        this.addSlot(new UpgradeSlot(this.block, upgradeable.getUpgradeInventory(), 2, 176 + getUpgradeableMoveFactor() + 2, 7 + 46, this.blockEntity));
+        this.addSlot(new UpgradeSlot(this.block, upgradeable.getUpgradeInventory(), 3, 176 + getUpgradeableMoveFactor() + 2, 7 + 64, this.blockEntity));
     }
 
     @Override
@@ -120,7 +121,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
      * @return -14 or 0
      */
     public int getUpgradeableMoveFactor () {
-        return upgradeableMoveFactor;
+        return 0;
     }
 
     /**

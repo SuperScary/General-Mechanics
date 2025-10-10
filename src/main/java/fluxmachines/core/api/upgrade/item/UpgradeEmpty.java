@@ -10,8 +10,8 @@ import java.util.List;
 
 public class UpgradeEmpty extends UpgradeBase {
 
-    public UpgradeEmpty (Item.Properties properties) {
-        super(properties);
+    public UpgradeEmpty (Item.Properties properties, String description) {
+        super(properties, description);
     }
 
     @Override

@@ -26,42 +26,54 @@ import java.util.ArrayList;
 
 public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements PoweredBlock, Upgradeable {
 
+    public enum MachineState {
+        ACTIVE,
+        INACTIVE,
+        ERROR
+    }
+
     private final CoreEnergyStorage energyStorage;
+    private final ItemStackHandler upgradeInventory = new ItemStackHandler(4);
     private ArrayList<PropertyComponent<?>> dataComponents = new ArrayList<>();
 
-    public BasePoweredBlockEntity (BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive) {
+
+    public BasePoweredBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive) {
         this(type, pos, blockState, capacity, maxReceive, Attribute.Builder.of(Keys.POWER, 0));
     }
 
-    public BasePoweredBlockEntity (BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive, Attribute.IntValue current) {
+    public BasePoweredBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive, Attribute.IntValue current) {
         super(type, pos, blockState);
         this.energyStorage = new CoreEnergyStorage(capacity.get(), maxReceive.get(), maxReceive.get(), current.getAsInt());
     }
 
     @Override
-    public void saveClientData (CompoundTag tag, HolderLookup.Provider registries) {
+    public void saveClientData(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveClientData(tag, registries);
         tag.put(Keys.POWER, energyStorage.serializeNBT(registries));
+        tag.put(Keys.INVENTORY_UPGRADE, upgradeInventory.serializeNBT(registries));
     }
 
     @Override
-    public void loadClientData (CompoundTag tag, HolderLookup.Provider registries) {
+    public void loadClientData(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadClientData(tag, registries);
         energyStorage.deserializeNBT(registries, IntTag.valueOf(tag.getInt(Keys.POWER)));
+        if (tag.contains(Keys.INVENTORY_UPGRADE)) {
+            upgradeInventory.deserializeNBT(registries, tag.getCompound(Keys.INVENTORY_UPGRADE));
+        }
     }
 
     @Override
-    public CoreEnergyStorage getEnergyStorage () {
+    public CoreEnergyStorage getEnergyStorage() {
         return energyStorage;
     }
 
-    public void updateBlockState (BlockState state) {
+    public void updateBlockState(BlockState state) {
         assert level != null;
         level.setBlockAndUpdate(getBlockPos(), state);
     }
 
     @Override
-    public InteractionResult disassemble (Player player, Level level, BlockHitResult hitResult, ItemStack stack, @Nullable ItemStack existingData) {
+    public InteractionResult disassemble(Player player, Level level, BlockHitResult hitResult, ItemStack stack, @Nullable ItemStack existingData) {
         var pos = hitResult.getBlockPos();
         var state = level.getBlockState(pos);
         var block = (BaseEntityBlock<?>) state.getBlock();
@@ -74,7 +86,7 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
     }
 
     @Override
-    public void setData (ItemStack stack) {
+    public void setData(ItemStack stack) {
         if (stack.has(CoreComponents.ENERGY_STORED) && stack.has(CoreComponents.ENERGY_MAX)) {
             var stored = stack.get(CoreComponents.ENERGY_STORED);
             var max = stack.get(CoreComponents.ENERGY_MAX);
@@ -86,7 +98,20 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
 
     @Override
     public ItemStackHandler getUpgradeInventory() {
-        return new ItemStackHandler(4);
+        return upgradeInventory;
+    }
+
+    /**
+     * Determines the current machine state based on various conditions.
+     * This method should be overridden by subclasses for specific state logic.
+     *
+     * @return the current machine state
+     */
+    public MachineState getMachineState() {
+        if (getEnergyStorage().getEnergyStored() <= 0) {
+            return MachineState.ERROR;
+        }
+        return MachineState.INACTIVE;
     }
 
 }

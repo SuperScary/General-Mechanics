@@ -1,9 +1,11 @@
 package fluxmachines.core.datagen.language;
 
 import fluxmachines.core.FluxMachines;
+import fluxmachines.core.api.upgrade.UpgradeBase;
 import fluxmachines.core.api.util.IDataProvider;
 import fluxmachines.core.registries.CoreBlocks;
 import fluxmachines.core.registries.CoreItems;
+import fluxmachines.core.registries.CoreUpgrades;
 import net.minecraft.data.DataGenerator;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -26,6 +28,17 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
         // BLOCKS
         for (var block : CoreBlocks.getBlocks()) {
             add(block.block(), block.getEnglishName());
+        }
+
+        // UPGRADES
+        for (var upgrade : CoreUpgrades.getUpgrades()) {
+            add(upgrade.get(), upgrade.getEnglishName());
+        }
+
+        // Upgrade descriptions
+        for (var upgrade : CoreUpgrades.getUpgrades()) {
+            UpgradeBase base = (UpgradeBase) upgrade.get();
+            add(base.getDescriptionId() + ".desc", base.getEnglishDescription());
         }
     }
 

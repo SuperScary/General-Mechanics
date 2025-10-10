@@ -44,7 +44,7 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
 
     @Override
     public @NotNull Component getDisplayName () {
-        return Component.translatable("block.fluxmachines.refabricator");
+        return Component.translatable("block.fluxmachines.matter_fabricator");
     }
 
     @Override
@@ -54,14 +54,14 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
 
     @Override
     public Range getInputSlots() {
-        // Slots 0, 1, 2 are input slots for the refabricator
+        // Slots 0, 1, 2 are input slots
         return new Range(0, 2);
     }
 
     @Override
     public Range getOutputSlots() {
         // Slot 3 is the output slot
-        return new Range(3, 0);
+        return new Range(3);
     }
 
     @Override

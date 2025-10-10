@@ -39,11 +39,15 @@ public class QuickMoveStack {
         ItemStack copyOfSourceStack = sourceStack.copy();
 
         if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
-            if (!menu.moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-                    + slotCount, false)) {
+            int inputSlotsEnd = TE_INVENTORY_FIRST_SLOT_INDEX + slotCount - 1;
+            if (!menu.moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, inputSlotsEnd, false)) {
                 return ItemStack.EMPTY;  // EMPTY_ITEM
             }
         } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + slotCount) {
+            if (!menu.moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;
+            }
+        } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + slotCount + 4) {
             if (!menu.moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
                 return ItemStack.EMPTY;
             }
