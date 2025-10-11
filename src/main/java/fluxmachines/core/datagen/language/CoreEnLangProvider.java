@@ -67,6 +67,9 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
         add("gui.fluxmachines.gui.status.inactive", "Inactive");
         add("gui.fluxmachines.gui.status.error", "Error");
         add("gui.fluxmachines.gui.close_button", "Close");
+        add("gui.fluxmachines.gui.info", "Info");
+        add("gui.fluxmachines.gui.locked", "Locked");
+        add("gui.fluxmachines.gui.unlocked", "Unlocked");
     }
 
     protected void addSubtitles() {

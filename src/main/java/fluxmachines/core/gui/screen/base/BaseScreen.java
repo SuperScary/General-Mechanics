@@ -13,6 +13,7 @@ import fluxmachines.core.gui.renderers.EnergyDisplayTooltipArea;
 import fluxmachines.core.gui.renderers.FluidTankRenderer;
 import fluxmachines.core.gui.renderers.ProgressDisplayTooltipArea;
 import fluxmachines.core.gui.util.IconButton;
+import fluxmachines.core.gui.util.IconButtonNoBG;
 import fluxmachines.core.network.ToggleEnabledC2S;
 import fluxmachines.core.network.ToggleExportC2S;
 import fluxmachines.core.network.ToggleImportC2S;
@@ -63,6 +64,9 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     private IconButton closeButton = null;
     private Button sidedConfig = null;
 
+    private IconButtonNoBG infoButton = null;
+    private IconButtonNoBG lockedButton = null;
+
     private final ResourceLocation sideTabClosed = FluxMachines.getResource("textures/gui/elements/side_tab_closed.png");
     private final ResourceLocation sideTabSelected = FluxMachines.getResource("textures/gui/elements/side_tab_selected.png");
     private final ResourceLocation sideTabOpen = FluxMachines.getResource("textures/gui/elements/side_tab_open.png");
@@ -84,8 +88,13 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     private final ResourceLocation exportOff = FluxMachines.getResource("textures/gui/elements/export_off.png");
     private final ResourceLocation disabledOn = FluxMachines.getResource("textures/gui/elements/disabled.png");
     private final ResourceLocation close = FluxMachines.getResource("textures/gui/elements/close_button.png");
+    private final ResourceLocation infoIcon = FluxMachines.getResource("textures/gui/elements/info.png");
+    private final ResourceLocation lockedIcon = FluxMachines.getResource("textures/gui/elements/locked.png");
+    private final ResourceLocation unlockedIcon = FluxMachines.getResource("textures/gui/elements/unlocked.png");
 
     protected int imageWidth;
+
+    private boolean locked = false; // TODO: Testing only
 
     public BaseScreen(T menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -112,6 +121,9 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         settingsPanelY = ((height - imageHeight) / 2) + imageHeight - 84;
         settingsPanelXHalf = settingsPanelX + (settingsPanelX / 2);
         setupButtons();
+
+        addRenderableWidget(infoButton);
+        addRenderableWidget(lockedButton);
     }
 
     @Override
@@ -146,6 +158,12 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
         this.closeButton = new IconButton(buttonCenter + 35, posY, 8, 8, close, 0, 0, 8, 8, 8, 8, 0, 0.5f, button -> closeScreen());
         closeButton.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.close_button")));
+
+        this.infoButton = new IconButtonNoBG(this.leftPos - 17, this.topPos - 3, buttonWidth, buttonHeight, infoIcon, 0, 0, 16, 16, 16, 16, 0, button -> closeScreen());
+        infoButton.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.info")));
+
+        this.lockedButton = new IconButtonNoBG(this.leftPos - 17, this.topPos + 16, buttonWidth, buttonHeight, unlockedIcon, 0, 0, 16, 16, 16, 16, 0, 0.75f, button -> toggleLocked());
+
     }
 
     private void toggleRedstoneMode() {
@@ -178,6 +196,12 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
             PacketDistributor.sendToServer(new ToggleEnabledC2S(poweredEntity.getBlockPos(), poweredEntity.isEnabled()));
             updateEnabledButtonIcon();
         }
+    }
+
+    private void toggleLocked() {
+        locked = !locked;
+        lockedButton.setIcon(locked ? lockedIcon : unlockedIcon);
+        lockedButton.setTooltip(!locked ? Tooltip.create(Component.translatable("gui.fluxmachines.gui.unlocked")) : Tooltip.create(Component.translatable("gui.fluxmachines.gui.locked")));
     }
 
     private void sidedConfig() {
