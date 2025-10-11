@@ -172,18 +172,8 @@ public abstract class BaseEntityBlock<T extends BaseBlockEntity> extends BaseBlo
     }
 
     @Override
-    protected int getSignal (@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull Direction direction) {
-        return PropertyHelper.sameValue(state, CRAFTING) ? 15 : 0;
-    }
-
-    @Override
-    protected int getDirectSignal (@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos, @NotNull Direction direction) {
-        return getConnectedDirection(state) == direction ? 15 : 0;
-    }
-
-    @Override
     protected boolean isSignalSource (@NotNull BlockState state) {
-        return true;
+        return false;
     }
 
     public boolean getDisassembled () {

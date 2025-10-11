@@ -12,5 +12,9 @@ public class Keys {
     public static final String RF_AMOUNT = "rf_amount";
     public static final String PROGRESS = "progress";
     public static final String CRAFTING = "crafting";
+    public static final String ENABLED = "enabled";
+    public static final String AUTO_EXPORT = "auto_export";
+    public static final String AUTO_IMPORT = "auto_import";
+    public static final String REDSTONE_MODE = "redstone_mode";
 
 }

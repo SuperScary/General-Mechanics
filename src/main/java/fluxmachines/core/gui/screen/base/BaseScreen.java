@@ -13,6 +13,10 @@ import fluxmachines.core.gui.renderers.EnergyDisplayTooltipArea;
 import fluxmachines.core.gui.renderers.FluidTankRenderer;
 import fluxmachines.core.gui.renderers.ProgressDisplayTooltipArea;
 import fluxmachines.core.gui.util.IconButton;
+import fluxmachines.core.network.ToggleEnabledC2S;
+import fluxmachines.core.network.ToggleExportC2S;
+import fluxmachines.core.network.ToggleImportC2S;
+import fluxmachines.core.network.ToggleRedstoneModeC2S;
 import fluxmachines.core.util.MouseUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,13 +24,12 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -45,6 +48,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     private boolean isSideTabOpen;
 
     private boolean settingsPanelOpen;
+    private boolean buttonsAdded = false; // Track if buttons are currently added to screen
     public static int settingsPanelX;
     public static int settingsPanelY;
     public static int settingsPanelXHalf;
@@ -55,7 +59,8 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     private IconButton redstoneMode = null;
     private IconButton autoExport = null;
     private IconButton autoImport = null;
-    private IconButton enabled = null;
+    private IconButton enabledButton = null;
+    private IconButton closeButton = null;
     private Button sidedConfig = null;
 
     private final ResourceLocation sideTabClosed = FluxMachines.getResource("textures/gui/elements/side_tab_closed.png");
@@ -68,13 +73,17 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     private final ResourceLocation machineInactive = FluxMachines.getResource("textures/gui/elements/machine_inactive.png");
     private final ResourceLocation machineError = FluxMachines.getResource("textures/gui/elements/machine_warning.png");
 
-    private final ResourceLocation redstone = FluxMachines.getMinecraftResource("textures/item/redstone.png");
+    private final ResourceLocation redstoneHigh = FluxMachines.getMinecraftResource("textures/item/redstone.png");
+    private final ResourceLocation redstoneLow = FluxMachines.getResource("textures/gui/elements/redstone_low.png");
+    private final ResourceLocation redstoneDisabled = FluxMachines.getMinecraftResource("textures/item/gunpowder.png");
+
     private final ResourceLocation importOn = FluxMachines.getResource("textures/gui/elements/import_on.png");
     private final ResourceLocation exportOn = FluxMachines.getResource("textures/gui/elements/export_on.png");
     private final ResourceLocation enabledOn = FluxMachines.getResource("textures/gui/elements/enabled.png");
     private final ResourceLocation importOff = FluxMachines.getResource("textures/gui/elements/import_off.png");
     private final ResourceLocation exportOff = FluxMachines.getResource("textures/gui/elements/export_off.png");
-    private final ResourceLocation disabledOn = FluxMachines.getResource("textures/elements/disabled.png");
+    private final ResourceLocation disabledOn = FluxMachines.getResource("textures/gui/elements/disabled.png");
+    private final ResourceLocation close = FluxMachines.getResource("textures/gui/elements/close_button.png");
 
     protected int imageWidth;
 
@@ -97,14 +106,18 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
             assignEnergyInfoArea();
         }
 
-        // Upgrade slot tooltips are now handled directly by the slots themselves
-
         assignProgressBarArea();
 
         settingsPanelX = ((width - imageWidth) / 2) + imageWidth - 14;
         settingsPanelY = ((height - imageHeight) / 2) + imageHeight - 84;
         settingsPanelXHalf = settingsPanelX + (settingsPanelX / 2);
         setupButtons();
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        closeScreen();
     }
 
     private void setupButtons() {
@@ -115,38 +128,141 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         int buttonHeight = 20;
         int buttonCenter = posX + (panelWidth / 2) - 10;
 
-        this.redstoneMode = new IconButton(buttonCenter - 21, posY + 85, buttonWidth, buttonHeight, redstone, 0, 0, 16, 16, 16, 16, 0, button -> toggleRedstoneMode());
-        redstoneMode.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.redstone_mode")));
+        this.redstoneMode = new IconButton(buttonCenter - 21, posY + 85, buttonWidth, buttonHeight, redstoneHigh, 0, 0, 16, 16, 16, 16, 0, button -> toggleRedstoneMode());
+        updateRedstoneModeButton();
 
-        this.autoExport = new IconButton(buttonCenter, posY + 85, buttonWidth, buttonHeight, exportOff, 0, 0, 16, 16, 16, 16, 0, button -> toggleAutoEject());
+        this.autoExport = new IconButton(buttonCenter, posY + 85, buttonWidth, buttonHeight, exportOff, 0, 0, 16, 16, 16, 16, 0, button -> toggleExport());
         autoExport.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.auto_export")));
+        updateExportButton();
 
-        this.autoImport = new IconButton(buttonCenter, posY + 106, buttonWidth, buttonHeight, importOff, 0, 0, 16, 16, 16, 16, 0, button -> toggleAutoExtract());
+        this.autoImport = new IconButton(buttonCenter, posY + 106, buttonWidth, buttonHeight, importOff, 0, 0, 16, 16, 16, 16, 0, button -> toggleImport());
         autoImport.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.auto_import")));
+        updateImportButton();
 
-        this.enabled = new IconButton(buttonCenter + 21, posY + 85, buttonWidth, buttonHeight, enabledOn, 0, 0, 16, 16, 16, 16, 0, button -> toggleEnabled());
-        enabled.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.enabled")));
+        this.enabledButton = new IconButton(buttonCenter + 21, posY + 85, buttonWidth, buttonHeight, enabledOn, 0, 0, 16, 16, 16, 16, 0, 0.9f, button -> toggleEnabled());
+        updateEnabledButtonIcon();
 
         this.sidedConfig = Button.builder(Component.translatable("gui.fluxmachines.gui.side_config"), button -> sidedConfig()).bounds((buttonCenter + 10) - 35, posY + 135, 70, 20).build();
+
+        this.closeButton = new IconButton(buttonCenter + 35, posY, 8, 8, close, 0, 0, 8, 8, 8, 8, 0, 0.5f, button -> closeScreen());
+        closeButton.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.close_button")));
     }
 
     private void toggleRedstoneMode() {
-        Minecraft.getInstance().getSoundManager()
-                .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        if (menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            poweredEntity.setRedstoneMode(poweredEntity.getRedstoneMode().next().id());
+            PacketDistributor.sendToServer(new ToggleRedstoneModeC2S(poweredEntity.getBlockPos(), poweredEntity.getRedstoneMode().id()));
+            updateRedstoneModeButton();
+        }
     }
 
-    private void toggleAutoEject() {
+    private void toggleExport() {
+        if (menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            poweredEntity.toggleExport();
+            PacketDistributor.sendToServer(new ToggleExportC2S(poweredEntity.getBlockPos(), poweredEntity.isExportEnabled()));
+            updateExportButton();
+        }
     }
 
-    private void toggleAutoExtract() {
-
+    private void toggleImport() {
+        if (menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            poweredEntity.toggleImport();
+            PacketDistributor.sendToServer(new ToggleImportC2S(poweredEntity.getBlockPos(), poweredEntity.isImportEnabled()));
+            updateImportButton();
+        }
     }
 
     private void toggleEnabled() {
-
+        if (menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            poweredEntity.toggleEnabled();
+            PacketDistributor.sendToServer(new ToggleEnabledC2S(poweredEntity.getBlockPos(), poweredEntity.isEnabled()));
+            updateEnabledButtonIcon();
+        }
     }
 
     private void sidedConfig() {
+    }
+
+    private void closeScreen() {
+        isSideTabOpen = false;
+        settingsPanelOpen = false;
+        menu.blockEntity.setSettingsPanelOpen(false);
+        // Remove buttons when panel closes
+        removeButtonsFromScreen();
+    }
+
+    private void updateRedstoneModeButton() {
+        if (redstoneMode != null && menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            redstoneMode.setIcon(switch (poweredEntity.getRedstoneMode()) {
+                case LOW -> redstoneLow;
+                case HIGH -> redstoneHigh;
+                case IGNORED -> redstoneDisabled;
+            });
+
+            // im really lazy.
+            redstoneMode.setTooltip(Tooltip.create(Component.translatable("gui.fluxmachines.gui.redstone_mode", Component.translatable("gui.fluxmachines.gui.redstone_mode." +
+                                            switch (poweredEntity.getRedstoneMode()) {
+                                                case LOW -> BasePoweredBlockEntity.RedstoneMode.LOW.name().toLowerCase();
+                                                case HIGH -> BasePoweredBlockEntity.RedstoneMode.HIGH.name().toLowerCase();
+                                                case IGNORED -> BasePoweredBlockEntity.RedstoneMode.IGNORED.name().toLowerCase();
+                                            }
+                                    )
+                            )
+                    )
+            );
+        }
+    }
+
+    private void updateExportButton() {
+        if (autoExport != null && menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            autoExport.setIcon(poweredEntity.isExportEnabled() ? exportOn : exportOff);
+        }
+    }
+
+    private void updateImportButton() {
+        if (autoImport != null && menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            autoImport.setIcon(poweredEntity.isImportEnabled() ? importOn : importOff);
+        }
+    }
+
+    /**
+     * Updates the enabled button icon based on the current enabled state
+     */
+    private void updateEnabledButtonIcon() {
+        if (enabledButton != null && menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
+            enabledButton.setIcon(poweredEntity.isEnabled() ? enabledOn : disabledOn);
+            enabledButton.setTooltip(poweredEntity.isEnabled() ? Tooltip.create(Component.translatable("gui.fluxmachines.gui.enabled")) : Tooltip.create(Component.translatable("gui.fluxmachines.gui.disabled")));
+        }
+    }
+
+    /**
+     * Adds all settings buttons to the screen
+     */
+    private void addButtonsToScreen() {
+        if (!buttonsAdded) {
+            addRenderableWidget(redstoneMode);
+            addRenderableWidget(autoExport);
+            addRenderableWidget(autoImport);
+            addRenderableWidget(enabledButton);
+            addRenderableWidget(sidedConfig);
+            addRenderableWidget(closeButton);
+            buttonsAdded = true;
+        }
+    }
+
+    /**
+     * Removes all settings buttons from the screen
+     */
+    private void removeButtonsFromScreen() {
+        if (buttonsAdded) {
+            removeWidget(redstoneMode);
+            removeWidget(autoExport);
+            removeWidget(autoImport);
+            removeWidget(enabledButton);
+            removeWidget(sidedConfig);
+            removeWidget(closeButton);
+            buttonsAdded = false;
+        }
     }
 
     /**
@@ -205,7 +321,6 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         pose.translate(x, y, 0);
         pose.scale(scale, scale, 1.0f);
 
-        // Get the machine state from the block entity and render appropriate texture
         var machineState = ((BasePoweredBlockEntity) menu.blockEntity).getMachineState();
         ResourceLocation texture = switch (machineState) {
             case ACTIVE -> machineActive;
@@ -291,23 +406,6 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     }
 
     /**
-     * Use for mouse release on the gui
-     *
-     * @param mouseX Mouse Position X
-     * @param mouseY Mouse Position Y
-     * @param button Mouse button pressed
-     * @return true if the mouse button is released.
-     */
-    @Deprecated(forRemoval = true)
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (super.mouseReleased(mouseX, mouseY, button)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Toggles the side settings tab menu.
      *
      * @param graphics {@link GuiGraphics}
@@ -323,14 +421,6 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         graphics.blit(sideTabOpen, x, y, 0, 0, 256, 256);
 
         addTabElements(graphics, mouseX, mouseY, x, y);
-
-        if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y, 0, 0, 256, 256)) {
-            // TODO: DO SOMETHING
-        } else {
-            isSideTabOpen = false;
-            settingsPanelOpen = false;
-            menu.blockEntity.setSettingsPanelOpen(false);
-        }
     }
 
     /**
@@ -351,11 +441,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
         if (isSideTabOpen && menu.blockEntity.isSettingsPanelOpen()) {
             drawSlotWithDesc(graphics, mouseX, mouseY, x, y, posX, posY, panelWidth);
-            redstoneMode.render(graphics, mouseX, mouseY, 0);
-            autoExport.render(graphics, mouseX, mouseY, 0);
-            autoImport.render(graphics, mouseX, mouseY, 0);
-            enabled.render(graphics, mouseX, mouseY, 0);
-            sidedConfig.render(graphics, mouseX, mouseY, 0);
+            addButtonsToScreen();
         }
 
         addAdditionalTabElements(graphics, mouseX, mouseY, x, y);
@@ -503,7 +589,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         if (!menu.isUpgradeable() || !menu.blockEntity.isSettingsPanelOpen()) {
             return;
         }
-        
+
         // Find upgrade slots and render their tooltips
         for (var slot : menu.slots) {
             if (slot instanceof fluxmachines.core.gui.util.UpgradeSlot upgradeSlot && upgradeSlot.isActive()) {

@@ -1,21 +1,20 @@
 package fluxmachines.core.gui.util;
 
+import fluxmachines.core.api.entity.block.BasePoweredBlockEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public class IconButton extends Button {
 
     private ResourceLocation texture;
     private int u, v, iconW, iconH, texW, texH;
     private int hoverVOffset;
+    private float scale = 1f;
 
-    public IconButton(int x, int y, int width, int height,
-                      ResourceLocation texture,
-                      int u, int v, int iconW, int iconH,
-                      int texW, int texH, int hoverVOffset,
-                      OnPress onPress) {
+    public IconButton(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int iconW, int iconH, int texW, int texH, int hoverVOffset, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, DEFAULT_NARRATION);
         this.texture = texture;
         this.u = u;
@@ -25,6 +24,11 @@ public class IconButton extends Button {
         this.texW = texW;
         this.texH = texH;
         this.hoverVOffset = hoverVOffset;
+    }
+
+    public IconButton(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int iconW, int iconH, int texW, int texH, int hoverVOffset, float scale, OnPress onPress) {
+        this(x, y, width, height, texture, u, v, iconW, iconH, texW, texH, hoverVOffset, onPress);
+        this.scale = scale;
     }
 
     public void setIcon(ResourceLocation newTexture, int newU, int newV,
@@ -44,16 +48,23 @@ public class IconButton extends Button {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics gfx, int mouseX, int mouseY, float partialTick) {
-        // Draw vanilla button background & hover/active state
-        super.renderWidget(gfx, mouseX, mouseY, partialTick);
+    protected void renderWidget(@NotNull GuiGraphics g, int mouseX, int mouseY, float pt) {
+        super.renderWidget(g, mouseX, mouseY, pt);
 
-        // Center the icon inside the button
-        int cx = getX() + (this.width - iconW) / 2;
-        int cy = getY() + (this.height - iconH) / 2;
+        float drawW = iconW * scale;
+        float drawH = iconH * scale;
 
-        int vv = this.isHoveredOrFocused() ? v + hoverVOffset : v; // use hover frame if provided
-        gfx.blit(texture, cx, cy, u, vv, iconW, iconH, texW, texH);
+        float cx = getX() + (this.width  - drawW) / 2f;
+        float cy = getY() + (this.height - drawH) / 2f;
+
+        var pose = g.pose();
+        pose.pushPose();
+        pose.translate(cx, cy, 0);   // top-left of scaled icon
+        pose.scale(scale, scale, 1f); // scale around that top-left
+
+        int vv = this.isHoveredOrFocused() ? v + hoverVOffset : v;
+        if (texture != null) g.blit(texture, 0, 0, u, vv, iconW, iconH, texW, texH);
+        pose.popPose();
     }
 
 }

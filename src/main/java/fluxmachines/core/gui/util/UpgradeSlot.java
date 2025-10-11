@@ -89,6 +89,7 @@ public class UpgradeSlot extends SlotItemHandler {
      * Gets the tooltip for this upgrade slot, showing compatible upgrades
      */
     public List<Component> getTooltip() {
+        if (this.hasItem()) return List.of();
         var tooltip = new ArrayList<Component>();
         var upgrades = getCompatibleUpgrades();
         

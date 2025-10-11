@@ -30,11 +30,11 @@ public class MatterFabricatorMenu extends BaseMenu<MatterFabricatorBlock, Matter
     @Override
     public void addSlots () {
 
-        this.addSlot(new SlotItemHandler(this.blockEntity.getInventory(), 0, 20 + getUpgradeableMoveFactor(), 35));
-        this.addSlot(new SlotItemHandler(this.blockEntity.getInventory(), 1, 38 + getUpgradeableMoveFactor(), 35));
-        this.addSlot(new SlotItemHandler(this.blockEntity.getInventory(), 2, 56 + getUpgradeableMoveFactor(), 35));
+        this.addSlot(new SlotItemHandler(this.blockEntity.getInventory(), 0, 20, 35));
+        this.addSlot(new SlotItemHandler(this.blockEntity.getInventory(), 1, 38, 35));
+        this.addSlot(new SlotItemHandler(this.blockEntity.getInventory(), 2, 56, 35));
 
-        this.addSlot(new OutputSlot(this.blockEntity.getInventory(), 3, 116 + getUpgradeableMoveFactor(), 35));
+        this.addSlot(new OutputSlot(this.blockEntity.getInventory(), 3, 116, 35));
     }
 
     @Override

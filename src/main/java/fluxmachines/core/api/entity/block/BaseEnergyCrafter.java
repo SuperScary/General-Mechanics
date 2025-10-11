@@ -25,7 +25,7 @@ import java.util.*;
 public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePoweredBlockEntity implements EnergizedCrafter<T> {
 
     private final Attribute.FloatValue progress;
-    private final Attribute.BooleanValue isCrafting = Attribute.Builder.of(Keys.CRAFTING, false);
+    private final Attribute.BooleanValue isCrafting;
 
     public BaseEnergyCrafter(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive) {
         this(type, pos, blockState, capacity, maxReceive, Attribute.Builder.of(Keys.POWER, 0));
@@ -34,13 +34,14 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
     public BaseEnergyCrafter(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive, Attribute.IntValue current) {
         super(type, pos, blockState, capacity, maxReceive, current);
         progress = Attribute.Builder.of(Keys.PROGRESS, 0f);
+        isCrafting = Attribute.Builder.of(Keys.CRAFTING, false);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public @NotNull Optional<RecipeHolder<T>> getCurrentRecipe () {
+    public @NotNull Optional<RecipeHolder<T>> getCurrentRecipe() {
         if (level == null) return Optional.empty();
-        
+
         var recipeManager = level.getRecipeManager();
         var recipeType = getRecipeType();
         var inputSlots = getInputSlots();
@@ -75,22 +76,25 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
     }
 
     @Override
-    public void increaseCraftingProgress () {
+    public void increaseCraftingProgress() {
+        if (!isEnabled()) return;
         progress.increase(1f);
     }
 
     @Override
-    public float getProgress () {
+    public float getProgress() {
         return progress.get();
     }
 
     @Override
-    public boolean hasEnoughEnergy (int required) {
+    public boolean hasEnoughEnergy(int required) {
         return this.getEnergyStorage().getEnergyStored() >= required;
     }
 
     @Override
-    public void tick (Level level, BlockPos pos, BlockState state) {
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (!isEnabled() || !redstoneAllowsRunning()) return;
+
         if (Utils.isDevEnvironment()) getEnergyStorage().receiveEnergy(10_000, false); // TODO: Dev only environment
         if (level.isClientSide()) {
             return;
@@ -101,7 +105,7 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
                 .anyMatch(slot -> getInventory().getStackInSlot(slot) != ItemStack.EMPTY);
 
         boolean canCraft = hasRecipe(state) && hasInputs && hasEnoughEnergy(getEnergyAmount());
-        
+
         if (canCraft) {
             isCrafting.set(true);
             increaseCraftingProgress();
@@ -130,7 +134,8 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
     }
 
     @Override
-    public boolean hasRecipe (BlockState state) {
+    public boolean hasRecipe(BlockState state) {
+        if (!isEnabled()) return false;
         var recipe = getCurrentRecipe();
         if (recipe.isEmpty()) {
             return false;
@@ -142,7 +147,7 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
 
         boolean canInsert = canInsertResult(result);
         boolean hasEnergy = this.getEnergyStorage().getEnergyStored() >= getEnergyAmount();
-        
+
         return canInsert && hasEnergy;
     }
 
@@ -151,6 +156,8 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
      * This method handles both the CRAFTING and POWERED properties.
      */
     protected void updateCraftingState(BlockState state, boolean canCraft) {
+        if (!isEnabled()) return;
+
         boolean currentlyCrafting = isCrafting.getAsBoolean();
         boolean shouldBePowered = canCraft || currentlyCrafting;
 
@@ -168,10 +175,12 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
      * Checks if the result can be inserted into any of the output slots.
      */
     protected boolean canInsertResult(ItemStack result) {
+        if (!isEnabled()) return false;
+
         var outputSlots = getOutputSlots();
         for (int outputSlot : outputSlots.toArray()) {
-            if (canInsertAmount(result.getCount(), 0, outputSlot, getInventory()) && 
-                canInsertItem(getInventory(), result.getItem(), outputSlot)) {
+            if (canInsertAmount(result.getCount(), 0, outputSlot, getInventory()) &&
+                    canInsertItem(getInventory(), result.getItem(), outputSlot)) {
                 return true;
             }
         }
@@ -179,10 +188,12 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
     }
 
     @Override
-    public void craftItem (ItemStack result) {
+    public void craftItem(ItemStack result) {
+        if (!isEnabled()) return;
+
         consumeInputs();
         insertResult(result);
-        
+
         isCrafting.set(false);
         progress.set(0f);
     }
@@ -192,9 +203,11 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
      * This method should be overridden by subclasses for custom consumption logic.
      */
     protected void consumeInputs() {
+        if (!isEnabled()) return;
+
         var recipe = getCurrentRecipe();
         if (recipe.isEmpty()) return;
-        
+
         var inputSlots = getInputSlots();
         for (int slot : inputSlots.toArray()) {
             var stack = getInventory().getStackInSlot(slot);
@@ -209,39 +222,43 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
      * Inserts the result into the first available output slot.
      */
     protected void insertResult(ItemStack result) {
+        if (!isEnabled()) return;
+
         var outputSlots = getOutputSlots();
         for (int outputSlot : outputSlots.toArray()) {
             var currentStack = getInventory().getStackInSlot(outputSlot);
             if (currentStack == ItemStack.EMPTY) {
                 getInventory().setStackInSlot(outputSlot, result.copy());
                 return;
-            } else if (currentStack.is(result.getItem()) && 
-                      currentStack.getCount() + result.getCount() <= currentStack.getMaxStackSize()) {
-                getInventory().setStackInSlot(outputSlot, new ItemStack(result.getItem(), 
-                    currentStack.getCount() + result.getCount()));
+            } else if (currentStack.is(result.getItem()) &&
+                    currentStack.getCount() + result.getCount() <= currentStack.getMaxStackSize()) {
+                getInventory().setStackInSlot(outputSlot, new ItemStack(result.getItem(),
+                        currentStack.getCount() + result.getCount()));
                 return;
             }
         }
     }
 
     @Override
-    public void saveClientData (CompoundTag tag, HolderLookup.Provider registries) {
+    public void saveClientData(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveClientData(tag, registries);
         float currentProgress = getProgress();
         boolean currentCrafting = isCrafting();
-        
+
         tag.putFloat(Keys.PROGRESS, currentProgress);
         tag.putBoolean(Keys.CRAFTING, currentCrafting);
     }
 
     @Override
-    public void loadClientData (CompoundTag tag, HolderLookup.Provider registries) {
+    public void loadClientData(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadClientData(tag, registries);
         float newProgress = tag.getFloat(Keys.PROGRESS);
         boolean newCrafting = tag.getBoolean(Keys.CRAFTING);
-        
+
         progress.set(newProgress);
         isCrafting.set(newCrafting);
+
+        setChanged();
     }
 
     @Override
@@ -250,7 +267,7 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
     }
 
     @Override
-    public boolean isCrafting () {
+    public boolean isCrafting() {
         return isCrafting.getAsBoolean();
     }
 
@@ -279,6 +296,10 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
 
     @Override
     public MachineState getMachineState() {
+        if (!isEnabled()) return MachineState.ERROR;
+
+        if (!redstoneAllowsRunning()) return MachineState.INACTIVE;
+
         if (getEnergyStorage().getEnergyStored() <= 0) {
             return MachineState.ERROR;
         }
