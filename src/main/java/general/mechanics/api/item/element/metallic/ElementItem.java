@@ -1,30 +1,33 @@
 package general.mechanics.api.item.element.metallic;
 
-import general.mechanics.api.block.plastic.PlasticBlock;
+import general.mechanics.api.item.base.BaseItem;
 import general.mechanics.api.item.element.Element;
-import general.mechanics.api.item.ingot.IngotItem;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-public class ElementItem extends IngotItem {
+public class ElementItem extends BaseItem {
 
     public static final Properties ELEMENT_PROPERTIES;
     private final Element element;
+    private final ElementDustItem dust;
+    private final ElementPlateItem plate;
+    private final ElementNuggetItem nugget;
+    private final ElementRawItem raw;
+    private final Properties properties;
 
     public ElementItem(Properties properties, Element element) {
         super(properties);
+        this.properties = properties;
         this.element = element;
+        this.dust = new ElementDustItem(this);
+        this.plate = new ElementPlateItem(this);
+        this.nugget = new ElementNuggetItem(this);
+        this.raw = new ElementRawItem(this);
     }
 
     public ElementItem(Element element) {
@@ -47,6 +50,22 @@ public class ElementItem extends IngotItem {
         return element;
     }
 
+    public ElementDustItem getDustItem() {
+        return dust;
+    }
+
+    public ElementPlateItem getPlateItem() {
+        return plate;
+    }
+
+    public ElementNuggetItem getNuggetItem() {
+        return nugget;
+    }
+
+    public ElementRawItem getRawItem() {
+        return raw;
+    }
+
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         //tooltipComponents.add(Component.translatable("element.atomic_number", getAtomicNumber()));
@@ -62,6 +81,10 @@ public class ElementItem extends IngotItem {
         }
 
         return -1;
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 
     static {

@@ -73,11 +73,15 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
 
     public ItemModelBuilder element (ItemDefinition<ElementItem> item) {
         var element = item.get();
-        var nugget = item.get().getNuggetItem();
-        var raw = item.get().getRawItem();
+        var nugget = element.getNuggetItem();
+        var raw = element.getRawItem();
+        var dust = element.getDustItem();
+        var plate = element.getPlateItem();
 
         this.getBuilder(nugget.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/nugget"));
         this.getBuilder(raw.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/raw_ore"));
+        this.getBuilder(dust.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/dust"));
+        this.getBuilder(plate.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/plate"));
 
         return this.getBuilder(item.id().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/ingot"));
     }

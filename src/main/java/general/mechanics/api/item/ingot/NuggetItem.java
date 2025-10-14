@@ -1,6 +1,7 @@
 package general.mechanics.api.item.ingot;
 
 import general.mechanics.api.item.base.BaseItem;
+import general.mechanics.api.item.element.metallic.ElementItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,7 +23,7 @@ public class NuggetItem extends BaseItem {
 
         if (item instanceof NuggetItem nuggetItem) {
             IngotItem parent = nuggetItem.getParentIngot();
-            if (parent instanceof general.mechanics.api.item.element.metallic.ElementItem elementItem) {
+            if (parent instanceof IngotItem elementItem) {
                 return elementItem.getTint();
             }
         }

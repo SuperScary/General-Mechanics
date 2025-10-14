@@ -5,6 +5,10 @@ import general.mechanics.GM;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.element.Element;
 import general.mechanics.api.item.element.metallic.ElementItem;
+import general.mechanics.api.item.element.metallic.ElementDustItem;
+import general.mechanics.api.item.element.metallic.ElementPlateItem;
+import general.mechanics.api.item.element.metallic.ElementRawItem;
+import general.mechanics.api.item.element.metallic.ElementNuggetItem;
 import general.mechanics.api.item.ingot.NuggetItem;
 import general.mechanics.api.item.ingot.RawItem;
 import general.mechanics.tab.CoreTab;
@@ -149,11 +153,11 @@ public class CoreElements {
     static <T extends ElementItem> ItemDefinition<T> ingot(String name, Function<Item.Properties, T> factory) {
         // Create the main element item
         ItemDefinition<T> elementDef = item(name, factory);
-        
+
         // Register the raw item
         String rawName = "Raw " + name.replace(" Ingot", "");
         String rawResourceName = name.toLowerCase().replace(' ', '_').replace("_ingot", "_raw");
-        itemRaw(rawName, rawResourceName, (Item.Properties properties) -> {
+        itemElementRaw(rawName, rawResourceName, (Item.Properties properties) -> {
             T elementItem = elementDef.get();
             return elementItem.getRawItem();
         });
@@ -161,9 +165,25 @@ public class CoreElements {
         // Register the nugget item
         String nuggetName = name.replace(" Ingot", " Nugget");
         String nuggetResourceName = name.toLowerCase().replace(' ', '_').replace("_ingot", "_nugget");
-        itemNugget(nuggetName, nuggetResourceName, (Item.Properties properties) -> {
+        itemElementNugget(nuggetName, nuggetResourceName, (Item.Properties properties) -> {
             T elementItem = elementDef.get();
             return elementItem.getNuggetItem();
+        });
+        
+        // Register the dust item
+        String dustName = name.replace(" Ingot", " Dust");
+        String dustResourceName = name.toLowerCase().replace(' ', '_').replace("_ingot", "_dust");
+        itemDust(dustName, dustResourceName, (Item.Properties properties) -> {
+            T elementItem = elementDef.get();
+            return elementItem.getDustItem();
+        });
+        
+        // Register the plate item
+        String plateName = name.replace(" Ingot", " Plate");
+        String plateResourceName = name.toLowerCase().replace(' ', '_').replace("_ingot", "_plate");
+        itemPlate(plateName, plateResourceName, (Item.Properties properties) -> {
+            T elementItem = elementDef.get();
+            return elementItem.getPlateItem();
         });
         
         return elementDef;
@@ -219,6 +239,78 @@ public class CoreElements {
     }
 
     static ItemDefinition<NuggetItem> itemNugget (String name, ResourceLocation id, Function<Item.Properties, NuggetItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+        Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
+        var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
+
+        if (Objects.equals(group, CoreTab.MAIN)) {
+            CoreTab.add(definition);
+        } else if (group != null) {
+            CoreTab.addExternal(group, definition);
+        }
+
+        ITEMS.add(definition);
+        return definition;
+    }
+
+    static ItemDefinition<ElementDustItem> itemDust (String name, String resourceName, Function<Item.Properties, ElementDustItem> factory) {
+        return itemDust(name, GM.getResource(resourceName), factory, CoreTab.MAIN);
+    }
+
+    static ItemDefinition<ElementDustItem> itemDust (String name, ResourceLocation id, Function<Item.Properties, ElementDustItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+        Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
+        var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
+
+        if (Objects.equals(group, CoreTab.MAIN)) {
+            CoreTab.add(definition);
+        } else if (group != null) {
+            CoreTab.addExternal(group, definition);
+        }
+
+        ITEMS.add(definition);
+        return definition;
+    }
+
+    static ItemDefinition<ElementPlateItem> itemPlate (String name, String resourceName, Function<Item.Properties, ElementPlateItem> factory) {
+        return itemPlate(name, GM.getResource(resourceName), factory, CoreTab.MAIN);
+    }
+
+    static ItemDefinition<ElementPlateItem> itemPlate (String name, ResourceLocation id, Function<Item.Properties, ElementPlateItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+        Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
+        var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
+
+        if (Objects.equals(group, CoreTab.MAIN)) {
+            CoreTab.add(definition);
+        } else if (group != null) {
+            CoreTab.addExternal(group, definition);
+        }
+
+        ITEMS.add(definition);
+        return definition;
+    }
+
+    static ItemDefinition<ElementRawItem> itemElementRaw (String name, String resourceName, Function<Item.Properties, ElementRawItem> factory) {
+        return itemElementRaw(name, GM.getResource(resourceName), factory, CoreTab.MAIN);
+    }
+
+    static ItemDefinition<ElementRawItem> itemElementRaw (String name, ResourceLocation id, Function<Item.Properties, ElementRawItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+        Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
+        var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
+
+        if (Objects.equals(group, CoreTab.MAIN)) {
+            CoreTab.add(definition);
+        } else if (group != null) {
+            CoreTab.addExternal(group, definition);
+        }
+
+        ITEMS.add(definition);
+        return definition;
+    }
+
+    static ItemDefinition<ElementNuggetItem> itemElementNugget (String name, String resourceName, Function<Item.Properties, ElementNuggetItem> factory) {
+        return itemElementNugget(name, GM.getResource(resourceName), factory, CoreTab.MAIN);
+    }
+
+    static ItemDefinition<ElementNuggetItem> itemElementNugget (String name, ResourceLocation id, Function<Item.Properties, ElementNuggetItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 

@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ElementPlateItem extends BaseItem {
+public class ElementNuggetItem extends BaseItem {
 
     private final ElementItem parentElement;
 
-    public ElementPlateItem(ElementItem element) {
+    public ElementNuggetItem(ElementItem element) {
         super(element.getProperties());
         this.parentElement = element;
     }
@@ -32,8 +32,8 @@ public class ElementPlateItem extends BaseItem {
     public static int getColor(ItemStack stack, int index) {
         Item item = stack.getItem();
 
-        if (item instanceof ElementPlateItem plateItem) {
-            ElementItem parent = plateItem.getParentElement();
+        if (item instanceof ElementNuggetItem nuggetItem) {
+            ElementItem parent = nuggetItem.getParentElement();
             return parent.getTint();
         }
         return -1;

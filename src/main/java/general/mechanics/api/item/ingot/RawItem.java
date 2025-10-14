@@ -22,7 +22,7 @@ public class RawItem extends BaseItem {
 
         if (item instanceof RawItem rawItem) {
             IngotItem parent = rawItem.getParentIngot();
-            if (parent instanceof general.mechanics.api.item.element.metallic.ElementItem elementItem) {
+            if (parent instanceof IngotItem elementItem) {
                 return elementItem.getTint();
             }
         }
