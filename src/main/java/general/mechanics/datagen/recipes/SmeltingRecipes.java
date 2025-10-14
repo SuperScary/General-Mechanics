@@ -1,6 +1,8 @@
 package general.mechanics.datagen.recipes;
 
 import general.mechanics.GM;
+import general.mechanics.registries.CoreItems;
+import general.mechanics.registries.CoreElements;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -29,19 +31,10 @@ public class SmeltingRecipes extends CoreRecipeProvider {
 
     @Override
     public void buildRecipes (@NotNull RecipeOutput consumer) {
-        SimpleCookingRecipeBuilder
-                .smelting(Ingredient.of(RAW_DRAKIUM_ORE), RecipeCategory.BREWING, DRAKIUM_INGOT, 0.6f, DEFAULT_SMELTING_TIME)
-                .unlockedBy("has_raw_drakium", has(RAW_DRAKIUM_ORE))
-                .save(consumer, GM.getResource("smelting/drakium_ingot_from_raw_drakium_ore"));
 
         SimpleCookingRecipeBuilder
-                .smelting(Ingredient.of(DRAKIUM_BLOCK_RAW), RecipeCategory.BREWING, DRAKIUM_BLOCK, 0.6f * 9f, DEFAULT_SMELTING_TIME * 9)
-                .unlockedBy("has_raw_drakium_block", has(DRAKIUM_BLOCK_RAW))
-                .save(consumer, GM.getResource("smelting/drakium_block_from_raw_drakium_block"));
-
-        SimpleCookingRecipeBuilder
-                .smelting(Ingredient.of(RAW_VANADIUM_ORE), RecipeCategory.BREWING, VANADIUM_INGOT, 0.6f, DEFAULT_SMELTING_TIME)
-                .unlockedBy("has_raw_vanadium", has(RAW_VANADIUM_ORE))
+                .smelting(Ingredient.of(CoreElements.VANADIUM_INGOT.get().getRawItem().asItem()), RecipeCategory.BREWING, CoreElements.VANADIUM_INGOT, 0.6f, DEFAULT_SMELTING_TIME)
+                .unlockedBy("has_raw_vanadium", has(CoreElements.VANADIUM_INGOT.get().getRawItem().asItem()))
                 .save(consumer, GM.getResource("smelting/vanadium_ingot_from_raw_vanadium_ore"));
     }
 

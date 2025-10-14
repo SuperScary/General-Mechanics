@@ -143,20 +143,20 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         updateRedstoneModeButton();
 
         this.autoExport = new IconButton(buttonCenter, posY + 85, buttonWidth, buttonHeight, exportOff, 0, 0, 16, 16, 16, 16, 0, button -> toggleExport());
-        autoExport.setTooltip(Tooltip.create(Component.translatable("gui.gm.gui.auto_export")));
+        autoExport.setTooltip(Tooltip.create(Component.translatable("gui.gm.auto_export")));
         updateExportButton();
 
         this.autoImport = new IconButton(buttonCenter, posY + 106, buttonWidth, buttonHeight, importOff, 0, 0, 16, 16, 16, 16, 0, button -> toggleImport());
-        autoImport.setTooltip(Tooltip.create(Component.translatable("gui.gm.gui.auto_import")));
+        autoImport.setTooltip(Tooltip.create(Component.translatable("gui.gm.auto_import")));
         updateImportButton();
 
         this.enabledButton = new IconButton(buttonCenter + 21, posY + 85, buttonWidth, buttonHeight, enabledOn, 0, 0, 16, 16, 16, 16, 0, 0.9f, button -> toggleEnabled());
         updateEnabledButtonIcon();
 
-        this.sidedConfig = Button.builder(Component.translatable("gui.gm.gui.side_config"), button -> sidedConfig()).bounds((buttonCenter + 10) - 35, posY + 135, 70, 20).build();
+        this.sidedConfig = Button.builder(Component.translatable("gui.gm.side_config"), button -> sidedConfig()).bounds((buttonCenter + 10) - 35, posY + 135, 70, 20).build();
 
         this.closeButton = new IconButton(buttonCenter + 35, posY, 8, 8, close, 0, 0, 8, 8, 8, 8, 0, 0.5f, button -> closeScreen());
-        closeButton.setTooltip(Tooltip.create(Component.translatable("gui.gm.gui.close_button")));
+        closeButton.setTooltip(Tooltip.create(Component.translatable("gui.gm.close_button")));
 
         this.lockedButton = new IconButtonNoBG(this.leftPos - 17, this.topPos + 16, buttonWidth, buttonHeight, unlockedIcon, 0, 0, 16, 16, 16, 16, 0, 0.75f, button -> toggleLocked());
 
@@ -197,7 +197,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     private void toggleLocked() {
         locked = !locked;
         lockedButton.setIcon(locked ? lockedIcon : unlockedIcon);
-        lockedButton.setTooltip(!locked ? Tooltip.create(Component.translatable("gui.gm.gui.unlocked")) : Tooltip.create(Component.translatable("gui.gm.gui.locked")));
+        lockedButton.setTooltip(!locked ? Tooltip.create(Component.translatable("gui.gm.unlocked")) : Tooltip.create(Component.translatable("gui.gm.locked")));
     }
 
     private void sidedConfig() {
@@ -220,7 +220,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
             });
 
             // im really lazy.
-            redstoneMode.setTooltip(Tooltip.create(Component.translatable("gui.gm.gui.redstone_mode", Component.translatable("gui.gm.gui.redstone_mode." +
+            redstoneMode.setTooltip(Tooltip.create(Component.translatable("gui.gm.redstone_mode", Component.translatable("gui.gm.redstone_mode." +
                                             switch (poweredEntity.getRedstoneMode()) {
                                                 case LOW -> BasePoweredBlockEntity.RedstoneMode.LOW.name().toLowerCase();
                                                 case HIGH -> BasePoweredBlockEntity.RedstoneMode.HIGH.name().toLowerCase();
@@ -251,7 +251,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     private void updateEnabledButtonIcon() {
         if (enabledButton != null && menu.blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
             enabledButton.setIcon(poweredEntity.isEnabled() ? enabledOn : disabledOn);
-            enabledButton.setTooltip(poweredEntity.isEnabled() ? Tooltip.create(Component.translatable("gui.gm.gui.enabled")) : Tooltip.create(Component.translatable("gui.gm.gui.disabled")));
+            enabledButton.setTooltip(poweredEntity.isEnabled() ? Tooltip.create(Component.translatable("gui.gm.enabled")) : Tooltip.create(Component.translatable("gui.gm.disabled")));
         }
     }
 
@@ -355,7 +355,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         pose.popPose();
 
         if (MouseUtil.isMouseOver(mouseX, mouseY, x, y, (int) (16 * scale), (int) (16 * scale))) {
-            graphics.renderTooltip(this.font, Component.translatable("gui.gm.gui.status", Component.translatable("gui.gm.gui.status." + machineState.name().toLowerCase())), mouseX, mouseY);
+            graphics.renderTooltip(this.font, Component.translatable("gui.gm.status", Component.translatable("gui.gm.status." + machineState.name().toLowerCase())), mouseX, mouseY);
         }
     }
 
@@ -460,7 +460,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         int posY = this.topPos + 6;
         int panelWidth = 80;
 
-        graphics.drawCenteredString(this.font, Component.translatable("gui.gm.gui.settings"), posX + (panelWidth / 2), posY, 0xFFFFFF);
+        graphics.drawCenteredString(this.font, Component.translatable("gui.gm.settings"), posX + (panelWidth / 2), posY, 0xFFFFFF);
 
         if (isSideTabOpen && menu.blockEntity.isSettingsPanelOpen()) {
             drawSlotWithDesc(graphics, mouseX, mouseY, x, y, posX, posY, panelWidth);
@@ -656,7 +656,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     }
 
     public List<Component> getOptionsTooltips() {
-        return List.of(Component.translatable("gui.gm.gui.settings.left"));
+        return List.of(Component.translatable("gui.gm.settings.left"));
     }
 
     public CoreEnergyStorage getEnergyStorage() {

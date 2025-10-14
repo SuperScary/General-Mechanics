@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import general.mechanics.GM;
 import general.mechanics.registries.CoreBlocks;
 import general.mechanics.registries.CoreItems;
+import general.mechanics.registries.CoreElements;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -40,12 +41,12 @@ public class DropProvider extends BlockLootSubProvider {
     @NotNull
     private ImmutableMap<Block, Function<Block, LootTable.Builder>> createOverrides() {
         return ImmutableMap.<Block, Function<Block, LootTable.Builder>>builder()
-                .put(CoreBlocks.DRAKIUM_ORE.block(), oreBlock(CoreBlocks.DRAKIUM_ORE.block(), CoreItems.RAW_DRAKIUM_ORE.asItem()))
-                .put(CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block(), CoreItems.RAW_DRAKIUM_ORE.asItem()))
-                .put(CoreBlocks.END_STONE_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.END_STONE_DRAKIUM_ORE.block(), CoreItems.RAW_DRAKIUM_ORE.asItem()))
-                .put(CoreBlocks.NETHER_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.NETHER_DRAKIUM_ORE.block(), CoreItems.DRAKIUM_NUGGET.asItem()))
-                .put(CoreBlocks.VANADIUM_ORE.block(), oreBlock(CoreBlocks.VANADIUM_ORE.block(), CoreItems.RAW_VANADIUM_ORE.asItem()))
-                .put(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), oreBlock(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), CoreItems.RAW_VANADIUM_ORE.asItem()))
+                /*.put(CoreBlocks.DRAKIUM_ORE.block(), oreBlock(CoreBlocks.DRAKIUM_ORE.block(), CoreItems.DRAKIUM_INGOT.get().getRawItem().asItem()))
+                .put(CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block(), CoreItems.DRAKIUM_INGOT.get().getRawItem().asItem()))
+                .put(CoreBlocks.END_STONE_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.END_STONE_DRAKIUM_ORE.block(), CoreItems.DRAKIUM_INGOT.get().getRawItem().asItem()))
+                .put(CoreBlocks.NETHER_DRAKIUM_ORE.block(), oreBlock(CoreBlocks.NETHER_DRAKIUM_ORE.block(), CoreItems.DRAKIUM_INGOT.get().getNuggetItem().asItem()))*/
+                .put(CoreBlocks.VANADIUM_ORE.block(), oreBlock(CoreBlocks.VANADIUM_ORE.block(), CoreElements.VANADIUM_INGOT.get().getRawItem().asItem()))
+                .put(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), oreBlock(CoreBlocks.DEEPSLATE_VANADIUM_ORE.block(), CoreElements.VANADIUM_INGOT.get().getRawItem().asItem()))
                 .put(CoreBlocks.ICE2.block(), oreBlock(CoreBlocks.ICE2.block(), ItemStack.EMPTY.getItem()))
                 .put(CoreBlocks.ICE3.block(), oreBlock(CoreBlocks.ICE3.block(), ItemStack.EMPTY.getItem()))
                 .put(CoreBlocks.ICE4.block(), oreBlock(CoreBlocks.ICE4.block(), ItemStack.EMPTY.getItem()))

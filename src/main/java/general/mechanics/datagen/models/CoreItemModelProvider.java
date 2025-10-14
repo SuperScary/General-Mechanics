@@ -3,9 +3,11 @@ package general.mechanics.datagen.models;
 import general.mechanics.GM;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.ElectricalComponent;
+import general.mechanics.api.item.element.metallic.ElementItem;
 import general.mechanics.api.item.plastic.PlasticItem;
 import general.mechanics.api.item.plastic.RawPlasticItem;
 import general.mechanics.api.util.IDataProvider;
+import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -44,6 +46,13 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
 
             handheldItem(item);
         }
+
+        for (var item : CoreElements.getElements()) {
+            if (item.asItem() instanceof ElementItem) {
+                element((ItemDefinition<ElementItem>) item);
+                continue;
+            }
+        }
     }
 
     public ItemModelBuilder handheldItem (ItemDefinition<?> item) {
@@ -60,6 +69,17 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
 
     public ItemModelBuilder plasticItem (ItemDefinition<?> item) {
         return this.getBuilder(item.id().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/plastic"));
+    }
+
+    public ItemModelBuilder element (ItemDefinition<ElementItem> item) {
+        var element = item.get();
+        var nugget = item.get().getNuggetItem();
+        var raw = item.get().getRawItem();
+
+        this.getBuilder(nugget.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/nugget"));
+        this.getBuilder(raw.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/raw_ore"));
+
+        return this.getBuilder(item.id().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/ingot"));
     }
 
 }

@@ -1,8 +1,12 @@
 package general.mechanics;
 
 import general.mechanics.api.block.plastic.PlasticBlock;
+import general.mechanics.api.item.element.metallic.ElementItem;
+import general.mechanics.api.item.ingot.NuggetItem;
+import general.mechanics.api.item.ingot.RawItem;
 import general.mechanics.api.item.plastic.PlasticItem;
 import general.mechanics.api.item.plastic.RawPlasticItem;
+import general.mechanics.registries.CoreElements;
 import general.mechanics.gui.screen.MatterFabricatorScreen;
 import general.mechanics.registries.CoreMenus;
 import net.minecraft.client.Minecraft;
@@ -21,6 +25,7 @@ public class CoreClient extends CoreBase {
         super(container, modEventBus);
         modEventBus.addListener(this::registerItemColors);
         modEventBus.addListener(this::registerBlockColors);
+        modEventBus.addListener(this::registerElementColors);
         modEventBus.addListener(this::registerMenuScreens);
     }
 
@@ -46,6 +51,22 @@ public class CoreClient extends CoreBase {
                 PLASTIC_BLOCK_LIGHT_BLUE.block(), PLASTIC_BLOCK_YELLOW.block(), PLASTIC_BLOCK_LIME.block(), PLASTIC_BLOCK_PINK.block(), PLASTIC_BLOCK_GRAY.block(),
                 PLASTIC_BLOCK_LIGHT_GRAY.block(), PLASTIC_BLOCK_CYAN.block(), PLASTIC_BLOCK_PURPLE.block(), PLASTIC_BLOCK_BLUE.block(), PLASTIC_BLOCK_BROWN.block(),
                 PLASTIC_BLOCK_GREEN.block(), PLASTIC_BLOCK_RED.block(), PLASTIC_BLOCK_BLACK.block());
+    }
+
+    public void registerElementColors(RegisterColorHandlersEvent.Item event) {
+        // Automatically register all element items (ingot, raw, nugget) for tinting
+        for (var itemDef : CoreElements.getElements()) {
+            var item = itemDef.get();
+            
+            // Register based on item type
+            if (item instanceof ElementItem) {
+                event.register(ElementItem::getColor, item);
+            } else if (item instanceof RawItem) {
+                event.register(RawItem::getColor, item);
+            } else if (item instanceof NuggetItem) {
+                event.register(NuggetItem::getColor, item);
+            }
+        }
     }
 
     private void registerMenuScreens(RegisterMenuScreensEvent event) {

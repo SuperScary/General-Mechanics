@@ -77,7 +77,7 @@ public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlock
 
     @Override
     public int getLightEmission (@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 16 : super.getLightEmission(state, level, pos);
+        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 16 : 8;
     }
 
     @Override
@@ -112,10 +112,11 @@ public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlock
         double yOffsets = random.nextDouble() * 6.0 / 8.0;
         double zOffsets = axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52 : defaultOffset;
 
-        if (level.getBlockEntity(pos) instanceof MatterFabricatorBlockEntity entity && !entity.getInventory().getStackInSlot(0).isEmpty()) {
+        // No longer doing this,
+        /*if (level.getBlockEntity(pos) instanceof MatterFabricatorBlockEntity entity && !entity.getInventory().getStackInSlot(0).isEmpty()) {
             var stack = entity.getInventory().getStackInSlot(0);
             level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), xPos + xOffsets, yPos + yOffsets, zPos + zOffsets, 0d, 0d, 0d);
-        }
+        }*/
 
     }
 

@@ -4,6 +4,8 @@ import general.mechanics.GM;
 import general.mechanics.api.block.plastic.PlasticBlock;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.IDataProvider;
+import general.mechanics.registries.CoreItems;
+import general.mechanics.registries.CoreElements;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -26,16 +28,13 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
     @Override
     protected void addTags (HolderLookup.@NotNull Provider provider) {
         this.tag(Tags.Items.INGOTS)
-                .add(DRAKIUM_INGOT.asItem())
-                .add(VANADIUM_INGOT.asItem());
+                .add(CoreElements.VANADIUM_INGOT.asItem());
 
         this.tag(Tags.Items.RAW_MATERIALS)
-                .add(RAW_DRAKIUM_ORE.asItem())
-                .add(RAW_VANADIUM_ORE.asItem());
+                .add(CoreElements.VANADIUM_INGOT.get().getRawItem().asItem().asItem());
 
         this.tag(Tags.Items.NUGGETS)
-                .add(DRAKIUM_NUGGET.asItem())
-                .add(VANADIUM_NUGGET.asItem());
+                .add(CoreElements.VANADIUM_INGOT.get().getNuggetItem().asItem().asItem());
 
         this.tag(CoreTags.Items.RAW_PLASTIC)
                 .add(RAW_PLASTIC.asItem())

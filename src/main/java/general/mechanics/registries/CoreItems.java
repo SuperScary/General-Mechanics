@@ -4,6 +4,10 @@ import com.google.common.base.Preconditions;
 import general.mechanics.GM;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.*;
+import general.mechanics.api.item.element.metallic.ElementItem;
+import general.mechanics.api.item.ingot.IngotItem;
+import general.mechanics.api.item.ingot.NuggetItem;
+import general.mechanics.api.item.ingot.RawItem;
 import general.mechanics.api.item.plastic.PlasticItem;
 import general.mechanics.api.item.plastic.RawPlasticItem;
 import general.mechanics.tab.CoreTab;
@@ -31,16 +35,6 @@ public class CoreItems {
 
     private static final List<ItemDefinition<?>> ITEMS = new ArrayList<>();
 
-    // DRAKIUM
-    public static final ItemDefinition<BaseItem> RAW_DRAKIUM_ORE = item("Raw Drakium Ore", BaseItem::new);
-    public static final ItemDefinition<BaseItem> DRAKIUM_INGOT = item("Drakium Ingot", BaseItem::new);
-    public static final ItemDefinition<BaseItem> DRAKIUM_NUGGET = item("Drakium Nugget", BaseItem::new);
-
-    // Vanadium
-    public static final ItemDefinition<BaseItem> RAW_VANADIUM_ORE = item("Raw Vanadium Ore", BaseItem::new);
-    public static final ItemDefinition<BaseItem> VANADIUM_INGOT = item("Vanadium Ingot", BaseItem::new);
-    public static final ItemDefinition<BaseItem> VANADIUM_NUGGET = item("Vanadium Nugget", BaseItem::new);
-
     // Wire
     public static final ItemDefinition<BaseItem> WIRE_SPOOL = item("Wire Spool", "spool", BaseItem::new);
     public static final ItemDefinition<WireSpoolItem> COPPER_WIRE_SPOOL = item("Copper Wire Spool", WireSpoolItem::new);
@@ -55,9 +49,6 @@ public class CoreItems {
 
     // Circuits
     public static final ItemDefinition<CircuitItem> BASIC_CIRCUIT = item("Basic Circuit", CircuitItem::new);
-
-    // Upgrades
-    //public static final ItemDefinition<CircuitItem> UPGRADE_BASE = item("Upgrade Base", CircuitItem::new);
 
     // Plastic
     public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC = item("Raw Plastic", (properties) -> new RawPlasticItem(properties, DyeColor.WHITE));

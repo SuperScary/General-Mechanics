@@ -54,6 +54,7 @@ public abstract class CoreBase implements GM {
         CoreComponents.REGISTRY.register(modEventBus);
         CoreBlocks.REGISTRY.register(modEventBus);
         CoreItems.REGISTRY.register(modEventBus);
+        CoreElements.REGISTRY.register(modEventBus);
         CoreBlockEntities.REGISTRY.register(modEventBus);
         CoreMultiblocks.REGISTRY.register(modEventBus);
         CoreSounds.REGISTRY.register(modEventBus);
