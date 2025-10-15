@@ -1,3 +1,5 @@
+![Logo](https://github.com/SuperScary/General-Mechanics/blob/master/src/main/resources/logo.png)
+
 # General Mechanics
 
 *A comprehensive technology mod for Minecraft that brings real-world engineering, chemistry, and industrial processes to your world.*
