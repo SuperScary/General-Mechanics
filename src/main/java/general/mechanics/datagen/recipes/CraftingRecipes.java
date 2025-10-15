@@ -13,6 +13,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -73,16 +74,23 @@ public class CraftingRecipes extends CoreRecipeProvider {
     }
 
     protected void color (RecipeOutput consumer) {
+        // TODO: Update recipe generation for new colored plastic system
+        // These recipes need to be updated to work with ColoredPlasticItem and ColoredRawPlasticItem
+        
         // Lazily creating all recipes for raw plastic item dyes.
-        for (var rawPlastic : RawPlasticItem.getPlasticItems()) {
-            RawPlasticItem.getRecipeFrom(rawPlastic, consumer, has(CoreTags.Items.RAW_PLASTIC));
-        }
+        // for (var rawPlastic : CoreItems.getAllColoredRawPlastics()) {
+        //     RawPlasticItem.getRecipeFrom(rawPlastic, consumer, has(CoreTags.Items.RAW_PLASTIC));
+        // }
 
         // Lazily creating all recipes for plastic blocks.
-        for (int i = 0; i < PlasticBlock.getPlasticBlocks().size(); i++) {
-            var plasticBlock = PlasticBlock.getPlasticBlocks().get(i);
-            PlasticBlock.getRecipeFrom(plasticBlock, PlasticItem.getPlasticItems().get(i), consumer, has(plasticBlock));
-        }
+        // for (int i = 0; i < PlasticBlock.getPlasticBlocks().size(); i++) {
+        //     var plasticBlock = PlasticBlock.getPlasticBlocks().get(i);
+        //     // Use the new colored plastic system
+        //     var coloredPlastics = CoreItems.getAllColoredPlastics();
+        //     if (i < coloredPlastics.size()) {
+        //         PlasticBlock.getRecipeFrom(plasticBlock, coloredPlastics.get(i), consumer, has(plasticBlock));
+        //     }
+        // }
     }
 
     protected void tools (RecipeOutput consumer) {
@@ -90,10 +98,10 @@ public class CraftingRecipes extends CoreRecipeProvider {
                 .pattern(" V ")
                 .pattern(" PV")
                 .pattern("P  ")
-                .define('P', PLASTIC_BLACK)
+                .define('P', POLYETHYLENE.get().getColoredVariant(DyeColor.BLACK))
                 .define('V', CoreElements.VANADIUM_INGOT)
                 .unlockedBy("has_vanadium_ingot", has(CoreElements.VANADIUM_INGOT))
-                .unlockedBy("has_plastic_black", has(PLASTIC_BLACK))
+                .unlockedBy("has_plastic_black", has(POLYETHYLENE.get().getColoredVariant(DyeColor.BLACK)))
                 .save(consumer, GM.getResource("crafting/wrench_from_plastic"));
     }
 

@@ -7,7 +7,7 @@ import general.mechanics.api.block.base.BaseBlock;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.BaseBlockItem;
 import general.mechanics.api.item.base.BaseItem;
-import general.mechanics.registries.CoreBlocks;
+import general.mechanics.registries.CoreItems;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ public class CoreTab {
     public static void init (Registry<CreativeModeTab> registry) {
         var tab = CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup." + GM.MODID))
-                .icon(CoreBlocks.DRAKIUM_BLOCK::stack)
+                .icon(CoreItems.WRENCH::stack)
                 .displayItems(CoreTab::buildDisplayItems)
                 .build();
         Registry.register(registry, MAIN, tab);

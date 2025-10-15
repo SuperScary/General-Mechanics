@@ -119,7 +119,6 @@ public class BlockModelProvider extends CoreBlockStateProvider {
     private void err(List<ResourceLocation> list) {
         for (var res : list) {
             existingFileHelper.trackGenerated(res, PackType.CLIENT_RESOURCES, ".png", "textures");
-
         }
     }
 

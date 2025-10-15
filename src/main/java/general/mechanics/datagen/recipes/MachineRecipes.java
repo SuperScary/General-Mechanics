@@ -9,6 +9,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -33,14 +34,12 @@ public class MachineRecipes extends CoreRecipeProvider {
 
     protected void refabricateRecipes (RecipeOutput consumer) {
 
-        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_leaves"), ItemTags.LEAVES, CoreItems.RAW_PLASTIC.get());
-        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_saplings"), ItemTags.SAPLINGS, CoreItems.RAW_PLASTIC.get());
-        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_flowers"), ItemTags.FLOWERS, CoreItems.RAW_PLASTIC.get());
-        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/test"), RAW_PLASTIC.get(), Blocks.COBBLESTONE, RAW_PLASTIC.get());
-
-        for (var rawPlastic : PlasticItem.getPlasticItems()) {
-            //RefabricationRecipeBuilder.build(consumer, DimensionalCore.getResource("refabrication/" + rawPlastic.getRegistryName().getPath() + "_from_"));
-        }
+        // Use white raw plastic as the default for these recipes
+        var whiteRawPlastic = POLYETHYLENE.get().getColoredVariant(DyeColor.WHITE);
+        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_leaves"), ItemTags.LEAVES, whiteRawPlastic);
+        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_saplings"), ItemTags.SAPLINGS, whiteRawPlastic);
+        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_flowers"), ItemTags.FLOWERS, whiteRawPlastic);
+        FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/test"), whiteRawPlastic, Blocks.COBBLESTONE, whiteRawPlastic);
     }
 
 }

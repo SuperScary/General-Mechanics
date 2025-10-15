@@ -36,41 +36,10 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
         this.tag(Tags.Items.NUGGETS)
                 .add(CoreElements.VANADIUM_INGOT.get().getNuggetItem().asItem().asItem());
 
-        this.tag(CoreTags.Items.RAW_PLASTIC)
-                .add(RAW_PLASTIC.asItem())
-                .add(RAW_PLASTIC_ORANGE.asItem())
-                .add(RAW_PLASTIC_MAGENTA.asItem())
-                .add(RAW_PLASTIC_LIGHT_BLUE.asItem())
-                .add(RAW_PLASTIC_YELLOW.asItem())
-                .add(RAW_PLASTIC_LIME.asItem())
-                .add(RAW_PLASTIC_PINK.asItem())
-                .add(RAW_PLASTIC_GRAY.asItem())
-                .add(RAW_PLASTIC_LIGHT_GRAY.asItem())
-                .add(RAW_PLASTIC_CYAN.asItem())
-                .add(RAW_PLASTIC_PURPLE.asItem())
-                .add(RAW_PLASTIC_BLUE.asItem())
-                .add(RAW_PLASTIC_BROWN.asItem())
-                .add(RAW_PLASTIC_GREEN.asItem())
-                .add(RAW_PLASTIC_RED.asItem())
-                .add(RAW_PLASTIC_BLACK.asItem());
-
-        this.tag(CoreTags.Items.PLASTIC)
-                .add(PLASTIC.asItem())
-                .add(PLASTIC_ORANGE.asItem())
-                .add(PLASTIC_MAGENTA.asItem())
-                .add(PLASTIC_LIGHT_BLUE.asItem())
-                .add(PLASTIC_YELLOW.asItem())
-                .add(PLASTIC_LIME.asItem())
-                .add(PLASTIC_PINK.asItem())
-                .add(PLASTIC_GRAY.asItem())
-                .add(PLASTIC_LIGHT_GRAY.asItem())
-                .add(PLASTIC_CYAN.asItem())
-                .add(PLASTIC_PURPLE.asItem())
-                .add(PLASTIC_BLUE.asItem())
-                .add(PLASTIC_BROWN.asItem())
-                .add(PLASTIC_GREEN.asItem())
-                .add(PLASTIC_RED.asItem())
-                .add(PLASTIC_BLACK.asItem());
+        // Add all colored plastics to the tag
+        for (var plastic : CoreItems.getAllColoredPlastics()) {
+            this.tag(CoreTags.Items.PLASTIC).add(plastic.asItem());
+        }
 
         for (var block : PlasticBlock.getPlasticBlocks()) {
             this.tag(CoreTags.Items.PLASTIC_BLOCKS)

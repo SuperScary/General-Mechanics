@@ -26,12 +26,6 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(DRAKIUM_ORE.block())
-                .add(DEEPSLATE_DRAKIUM_ORE.block())
-                .add(END_STONE_DRAKIUM_ORE.block())
-                .add(NETHER_DRAKIUM_ORE.block())
-                .add(DRAKIUM_BLOCK.block())
-                .add(DRAKIUM_BLOCK_RAW.block())
                 .add(VANADIUM_ORE.block())
                 .add(VANADIUM_BLOCK.block())
                 .add(DEEPSLATE_VANADIUM_ORE.block())
@@ -59,21 +53,11 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
         }
 
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
-                .add(DRAKIUM_ORE.block())
-                .add(DEEPSLATE_DRAKIUM_ORE.block())
-                .add(END_STONE_DRAKIUM_ORE.block())
-                .add(NETHER_DRAKIUM_ORE.block())
-                .add(DRAKIUM_BLOCK.block())
-                .add(DRAKIUM_BLOCK_RAW.block())
                 .add(VANADIUM_ORE.block())
                 .add(VANADIUM_BLOCK.block())
                 .add(DEEPSLATE_VANADIUM_ORE.block());
 
         this.tag(Tags.Blocks.ORES)
-                .add(DRAKIUM_ORE.block())
-                .add(END_STONE_DRAKIUM_ORE.block())
-                .add(DEEPSLATE_DRAKIUM_ORE.block())
-                .add(NETHER_DRAKIUM_ORE.block())
                 .add(VANADIUM_ORE.block())
                 .add(VANADIUM_BLOCK.block())
                 .add(DEEPSLATE_VANADIUM_ORE.block());

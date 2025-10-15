@@ -29,13 +29,13 @@ public class CoreConfiguredFeatures {
         RuleTest netherReplaceables = new BlockMatchTest(Blocks.NETHERRACK);
         RuleTest endReplaceables = new BlockMatchTest(Blocks.END_STONE);
 
-        List<OreConfiguration.TargetBlockState> overworldDrakiumOres = List.of(OreConfiguration.target(stoneReplaceables, CoreBlocks.DRAKIUM_ORE.block().defaultBlockState()), OreConfiguration.target(deepslateReplaceables, CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block().defaultBlockState()));
-        List<OreConfiguration.TargetBlockState> endDrakiumOres = List.of(OreConfiguration.target(endReplaceables, CoreBlocks.END_STONE_DRAKIUM_ORE.block().defaultBlockState()));
-        List<OreConfiguration.TargetBlockState> netherDrakiumOres = List.of(OreConfiguration.target(netherReplaceables, CoreBlocks.NETHER_DRAKIUM_ORE.block().defaultBlockState()));
+        //List<OreConfiguration.TargetBlockState> overworldDrakiumOres = List.of(OreConfiguration.target(stoneReplaceables, CoreBlocks.DRAKIUM_ORE.block().defaultBlockState()), OreConfiguration.target(deepslateReplaceables, CoreBlocks.DEEPSLATE_DRAKIUM_ORE.block().defaultBlockState()));
+        //List<OreConfiguration.TargetBlockState> endDrakiumOres = List.of(OreConfiguration.target(endReplaceables, CoreBlocks.END_STONE_DRAKIUM_ORE.block().defaultBlockState()));
+        //List<OreConfiguration.TargetBlockState> netherDrakiumOres = List.of(OreConfiguration.target(netherReplaceables, CoreBlocks.NETHER_DRAKIUM_ORE.block().defaultBlockState()));
 
-        register(context, DRAKIUM_ORE_KEY, Feature.ORE, new OreConfiguration(overworldDrakiumOres, 6));
-        register(context, DRAKIUM_END_ORE_KEY, Feature.ORE, new OreConfiguration(endDrakiumOres, 4));
-        register(context, DRAKIUM_NETHER_ORE_KEY, Feature.ORE, new OreConfiguration(netherDrakiumOres, 8));
+        //register(context, DRAKIUM_ORE_KEY, Feature.ORE, new OreConfiguration(overworldDrakiumOres, 6));
+        //register(context, DRAKIUM_END_ORE_KEY, Feature.ORE, new OreConfiguration(endDrakiumOres, 4));
+        //register(context, DRAKIUM_NETHER_ORE_KEY, Feature.ORE, new OreConfiguration(netherDrakiumOres, 8));
 
     }
 

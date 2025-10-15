@@ -41,14 +41,6 @@ public class CoreBlocks {
     //################################
     //||            Ores            ||
     //################################
-    // Drakium
-    public static final BlockDefinition<DecorativeBlock> DRAKIUM_BLOCK = reg("Drakium Block", DecorativeBlock::new);
-    public static final BlockDefinition<DecorativeBlock> DRAKIUM_BLOCK_RAW = reg("Block of Raw Drakium", "raw_drakium_block", DecorativeBlock::new);
-    public static final BlockDefinition<OreBlock> DRAKIUM_ORE = reg("Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.STONE));
-    public static final BlockDefinition<OreBlock> DEEPSLATE_DRAKIUM_ORE = reg("Deepslate Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.DEEPSLATE));
-    public static final BlockDefinition<OreBlock> END_STONE_DRAKIUM_ORE = reg("End Stone Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.END));
-    public static final BlockDefinition<OreBlock> NETHER_DRAKIUM_ORE = reg("Nether Drakium Ore", () -> new OreBlock(1, 3, OreBlock.Type.NETHER));
-
     // Vanadium
     public static final BlockDefinition<DecorativeBlock> VANADIUM_BLOCK = reg("Vanadium Block", DecorativeBlock::new);
     //public static final BlockDefinition<DecorativeBlock> VANADIUM_BLOCK_RAW = reg("Block of Raw Vanadium", "raw_vanadium_block", DecorativeBlock::new);

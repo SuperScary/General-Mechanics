@@ -4,12 +4,9 @@ import com.google.common.base.Preconditions;
 import general.mechanics.GM;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.*;
-import general.mechanics.api.item.element.metallic.ElementItem;
-import general.mechanics.api.item.ingot.IngotItem;
-import general.mechanics.api.item.ingot.NuggetItem;
-import general.mechanics.api.item.ingot.RawItem;
-import general.mechanics.api.item.plastic.PlasticItem;
-import general.mechanics.api.item.plastic.RawPlasticItem;
+import general.mechanics.api.item.plastic.PlasticTypeItem;
+import general.mechanics.api.item.plastic.ColoredPlasticItem;
+import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.tab.CoreTab;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -50,45 +47,33 @@ public class CoreItems {
     // Circuits
     public static final ItemDefinition<CircuitItem> BASIC_CIRCUIT = item("Basic Circuit", CircuitItem::new);
 
-    // Plastic
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC = item("Raw Plastic", (properties) -> new RawPlasticItem(properties, DyeColor.WHITE));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_ORANGE = item("Orange Raw Plastic", "raw_plastic_orange", (properties) -> new RawPlasticItem(properties, DyeColor.ORANGE));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_MAGENTA = item("Magenta Raw Plastic", "raw_plastic_magenta", (properties) -> new RawPlasticItem(properties, DyeColor.MAGENTA));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_LIGHT_BLUE = item("Light Blue Raw Plastic", "raw_plastic_light_blue", (properties) -> new RawPlasticItem(properties, DyeColor.LIGHT_BLUE));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_YELLOW = item("Yellow Raw Plastic", "raw_plastic_yellow", (properties) -> new RawPlasticItem(properties, DyeColor.YELLOW));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_LIME = item("Lime Raw Plastic", "raw_plastic_lime", (properties) -> new RawPlasticItem(properties, DyeColor.LIME));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_PINK = item("Pink Raw Plastic", "raw_plastic_pink", (properties) -> new RawPlasticItem(properties, DyeColor.PINK));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_GRAY = item("Gray Raw Plastic", "raw_plastic_gray", (properties) -> new RawPlasticItem(properties, DyeColor.GRAY));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_LIGHT_GRAY = item("Light Gray Raw Plastic", "raw_plastic_light_gray", (properties) -> new RawPlasticItem(properties, DyeColor.LIGHT_GRAY));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_CYAN = item("Cyan Raw Plastic", "raw_plastic_cyan", (properties) -> new RawPlasticItem(properties, DyeColor.CYAN));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_PURPLE = item("Purple Raw Plastic", "raw_plastic_purple", (properties) -> new RawPlasticItem(properties, DyeColor.PURPLE));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_BLUE = item("Blue Raw Plastic", "raw_plastic_blue", (properties) -> new RawPlasticItem(properties, DyeColor.BLUE));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_BROWN = item("Brown Raw Plastic", "raw_plastic_brown", (properties) -> new RawPlasticItem(properties, DyeColor.BROWN));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_GREEN = item("Green Raw Plastic", "raw_plastic_green", (properties) -> new RawPlasticItem(properties, DyeColor.GREEN));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_RED = item("Red Raw Plastic", "raw_plastic_red", (properties) -> new RawPlasticItem(properties, DyeColor.RED));
-    public static final ItemDefinition<RawPlasticItem> RAW_PLASTIC_BLACK = item("Black Raw Plastic", "raw_plastic_black", (properties) -> new RawPlasticItem(properties, DyeColor.BLACK));
-
-    public static final ItemDefinition<PlasticItem> PLASTIC = item("Plastic", (properties) -> new PlasticItem(properties, DyeColor.WHITE));
-    public static final ItemDefinition<PlasticItem> PLASTIC_ORANGE = item("Orange Plastic", "plastic_orange", (properties) -> new PlasticItem(properties, DyeColor.ORANGE));
-    public static final ItemDefinition<PlasticItem> PLASTIC_MAGENTA = item("Magenta Plastic", "plastic_magenta", (properties) -> new PlasticItem(properties, DyeColor.MAGENTA));
-    public static final ItemDefinition<PlasticItem> PLASTIC_LIGHT_BLUE = item("Light Blue Plastic", "plastic_light_blue", (properties) -> new PlasticItem(properties, DyeColor.LIGHT_BLUE));
-    public static final ItemDefinition<PlasticItem> PLASTIC_YELLOW = item("Yellow Plastic", "plastic_yellow", (properties) -> new PlasticItem(properties, DyeColor.YELLOW));
-    public static final ItemDefinition<PlasticItem> PLASTIC_LIME = item("Lime Plastic", "plastic_lime", (properties) -> new PlasticItem(properties, DyeColor.LIME));
-    public static final ItemDefinition<PlasticItem> PLASTIC_PINK = item("Pink Plastic", "plastic_pink", (properties) -> new PlasticItem(properties, DyeColor.PINK));
-    public static final ItemDefinition<PlasticItem> PLASTIC_GRAY = item("Gray Plastic", "plastic_gray", (properties) -> new PlasticItem(properties, DyeColor.GRAY));
-    public static final ItemDefinition<PlasticItem> PLASTIC_LIGHT_GRAY = item("Light Gray Plastic", "plastic_light_gray", (properties) -> new PlasticItem(properties, DyeColor.LIGHT_GRAY));
-    public static final ItemDefinition<PlasticItem> PLASTIC_CYAN = item("Cyan Plastic", "plastic_cyan", (properties) -> new PlasticItem(properties, DyeColor.CYAN));
-    public static final ItemDefinition<PlasticItem> PLASTIC_PURPLE = item("Purple Plastic", "plastic_purple", (properties) -> new PlasticItem(properties, DyeColor.PURPLE));
-    public static final ItemDefinition<PlasticItem> PLASTIC_BLUE = item("Blue Plastic", "plastic_blue", (properties) -> new PlasticItem(properties, DyeColor.BLUE));
-    public static final ItemDefinition<PlasticItem> PLASTIC_BROWN = item("Brown Plastic", "plastic_brown", (properties) -> new PlasticItem(properties, DyeColor.BROWN));
-    public static final ItemDefinition<PlasticItem> PLASTIC_GREEN = item("Green Plastic", "plastic_green", (properties) -> new PlasticItem(properties, DyeColor.GREEN));
-    public static final ItemDefinition<PlasticItem> PLASTIC_RED = item("Red Plastic", "plastic_red", (properties) -> new PlasticItem(properties, DyeColor.RED));
-    public static final ItemDefinition<PlasticItem> PLASTIC_BLACK = item("Black Plastic", "plastic_black", (properties) -> new PlasticItem(properties, DyeColor.BLACK));
+    // Plastic Types
+    public static final ItemDefinition<PlasticTypeItem> POLYETHYLENE = plasticType("Polyethylene", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYETHYLENE));
+    public static final ItemDefinition<PlasticTypeItem> POLYPROPYLENE = plasticType("Polypropylene", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYPROPYLENE));
+    public static final ItemDefinition<PlasticTypeItem> POLYSTYRENE = plasticType("Polystyrene", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYSTYRENE));
+    public static final ItemDefinition<PlasticTypeItem> POLYVINYL_CHLORIDE = plasticType("Polyvinyl Chloride", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYVINYL_CHLORIDE));
+    public static final ItemDefinition<PlasticTypeItem> POLYETHYLENE_TEREPHTHALATE = plasticType("Polyethylene Terephthalate", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYETHYLENE_TEREPHTHALATE));
+    public static final ItemDefinition<PlasticTypeItem> ACRYLONITRILE_BUTADIENE_STYRENE = plasticType("Acrylonitrile Butadiene Styrene", (properties) -> new PlasticTypeItem(properties, PlasticType.ACRYLONITRILE_BUTADIENE_STYRENE));
+    public static final ItemDefinition<PlasticTypeItem> POLYCARBONATE = plasticType("Polycarbonate", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYCARBONATE));
+    public static final ItemDefinition<PlasticTypeItem> NYLON = plasticType("Nylon", (properties) -> new PlasticTypeItem(properties, PlasticType.NYLON));
+    public static final ItemDefinition<PlasticTypeItem> POLYURETHANE = plasticType("Polyurethane", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYURETHANE));
+    public static final ItemDefinition<PlasticTypeItem> POLYTETRAFLUOROETHYLENE = plasticType("Polytetrafluoroethylene", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYTETRAFLUOROETHYLENE));
+    public static final ItemDefinition<PlasticTypeItem> POLYETHERETHERKETONE = plasticType("Polyetheretherketone", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYETHERETHERKETONE));
 
     public static final ItemDefinition<Wrench> WRENCH = item("Wrench", Wrench::new);
 
     public static List<ItemDefinition<?>> getItems () {
         return Collections.unmodifiableList(ITEMS);
+    }
+
+    public static List<ColoredPlasticItem> getAllColoredPlastics() {
+        List<ColoredPlasticItem> allColored = new ArrayList<>();
+        for (var item : ITEMS) {
+            if (item.get() instanceof ColoredPlasticItem colored) {
+                allColored.add(colored);
+            }
+        }
+        return allColored;
     }
 
     static <T extends Item> ItemDefinition<T> item (String name, Function<Item.Properties, T> factory) {
@@ -112,6 +97,42 @@ public class CoreItems {
 
         ITEMS.add(definition);
         return definition;
+    }
+
+    // Plastic Type Registration Methods
+    static ItemDefinition<ColoredPlasticItem> itemColoredPlastic(String name, String resourceName, Function<Item.Properties, ColoredPlasticItem> factory) {
+        return itemColoredPlastic(name, GM.getResource(resourceName), factory, CoreTab.MAIN);
+    }
+
+    static ItemDefinition<ColoredPlasticItem> itemColoredPlastic(String name, ResourceLocation id, Function<Item.Properties, ColoredPlasticItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+        Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
+        var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
+
+        if (Objects.equals(group, CoreTab.MAIN)) {
+            CoreTab.add(definition);
+        } else if (group != null) {
+            CoreTab.addExternal(group, definition);
+        }
+
+        ITEMS.add(definition);
+        return definition;
+    }
+
+    static <T extends PlasticTypeItem> ItemDefinition<T> plasticType(String name, Function<Item.Properties, T> factory) {
+        // Create the main plastic type item
+        ItemDefinition<T> plasticTypeDef = item(name, factory);
+        
+        // Register all colored plastic variants
+        for (DyeColor color : PlasticType.getAllColors()) {
+            String coloredName = color.getName().substring(0, 1).toUpperCase() + color.getName().substring(1) + " " + name;
+            String coloredResourceName = color.getName().toLowerCase() + "_" + name.toLowerCase().replace(' ', '_');
+            itemColoredPlastic(coloredName, GM.getResource(coloredResourceName), (Item.Properties properties) -> {
+                T plasticTypeItem = plasticTypeDef.get();
+                return plasticTypeItem.getColoredVariant(color);
+            }, null);
+        }
+        
+        return plasticTypeDef;
     }
 
 }

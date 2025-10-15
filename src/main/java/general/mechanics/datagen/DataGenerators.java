@@ -36,7 +36,7 @@ public class DataGenerators {
         var localization = new CoreEnLangProvider(generator);
 
         // WORLD GENERATION
-        pack.addProvider(output -> new WorldGenProvider(output, registries));
+        //pack.addProvider(output -> new WorldGenProvider(output, registries));
 
         // SOUNDS
         pack.addProvider(packOutput -> new SoundProvider(packOutput, existingFileHelper));

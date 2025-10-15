@@ -38,7 +38,7 @@ public class DrakiumCrafterMultiblock extends Multiblock {
                 .layer("CC", "CC")
                 // Top layer (2x2)
                 .layer("CC", "CC")
-                .key('C', CoreBlocks.DRAKIUM_BLOCK)
+                .key('C', CoreBlocks.VANADIUM_BLOCK)
                 .build();
     }
 }
