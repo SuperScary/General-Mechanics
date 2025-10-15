@@ -81,6 +81,21 @@ public class CoreItems {
         return allColored;
     }
 
+    /**
+     * Get all colored variants for a specific plastic type
+     */
+    public static List<ColoredPlasticItem> getColoredPlasticsForType(PlasticType plasticType) {
+        List<ColoredPlasticItem> coloredVariants = new ArrayList<>();
+        for (var item : ITEMS) {
+            if (item.get() instanceof ColoredPlasticItem colored) {
+                if (colored.getParentPlastic().getPlasticType() == plasticType) {
+                    coloredVariants.add(colored);
+                }
+            }
+        }
+        return coloredVariants;
+    }
+
     static <T extends Item> ItemDefinition<T> item (String name, Function<Item.Properties, T> factory) {
         String resourceFriendly = name.toLowerCase().replace(' ', '_');
         return item(name, GM.getResource(resourceFriendly), factory, CoreTab.MAIN);
@@ -120,7 +135,6 @@ public class CoreItems {
 
     /**
      * Formats a color name by capitalizing each word and replacing underscores with spaces.
-     * Example: "light_blue" -> "Light Blue"
      */
     private static String formatColorName(String colorName) {
         String[] words = colorName.split("_");

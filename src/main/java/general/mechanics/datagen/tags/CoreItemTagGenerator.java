@@ -2,6 +2,7 @@ package general.mechanics.datagen.tags;
 
 import general.mechanics.GM;
 import general.mechanics.api.block.plastic.PlasticBlock;
+import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.IDataProvider;
 import general.mechanics.registries.CoreItems;
@@ -9,6 +10,8 @@ import general.mechanics.registries.CoreElements;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -36,9 +39,17 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
         this.tag(Tags.Items.NUGGETS)
                 .add(CoreElements.VANADIUM_INGOT.get().getNuggetItem().asItem().asItem());
 
-        // Add all colored plastics to the tag
+        // Add all colored plastics to the general plastic tag
         for (var plastic : CoreItems.getAllColoredPlastics()) {
             this.tag(CoreTags.Items.PLASTIC).add(plastic.asItem());
+        }
+
+        // Add colored variants to their specific plastic type tags
+        for (PlasticType plasticType : PlasticType.values()) {
+            TagKey<Item> plasticTypeTag = getPlasticTypeTag(plasticType);
+            for (var plastic : CoreItems.getColoredPlasticsForType(plasticType)) {
+                this.tag(plasticTypeTag).add(plastic.asItem());
+            }
         }
 
         for (var block : PlasticBlock.getPlasticBlocks()) {
@@ -49,6 +60,25 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
         this.tag(CoreTags.Items.WRENCHES)
                 .add(WRENCH.asItem());
 
+    }
+
+    /**
+     * Get the appropriate tag for a given plastic type
+     */
+    private TagKey<Item> getPlasticTypeTag(PlasticType plasticType) {
+        return switch (plasticType) {
+            case POLYETHYLENE -> CoreTags.Items.POLYETHYLENE;
+            case POLYPROPYLENE -> CoreTags.Items.POLYPROPYLENE;
+            case POLYSTYRENE -> CoreTags.Items.POLYSTYRENE;
+            case POLYVINYL_CHLORIDE -> CoreTags.Items.POLYVINYL_CHLORIDE;
+            case POLYETHYLENE_TEREPHTHALATE -> CoreTags.Items.POLYETHYLENE_TEREPHTHALATE;
+            case ACRYLONITRILE_BUTADIENE_STYRENE -> CoreTags.Items.ACRYLONITRILE_BUTADIENE_STYRENE;
+            case POLYCARBONATE -> CoreTags.Items.POLYCARBONATE;
+            case NYLON -> CoreTags.Items.NYLON;
+            case POLYURETHANE -> CoreTags.Items.POLYURETHANE;
+            case POLYTETRAFLUOROETHYLENE -> CoreTags.Items.POLYTETRAFLUOROETHYLENE;
+            case POLYETHERETHERKETONE -> CoreTags.Items.POLYETHERETHERKETONE;
+        };
     }
 
     @Override
