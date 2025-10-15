@@ -1,20 +1,18 @@
 package general.mechanics.datagen.recipes;
 
 import general.mechanics.GM;
-import general.mechanics.api.item.plastic.PlasticItem;
 import general.mechanics.recipes.builder.FabricationRecipeBuilder;
-import general.mechanics.registries.CoreItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
-import static general.mechanics.registries.CoreItems.*;
+import static general.mechanics.registries.CoreItems.POLYETHYLENE;
 
 public class MachineRecipes extends CoreRecipeProvider {
 

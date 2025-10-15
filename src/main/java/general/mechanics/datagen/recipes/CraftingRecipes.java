@@ -1,11 +1,7 @@
 package general.mechanics.datagen.recipes;
 
 import general.mechanics.GM;
-import general.mechanics.api.block.plastic.PlasticBlock;
-import general.mechanics.api.item.plastic.PlasticItem;
-import general.mechanics.api.item.plastic.RawPlasticItem;
 import general.mechanics.api.tags.CoreTags;
-import general.mechanics.registries.CoreItems;
 import general.mechanics.registries.CoreElements;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -19,7 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 import static general.mechanics.registries.CoreBlocks.*;
-import static general.mechanics.registries.CoreItems.*;
+import static general.mechanics.registries.CoreItems.POLYETHYLENE;
+import static general.mechanics.registries.CoreItems.WRENCH;
 import static net.minecraft.world.item.Items.CRAFTER;
 import static net.minecraft.world.item.Items.REDSTONE;
 

@@ -7,6 +7,7 @@ import general.mechanics.api.item.base.*;
 import general.mechanics.api.item.plastic.PlasticTypeItem;
 import general.mechanics.api.item.plastic.ColoredPlasticItem;
 import general.mechanics.api.item.plastic.PlasticType;
+import general.mechanics.api.util.data.Keys;
 import general.mechanics.tab.CoreTab;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -60,7 +61,11 @@ public class CoreItems {
     public static final ItemDefinition<PlasticTypeItem> POLYTETRAFLUOROETHYLENE = plasticType("Polytetrafluoroethylene", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYTETRAFLUOROETHYLENE));
     public static final ItemDefinition<PlasticTypeItem> POLYETHERETHERKETONE = plasticType("Polyetheretherketone", (properties) -> new PlasticTypeItem(properties, PlasticType.POLYETHERETHERKETONE));
 
+    // Tools
     public static final ItemDefinition<Wrench> WRENCH = item("Wrench", Wrench::new);
+
+    // Misc
+    public static final ItemDefinition<BaseItem> BOLT = item("Bolt", BaseItem::new);
 
     public static List<ItemDefinition<?>> getItems () {
         return Collections.unmodifiableList(ITEMS);
@@ -99,11 +104,6 @@ public class CoreItems {
         return definition;
     }
 
-    // Plastic Type Registration Methods
-    static ItemDefinition<ColoredPlasticItem> itemColoredPlastic(String name, String resourceName, Function<Item.Properties, ColoredPlasticItem> factory) {
-        return itemColoredPlastic(name, GM.getResource(resourceName), factory, CoreTab.MAIN);
-    }
-
     static ItemDefinition<ColoredPlasticItem> itemColoredPlastic(String name, ResourceLocation id, Function<Item.Properties, ColoredPlasticItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
@@ -118,18 +118,35 @@ public class CoreItems {
         return definition;
     }
 
+    /**
+     * Formats a color name by capitalizing each word and replacing underscores with spaces.
+     * Example: "light_blue" -> "Light Blue"
+     */
+    private static String formatColorName(String colorName) {
+        String[] words = colorName.split("_");
+        StringBuilder formatted = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            if (i > 0) {
+                formatted.append(" ");
+            }
+            formatted.append(words[i].substring(0, 1).toUpperCase())
+                    .append(words[i].substring(1));
+        }
+        return formatted.toString();
+    }
+
     static <T extends PlasticTypeItem> ItemDefinition<T> plasticType(String name, Function<Item.Properties, T> factory) {
         // Create the main plastic type item
         ItemDefinition<T> plasticTypeDef = item(name, factory);
         
         // Register all colored plastic variants
         for (DyeColor color : PlasticType.getAllColors()) {
-            String coloredName = color.getName().substring(0, 1).toUpperCase() + color.getName().substring(1) + " " + name;
+            String coloredName = formatColorName(color.getName()) + " " + name;
             String coloredResourceName = color.getName().toLowerCase() + "_" + name.toLowerCase().replace(' ', '_');
             itemColoredPlastic(coloredName, GM.getResource(coloredResourceName), (Item.Properties properties) -> {
                 T plasticTypeItem = plasticTypeDef.get();
                 return plasticTypeItem.getColoredVariant(color);
-            }, null);
+            }, CoreTab.MAIN);
         }
         
         return plasticTypeDef;

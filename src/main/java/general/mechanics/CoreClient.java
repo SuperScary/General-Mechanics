@@ -2,9 +2,8 @@ package general.mechanics;
 
 import general.mechanics.api.block.plastic.PlasticBlock;
 import general.mechanics.api.item.element.metallic.*;
-import general.mechanics.api.item.plastic.PlasticItem;
-import general.mechanics.api.item.plastic.RawPlasticItem;
 import general.mechanics.api.item.plastic.ColoredPlasticItem;
+import general.mechanics.api.item.plastic.PlasticTypeItem;
 import general.mechanics.gui.screen.MatterFabricatorScreen;
 import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreItems;
@@ -28,16 +27,10 @@ public class CoreClient extends CoreBase {
 
     public void registerItemColors(RegisterColorHandlersEvent.Item event) {
         for (var item : CoreItems.getItems()) {
-            if (item.get() instanceof RawPlasticItem plastic) {
-                event.register(RawPlasticItem::getColorForItemStack, plastic);
-            }
-
-            if (item.get() instanceof PlasticItem plastic) {
-                event.register(PlasticItem::getColorForItemStack, plastic);
-            }
-
             if (item.get() instanceof ColoredPlasticItem coloredPlastic) {
                 event.register(ColoredPlasticItem::getColor, coloredPlastic);
+            } else if (item.get() instanceof PlasticTypeItem plasticTypeItem) {
+                event.register(PlasticTypeItem::getColor, plasticTypeItem);
             }
         }
 

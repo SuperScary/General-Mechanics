@@ -2,7 +2,7 @@ package general.mechanics.api.block.plastic;
 
 import general.mechanics.GM;
 import general.mechanics.api.block.base.BaseBlock;
-import general.mechanics.api.item.plastic.PlasticItem;
+import general.mechanics.api.item.plastic.PlasticTypeItem;
 import general.mechanics.registries.CoreSounds;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -56,7 +56,7 @@ public class PlasticBlock extends BaseBlock {
         return -1;
     }
 
-    public static void getRecipeFrom(PlasticBlock item, PlasticItem creator, RecipeOutput consumer, Criterion<InventoryChangeTrigger.TriggerInstance> criterion) {
+    public static void getRecipeFrom(PlasticBlock item, PlasticTypeItem creator, RecipeOutput consumer, Criterion<InventoryChangeTrigger.TriggerInstance> criterion) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, item, 2)
                 .pattern("SS")
                 .pattern("SS")

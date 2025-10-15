@@ -31,11 +31,6 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
     @Override
     protected void registerModels () {
         for (var item : CoreItems.getItems()) {
-            if (item.asItem() instanceof RawPlasticItem) {
-                rawPlasticItem(item);
-                continue;
-            }
-
             if (item.asItem() instanceof ElectricalComponent) {
                 electricalComponentItem(item);
                 continue;

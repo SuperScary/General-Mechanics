@@ -3,7 +3,7 @@ package general.mechanics.api.item.plastic;
 import general.mechanics.api.item.base.BaseItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
@@ -53,5 +53,16 @@ public class PlasticTypeItem extends BaseItem {
                 .filter(variant -> variant.getColor() == color)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public static int getColor(ItemStack stack, int index) {
+        Item item = stack.getItem();
+
+        if (item instanceof PlasticTypeItem plasticTypeItem) {
+            int defaultColor = plasticTypeItem.getPlasticType().getDefaultColor();
+            // If defaultColor is -1, return white (0xFFFFFFFF), otherwise return the default color
+            return defaultColor == -1 ? 0xFFFFFFFF : defaultColor;
+        }
+        return 0xFFFFFFFF; // Default to white if no specific color
     }
 }
