@@ -1,12 +1,12 @@
 package general.mechanics.datagen.tags;
 
 import general.mechanics.GM;
-import general.mechanics.api.block.plastic.PlasticBlock;
 import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.IDataProvider;
 import general.mechanics.registries.CoreItems;
 import general.mechanics.registries.CoreElements;
+import general.mechanics.registries.CoreBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -44,6 +44,11 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
             this.tag(CoreTags.Items.PLASTIC).add(plastic.asItem());
         }
 
+        // Add all colored plastic blocks to the general plastic blocks tag
+        for (var plasticBlock : CoreBlocks.getAllColoredPlasticBlocks()) {
+            this.tag(CoreTags.Items.PLASTIC_BLOCKS).add(plasticBlock.asItem());
+        }
+
         // Add colored variants to their specific plastic type tags
         for (PlasticType plasticType : PlasticType.values()) {
             TagKey<Item> plasticTypeTag = getPlasticTypeTag(plasticType);
@@ -52,10 +57,6 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
             }
         }
 
-        for (var block : PlasticBlock.getPlasticBlocks()) {
-            this.tag(CoreTags.Items.PLASTIC_BLOCKS)
-                    .add(block.asItem());
-        }
 
         this.tag(CoreTags.Items.WRENCHES)
                 .add(WRENCH.asItem());

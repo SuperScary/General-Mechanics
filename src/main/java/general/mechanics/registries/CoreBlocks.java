@@ -7,7 +7,9 @@ import general.mechanics.api.block.base.DecorativeBlock;
 import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.Ice7Block;
 import general.mechanics.api.block.ice.IceBlock;
-import general.mechanics.api.block.plastic.PlasticBlock;
+import general.mechanics.api.block.plastic.PlasticTypeBlock;
+import general.mechanics.api.block.plastic.ColoredPlasticBlock;
+import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.BaseBlockItem;
 import general.mechanics.block.MatterFabricatorBlock;
@@ -47,23 +49,18 @@ public class CoreBlocks {
     public static final BlockDefinition<OreBlock> VANADIUM_ORE = reg("Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.STONE.getProperties().explosionResistance(500).strength(25)));
     public static final BlockDefinition<OreBlock> DEEPSLATE_VANADIUM_ORE = reg("Deepslate Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.DEEPSLATE.getProperties().explosionResistance(500).strength(25)));
 
-    // Plastic
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK = reg("Plastic Block", "plastic_block", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.WHITE));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_ORANGE = reg("Orange Plastic Block", "plastic_block_orange", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.ORANGE));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_MAGENTA = reg("Magenta Plastic Block", "plastic_block_magenta", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.MAGENTA));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_LIGHT_BLUE = reg("Light Blue Plastic Block", "plastic_block_light_blue", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.LIGHT_BLUE));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_YELLOW = reg("Yellow Plastic Block", "plastic_block_yellow", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.YELLOW));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_LIME = reg("Lime Plastic Block", "plastic_block_lime", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.LIME));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_PINK = reg("Pink Plastic Block", "plastic_block_pink", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.PINK));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_GRAY = reg("Gray Plastic Block", "plastic_block_gray", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.GRAY));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_LIGHT_GRAY = reg("Light Gray Plastic Block", "plastic_block_light_gray", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.LIGHT_GRAY));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_CYAN = reg("Cyan Plastic Block", "plastic_block_cyan", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.CYAN));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_PURPLE = reg("Purple Plastic Block", "plastic_block_purple", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.PURPLE));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_BLUE = reg("Blue Plastic Block", "plastic_block_blue", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.BLUE));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_BROWN = reg("Brown Plastic Block", "plastic_block_brown", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.BROWN));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_GREEN = reg("Green Plastic Block", "plastic_block_green", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.GREEN));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_RED = reg("Red Plastic Block", "plastic_block_red", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.RED));
-    public static final BlockDefinition<PlasticBlock> PLASTIC_BLOCK_BLACK = reg("Black Plastic Block", "plastic_block_black", () -> new PlasticBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), DyeColor.BLACK));
+    // Plastic Blocks
+    public static final BlockDefinition<PlasticTypeBlock> POLYETHYLENE_BLOCK = plasticTypeBlock("Polyethylene Block", PlasticType.POLYETHYLENE);
+    public static final BlockDefinition<PlasticTypeBlock> POLYPROPYLENE_BLOCK = plasticTypeBlock("Polypropylene Block", PlasticType.POLYPROPYLENE);
+    public static final BlockDefinition<PlasticTypeBlock> POLYSTYRENE_BLOCK = plasticTypeBlock("Polystyrene Block", PlasticType.POLYSTYRENE);
+    public static final BlockDefinition<PlasticTypeBlock> POLYVINYL_CHLORIDE_BLOCK = plasticTypeBlock("Polyvinyl Chloride Block", PlasticType.POLYVINYL_CHLORIDE);
+    public static final BlockDefinition<PlasticTypeBlock> POLYETHYLENE_TEREPHTHALATE_BLOCK = plasticTypeBlock("Polyethylene Terephthalate Block", PlasticType.POLYETHYLENE_TEREPHTHALATE);
+    public static final BlockDefinition<PlasticTypeBlock> ACRYLONITRILE_BUTADIENE_STYRENE_BLOCK = plasticTypeBlock("Acrylonitrile Butadiene Styrene Block", PlasticType.ACRYLONITRILE_BUTADIENE_STYRENE);
+    public static final BlockDefinition<PlasticTypeBlock> POLYCARBONATE_BLOCK = plasticTypeBlock("Polycarbonate Block", PlasticType.POLYCARBONATE);
+    public static final BlockDefinition<PlasticTypeBlock> NYLON_BLOCK = plasticTypeBlock("Nylon Block", PlasticType.NYLON);
+    public static final BlockDefinition<PlasticTypeBlock> POLYURETHANE_BLOCK = plasticTypeBlock("Polyurethane Block", PlasticType.POLYURETHANE);
+    public static final BlockDefinition<PlasticTypeBlock> POLYTETRAFLUOROETHYLENE_BLOCK = plasticTypeBlock("Polytetrafluoroethylene Block", PlasticType.POLYTETRAFLUOROETHYLENE);
+    public static final BlockDefinition<PlasticTypeBlock> POLYETHERETHERKETONE_BLOCK = plasticTypeBlock("Polyetheretherketone Block", PlasticType.POLYETHERETHERKETONE);
 
     // Ice
     public static final BlockDefinition<IceBlock> ICE2 = reg("Ice II", "ice_2", IceBlock::new);
@@ -77,7 +74,69 @@ public class CoreBlocks {
     public static final BlockDefinition<MatterFabricatorBlock> MATTER_FABRICATOR = reg("Matter Fabricator", MatterFabricatorBlock::new);
 
     // Machine block
-    public static final BlockDefinition<DecorativeBlock> MACHINE_FRAME = reg("Machine Frame", () -> new DecorativeBlock(BlockBehaviour.Properties.ofFullCopy(PLASTIC_BLOCK.block())));
+    public static final BlockDefinition<DecorativeBlock> MACHINE_FRAME = reg("Machine Frame", () -> new DecorativeBlock(BlockBehaviour.Properties.ofFullCopy(POLYETHYLENE_BLOCK.block())));
+
+    /**
+     * Formats a color name by capitalizing each word and replacing underscores with spaces.
+     * Example: "light_blue" -> "Light Blue"
+     */
+    private static String formatColorName(String colorName) {
+        String[] words = colorName.split("_");
+        StringBuilder formatted = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            if (i > 0) {
+                formatted.append(" ");
+            }
+            formatted.append(words[i].substring(0, 1).toUpperCase())
+                    .append(words[i].substring(1));
+        }
+        return formatted.toString();
+    }
+
+    static <T extends PlasticTypeBlock> BlockDefinition<T> plasticTypeBlock(String name, PlasticType plasticType) {
+        // Create the main plastic type block
+        BlockDefinition<T> plasticTypeDef = reg(name, () -> (T) new PlasticTypeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), plasticType));
+        
+        // Register all colored plastic block variants
+        for (DyeColor color : PlasticType.getAllColors()) {
+            String coloredName = formatColorName(color.getName()) + " " + name;
+            String coloredResourceName = color.getName().toLowerCase() + "_" + name.toLowerCase().replace(' ', '_');
+            reg(coloredName, GM.getResource(coloredResourceName), () -> {
+                T plasticTypeBlock = plasticTypeDef.block();
+                return (Block) plasticTypeBlock.getColoredVariant(color);
+            }, null, true);
+        }
+        
+        return plasticTypeDef;
+    }
+
+    /**
+     * Get all colored plastic blocks for a specific plastic type
+     */
+    public static List<ColoredPlasticBlock> getColoredPlasticBlocksForType(PlasticType plasticType) {
+        List<ColoredPlasticBlock> coloredVariants = new ArrayList<>();
+        for (var block : BLOCKS) {
+            if (block.block() instanceof ColoredPlasticBlock colored) {
+                if (colored.getPlasticType() == plasticType) {
+                    coloredVariants.add(colored);
+                }
+            }
+        }
+        return coloredVariants;
+    }
+
+    /**
+     * Get all colored plastic blocks
+     */
+    public static List<ColoredPlasticBlock> getAllColoredPlasticBlocks() {
+        List<ColoredPlasticBlock> allColored = new ArrayList<>();
+        for (var block : BLOCKS) {
+            if (block.block() instanceof ColoredPlasticBlock colored) {
+                allColored.add(colored);
+            }
+        }
+        return allColored;
+    }
 
     public static List<BlockDefinition<?>> getBlocks () {
         return Collections.unmodifiableList(BLOCKS);

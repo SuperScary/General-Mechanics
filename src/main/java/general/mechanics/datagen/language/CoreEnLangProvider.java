@@ -1,6 +1,12 @@
 package general.mechanics.datagen.language;
 
 import general.mechanics.GM;
+import general.mechanics.api.electrical.capacitors.CapacitorItem;
+import general.mechanics.api.electrical.ics.IntegratedCircuitItem;
+import general.mechanics.api.electrical.ics.IntegratedCircuitType;
+import general.mechanics.api.electrical.resistors.ResistorItem;
+import general.mechanics.api.electrical.transformers.TransformerItem;
+import general.mechanics.api.electrical.transistor.TransistorItem;
 import general.mechanics.api.upgrade.UpgradeBase;
 import general.mechanics.api.util.IDataProvider;
 import general.mechanics.registries.CoreBlocks;
@@ -22,6 +28,7 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
         addManualStrings();
         addSubtitles();
         elements();
+        electricalComponents();
 
         // ITEMS
         for (var item : CoreItems.getItems()) {
@@ -88,5 +95,30 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
     protected void elements() {
         add("element.atomic_number", "Atomic Number: %s");
         add("element.atomic_symbol", "Atomic Symbol: %s");
+    }
+
+    protected void electricalComponents() {
+        for (var item : CoreItems.getItems()) {
+            if (item.get() instanceof TransformerItem itemTrans) {
+                add(itemTrans.getDescriptionId() + ".desc", itemTrans.getTransformerType().getDescription());
+            }
+
+            if (item.get() instanceof TransistorItem transistorItem) {
+                add(transistorItem.getDescriptionId() + ".desc", transistorItem.getTransistorType().getDescription());
+            }
+
+            if (item.get() instanceof IntegratedCircuitItem ic) {
+                add(ic.getDescriptionId() + ".desc", ic.getIntegratedCircuitType().getDescription());
+            }
+
+            if (item.get() instanceof ResistorItem resistorItem) {
+                add(resistorItem.getDescriptionId() + ".desc", resistorItem.getResistor().getDescription());
+            }
+
+            if (item.get() instanceof CapacitorItem capacitorItem) {
+                add(capacitorItem.getDescriptionId() + ".desc", capacitorItem.getCapacitor().getDescription());
+            }
+
+        }
     }
 }

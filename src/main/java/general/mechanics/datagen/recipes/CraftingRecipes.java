@@ -1,8 +1,11 @@
 package general.mechanics.datagen.recipes;
 
 import general.mechanics.GM;
+import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.registries.CoreElements;
+import general.mechanics.registries.CoreItems;
+import general.mechanics.registries.CoreBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -15,10 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 import static general.mechanics.registries.CoreBlocks.*;
-import static general.mechanics.registries.CoreItems.POLYETHYLENE;
-import static general.mechanics.registries.CoreItems.WRENCH;
-import static net.minecraft.world.item.Items.CRAFTER;
-import static net.minecraft.world.item.Items.REDSTONE;
+import static general.mechanics.registries.CoreItems.*;
+import static net.minecraft.world.item.Items.*;
 
 public class CraftingRecipes extends CoreRecipeProvider {
 
@@ -38,6 +39,12 @@ public class CraftingRecipes extends CoreRecipeProvider {
         color(consumer);
         tools(consumer);
         misc(consumer);
+
+        // im just testin shit
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, COBBLESTONE, 1)
+                .requires(FILE)
+                .unlockedBy("has_file", has(FILE))
+                .save(consumer, GM.getResource("crafting/cobblestone_from_file"));
     }
 
     private void block(RecipeOutput consumer) {
@@ -70,27 +77,24 @@ public class CraftingRecipes extends CoreRecipeProvider {
                 .save(consumer, GM.getResource("crafting/matter_fabricator_from_plastic"));
     }
 
-    protected void color (RecipeOutput consumer) {
-        // TODO: Update recipe generation for new colored plastic system
-        // These recipes need to be updated to work with ColoredPlasticItem and ColoredRawPlasticItem
-        
+    protected void color(RecipeOutput consumer) {
         // Lazily creating all recipes for raw plastic item dyes.
-        // for (var rawPlastic : CoreItems.getAllColoredRawPlastics()) {
-        //     RawPlasticItem.getRecipeFrom(rawPlastic, consumer, has(CoreTags.Items.RAW_PLASTIC));
-        // }
+        /*for (var rawPlastic : CoreItems.getAllColoredRawPlastics()) {
+            RawPlasticItem.getRecipeFrom(rawPlastic, consumer, has(CoreTags.Items.RAW_PLASTIC));
+        }*/
 
         // Lazily creating all recipes for plastic blocks.
-        // for (int i = 0; i < PlasticBlock.getPlasticBlocks().size(); i++) {
-        //     var plasticBlock = PlasticBlock.getPlasticBlocks().get(i);
-        //     // Use the new colored plastic system
-        //     var coloredPlastics = CoreItems.getAllColoredPlastics();
-        //     if (i < coloredPlastics.size()) {
-        //         PlasticBlock.getRecipeFrom(plasticBlock, coloredPlastics.get(i), consumer, has(plasticBlock));
-        //     }
-        // }
+        var coloredPlasticBlocks = CoreBlocks.getAllColoredPlasticBlocks();
+        var coloredPlastics = CoreItems.getAllColoredPlastics();
+        for (int i = 0; i < coloredPlasticBlocks.size() && i < coloredPlastics.size(); i++) {
+            var plasticBlock = coloredPlasticBlocks.get(i);
+            var plastic = coloredPlastics.get(i);
+            // TODO: Implement recipe generation for new plastic block system
+            // This will need to be updated to work with the new ColoredPlasticBlock system
+        }
     }
 
-    protected void tools (RecipeOutput consumer) {
+    protected void tools(RecipeOutput consumer) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, WRENCH, 1)
                 .pattern(" V ")
                 .pattern(" PV")
@@ -102,7 +106,7 @@ public class CraftingRecipes extends CoreRecipeProvider {
                 .save(consumer, GM.getResource("crafting/wrench_from_plastic"));
     }
 
-    protected void misc (RecipeOutput consumer) {
+    protected void misc(RecipeOutput consumer) {
 
         // Vanadium
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, VANADIUM_BLOCK, 1)

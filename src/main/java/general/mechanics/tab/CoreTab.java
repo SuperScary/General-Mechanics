@@ -7,6 +7,7 @@ import general.mechanics.api.block.base.BaseBlock;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.BaseBlockItem;
 import general.mechanics.api.item.base.BaseItem;
+import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreItems;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;

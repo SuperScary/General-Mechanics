@@ -1,7 +1,7 @@
 package general.mechanics.datagen.tags;
 
 import general.mechanics.GM;
-import general.mechanics.api.block.plastic.PlasticBlock;
+import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.IDataProvider;
 import net.minecraft.core.HolderLookup;
@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 import static general.mechanics.registries.CoreBlocks.*;
+import general.mechanics.registries.CoreBlocks;
 
 public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataProvider {
 
@@ -46,7 +47,7 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(ICE7.block())
                 .add(MACHINE_FRAME.block());
 
-        for (var block : PlasticBlock.getPlasticBlocks()) {
+        for (var block : CoreBlocks.getAllColoredPlasticBlocks()) {
             this.tag(BlockTags.NEEDS_STONE_TOOL).add(block);
             this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
             this.tag(CoreTags.Blocks.PLASTIC).add(block);

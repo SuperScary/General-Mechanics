@@ -5,7 +5,8 @@ import general.mechanics.api.block.BlockDefinition;
 import general.mechanics.api.block.base.DecorativeBlock;
 import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.IceBlock;
-import general.mechanics.api.block.plastic.PlasticBlock;
+import general.mechanics.api.block.plastic.PlasticTypeBlock;
+import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.registries.CoreBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
@@ -39,7 +40,10 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 blockWithItem(block);
             } else if (block.block() instanceof IceBlock) {
                 iceBlockWithItem(block);
-            } else if (block.block() instanceof PlasticBlock) {
+            } else if (block.block() instanceof PlasticTypeBlock) {
+                // Skip PlasticTypeBlock as it doesn't have its own texture
+                continue;
+            } else if (block.block() instanceof ColoredPlasticBlock) {
                 plasticBlockWithItem(block);
             }
         }
