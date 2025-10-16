@@ -27,7 +27,16 @@ public class CoreTags {
         public static final TagKey<Item> POLYTETRAFLUOROETHYLENE = createTag("polytetrafluoroethylene");
         public static final TagKey<Item> POLYETHERETHERKETONE = createTag("polyetheretherketone");
 
+        public static final TagKey<Item> PLATES = createTag("plates");
+
         public static final TagKey<Item> WRENCHES = createTag("wrenches");
+        public static final TagKey<Item> FLATHEAD_SCREWDRIVERS = createTag("flathead_screwdrivers");
+        public static final TagKey<Item> PHILLIPS_SCREWDRIVERS = createTag("philips_screwdrivers");
+        public static final TagKey<Item> HAMMERS = createTag("hammers");
+        public static final TagKey<Item> SOCKET_DRIVERS = createTag("socket_drivers");
+        public static final TagKey<Item> SAWS = createTag("saws");
+        public static final TagKey<Item> WIRE_CUTTERS = createTag("wire_cutters");
+        public static final TagKey<Item> FILES = createTag("files");
 
         private static TagKey<Item> createTag (String key) {
             return ItemTags.create(GM.getResource(key));

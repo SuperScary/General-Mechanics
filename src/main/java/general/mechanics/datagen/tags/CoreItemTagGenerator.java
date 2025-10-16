@@ -1,7 +1,9 @@
 package general.mechanics.datagen.tags;
 
 import general.mechanics.GM;
+import general.mechanics.api.item.element.metallic.*;
 import general.mechanics.api.item.plastic.PlasticType;
+import general.mechanics.api.item.tools.*;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.IDataProvider;
 import general.mechanics.registries.CoreItems;
@@ -20,8 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-import static general.mechanics.registries.CoreItems.*;
-
 public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvider {
 
     public CoreItemTagGenerator(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> future, CompletableFuture<TagLookup<Block>> completableFuture, @Nullable ExistingFileHelper existingFileHelper) {
@@ -30,14 +30,20 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
 
     @Override
     protected void addTags (HolderLookup.@NotNull Provider provider) {
-        this.tag(Tags.Items.INGOTS)
-                .add(CoreElements.VANADIUM_INGOT.asItem());
 
-        this.tag(Tags.Items.RAW_MATERIALS)
-                .add(CoreElements.VANADIUM_INGOT.get().getRawItem().asItem().asItem());
-
-        this.tag(Tags.Items.NUGGETS)
-                .add(CoreElements.VANADIUM_INGOT.get().getNuggetItem().asItem().asItem());
+        for (var element : CoreElements.getElements()) {
+            if (element.get() instanceof ElementItem) {
+                this.tag(Tags.Items.INGOTS).add(element.asItem());
+            } else if (element.get() instanceof ElementNuggetItem) {
+                this.tag(Tags.Items.NUGGETS).add(element.asItem());
+            } else if (element.get() instanceof ElementRawItem) {
+                this.tag(Tags.Items.RAW_MATERIALS).add(element.asItem());
+            } else if (element.get() instanceof ElementDustItem) {
+                this.tag(Tags.Items.DUSTS).add(element.asItem());
+            } else if (element.get() instanceof ElementPlateItem) {
+                this.tag(CoreTags.Items.PLATES).add(element.asItem());
+            }
+        }
 
         // Add all colored plastics to the general plastic tag
         for (var plastic : CoreItems.getAllColoredPlastics()) {
@@ -57,10 +63,50 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
             }
         }
 
+        for (var tool : CoreItems.getItems()) {
+            if (tool.get() instanceof ToolItem toolItem) {
+                if (toolItem instanceof FileItem) this.tag(CoreTags.Items.FILES).add(toolItem);
+                if (toolItem instanceof FlatheadScrewdriverItem) this.tag(CoreTags.Items.FLATHEAD_SCREWDRIVERS).add(toolItem);
+                if (toolItem instanceof HammerItem) this.tag(CoreTags.Items.HAMMERS).add(toolItem);
+                if (toolItem instanceof PhillipsScrewdriverItem) this.tag(CoreTags.Items.PHILLIPS_SCREWDRIVERS).add(toolItem);
+                if (toolItem instanceof SocketDriverItem) this.tag(CoreTags.Items.SOCKET_DRIVERS).add(toolItem);
+                if (toolItem instanceof SawItem) this.tag(CoreTags.Items.SAWS).add(toolItem);
+                if (toolItem instanceof WireCuttersItem) this.tag(CoreTags.Items.WIRE_CUTTERS).add(toolItem);
+                if (toolItem instanceof WrenchItem) this.tag(CoreTags.Items.WRENCHES).add(toolItem);
+                this.tag(Tags.Items.TOOLS).add(toolItem);
+            }
 
-        this.tag(CoreTags.Items.WRENCHES)
-                .add(WRENCH.asItem());
+        }
 
+        overrideMCTags();
+
+    }
+
+    protected void overrideMCTags() {
+        // Integrates our same type items with minecraft's default items.
+        this.tag(Tags.Items.INGOTS_IRON)
+                .add(CoreElements.IRON_INGOT.asItem());
+
+        this.tag(Tags.Items.INGOTS_GOLD)
+                .add(CoreElements.GOLD_INGOT.asItem());
+
+        this.tag(Tags.Items.INGOTS_COPPER)
+                .add(CoreElements.COPPER_INGOT.asItem());
+
+        this.tag(Tags.Items.NUGGETS_IRON)
+                .add(CoreElements.IRON_INGOT.get().getNuggetItem().asItem());
+
+        this.tag(Tags.Items.NUGGETS_GOLD)
+                .add(CoreElements.GOLD_INGOT.get().getNuggetItem().asItem());
+
+        this.tag(Tags.Items.RAW_MATERIALS_IRON)
+                .add(CoreElements.IRON_INGOT.get().getRawItem().asItem());
+
+        this.tag(Tags.Items.RAW_MATERIALS_COPPER)
+                .add(CoreElements.COPPER_INGOT.get().getRawItem().asItem());
+
+        this.tag(Tags.Items.RAW_MATERIALS_GOLD)
+                .add(CoreElements.GOLD_INGOT.get().getRawItem().asItem());
     }
 
     /**
