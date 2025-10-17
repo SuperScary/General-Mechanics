@@ -7,6 +7,7 @@ import general.mechanics.api.block.base.DecorativeBlock;
 import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.Ice7Block;
 import general.mechanics.api.block.ice.IceBlock;
+import general.mechanics.api.block.machine.MachineFrameBlock;
 import general.mechanics.api.block.plastic.PlasticTypeBlock;
 import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.api.item.plastic.PlasticType;
@@ -74,7 +75,7 @@ public class CoreBlocks {
     public static final BlockDefinition<MatterFabricatorBlock> MATTER_FABRICATOR = reg("Matter Fabricator", MatterFabricatorBlock::new);
 
     // Machine block
-    public static final BlockDefinition<DecorativeBlock> MACHINE_FRAME = reg("Machine Frame", () -> new DecorativeBlock(BlockBehaviour.Properties.ofFullCopy(POLYETHYLENE_BLOCK.block())));
+    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME = reg("Machine Frame", () -> new MachineFrameBlock(BlockBehaviour.Properties.ofFullCopy(POLYETHYLENE_BLOCK.block())));
 
     /**
      * Formats a color name by capitalizing each word and replacing underscores with spaces.
