@@ -56,7 +56,7 @@ public class MultiblockFeedbackHandler {
             double y = pos.getY() + 0.5 + level.random.nextDouble() * 3;
             double z = pos.getZ() + 0.5 + (level.random.nextDouble() - 0.5) * 3;
             
-            level.sendParticles(ParticleTypes.ENCHANT, x, y, z, 1, 0, 0.1, 0, 0);
+            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, x, y, z, 1, 0, 0.1, 0, 0);
         }
         
         // Spawn some sparkle particles

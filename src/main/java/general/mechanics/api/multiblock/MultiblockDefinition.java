@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -35,6 +36,14 @@ public final class MultiblockDefinition {
     }
 
     public Optional<MultiblockValidator.ValidationResult> findMatch(Level level, BlockPos anchorPos) {
+        if (objectFactory != null) {
+            Multiblock obj = objectFactory.get();
+            Map<net.minecraft.world.level.block.Block, Integer> exact = obj.getRequiredExactBlocks();
+            Map<net.minecraft.world.level.block.Block, Integer> minimum = obj.getRequiredMinimumBlocks();
+            if (!exact.isEmpty() || !minimum.isEmpty()) {
+                return MultiblockValidator.findMatch(layout, level, anchorPos, exact, minimum);
+            }
+        }
         return MultiblockValidator.findMatch(layout, level, anchorPos);
     }
 
@@ -42,10 +51,26 @@ public final class MultiblockDefinition {
                                                                     BlockPos anchorPos,
                                                                     EnumSet<Direction> facings,
                                                                     boolean includeMirror) {
+        if (objectFactory != null) {
+            Multiblock obj = objectFactory.get();
+            Map<net.minecraft.world.level.block.Block, Integer> exact = obj.getRequiredExactBlocks();
+            Map<net.minecraft.world.level.block.Block, Integer> minimum = obj.getRequiredMinimumBlocks();
+            if (!exact.isEmpty() || !minimum.isEmpty()) {
+                return MultiblockValidator.findMatch(layout, level, anchorPos, facings, includeMirror, exact, minimum);
+            }
+        }
         return MultiblockValidator.findMatch(layout, level, anchorPos, facings, includeMirror);
     }
 
     public MultiblockValidator.ValidationResult validateAt(Level level, BlockPos anchorPos, Direction facing, boolean mirrored) {
+        if (objectFactory != null) {
+            Multiblock obj = objectFactory.get();
+            Map<net.minecraft.world.level.block.Block, Integer> exact = obj.getRequiredExactBlocks();
+            Map<net.minecraft.world.level.block.Block, Integer> minimum = obj.getRequiredMinimumBlocks();
+            if (!exact.isEmpty() || !minimum.isEmpty()) {
+                return MultiblockValidator.validateAt(layout, level, anchorPos, facing, mirrored, exact, minimum);
+            }
+        }
         return MultiblockValidator.validateAt(layout, level, anchorPos, facing, mirrored);
     }
 

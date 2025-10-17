@@ -3,7 +3,7 @@ package general.mechanics.registries;
 import general.mechanics.GM;
 import general.mechanics.api.multiblock.MultiblockDefinition;
 import general.mechanics.api.multiblock.base.Multiblock;
-import general.mechanics.multiblocks.DrakiumCrafterMultiblock;
+import general.mechanics.multiblocks.EmptyMachineMultiblock;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -14,12 +14,8 @@ public class CoreMultiblocks {
 
     public static final DeferredRegister<MultiblockDefinition> REGISTRY = DeferredRegister.create(CoreRegistries.MULTIBLOCK_DEFINITIONS, GM.MODID);
 
-    public static final DeferredHolder<MultiblockDefinition, MultiblockDefinition> DRAKIUM_CRAFTER =
-            reg("Drakium Crafter", DrakiumCrafterMultiblock::new);
+    public static final DeferredHolder<MultiblockDefinition, MultiblockDefinition> EMPTY_MACHINE = reg("Empty Machine", EmptyMachineMultiblock::new);
 
-    /**
-     * Registers a multiblock with the default resource name (name converted to lowercase with underscores).
-     */
     public static <T extends Multiblock> DeferredHolder<MultiblockDefinition, MultiblockDefinition> reg(final String name, final Supplier<T> supplier) {
         String resourceFriendly = name.toLowerCase().replace(' ', '_');
         return reg(name, GM.getResource(resourceFriendly), supplier);

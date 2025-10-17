@@ -12,6 +12,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Base class for multiblocks that provides common functionality and lifecycle methods.
@@ -21,10 +26,22 @@ public abstract class Multiblock {
 
     protected MultiblockDefinition definition;
     protected final String name;
+    /**
+     * Exact count requirements for specific blocks present within the validated structure region.
+     * If present, validation will require exactly the specified number to be matched.
+     */
+    protected Map<Block, Integer> requiredExactBlocks;
+    /**
+     * Minimum count requirements for specific blocks present within the validated structure region.
+     * If present, validation will require at least the specified number to be matched (more is allowed).
+     */
+    protected Map<Block, Integer> requiredMinimumBlocks;
 
     public Multiblock(String name) {
         this.name = name;
         this.definition = null; // Will be created lazily when needed
+        this.requiredExactBlocks = new HashMap<>();
+        this.requiredMinimumBlocks = new HashMap<>();
     }
 
     /**
@@ -58,6 +75,38 @@ public abstract class Multiblock {
      * This method must be implemented by subclasses.
      */
     public abstract Layout createLayout();
+
+    /**
+     * Adds or updates an exact count requirement for a specific block.
+     */
+    public Multiblock requireExact(Block block, int count) {
+        if (count < 0) throw new IllegalArgumentException("count must be >= 0");
+        this.requiredExactBlocks.put(block, count);
+        return this;
+    }
+
+    /**
+     * Adds or updates a minimum count requirement for a specific block. More than this number is allowed.
+     */
+    public Multiblock requireAtLeast(Block block, int minCount) {
+        if (minCount < 0) throw new IllegalArgumentException("minCount must be >= 0");
+        this.requiredMinimumBlocks.put(block, minCount);
+        return this;
+    }
+
+    /**
+     * Returns an unmodifiable view of exact block count requirements.
+     */
+    public Map<Block, Integer> getRequiredExactBlocks() {
+        return Collections.unmodifiableMap(this.requiredExactBlocks);
+    }
+
+    /**
+     * Returns an unmodifiable view of minimum block count requirements.
+     */
+    public Map<Block, Integer> getRequiredMinimumBlocks() {
+        return Collections.unmodifiableMap(this.requiredMinimumBlocks);
+    }
 
     // Overridable methods with default implementations
 
@@ -107,8 +156,7 @@ public abstract class Multiblock {
      * @param hitPos The specific position that was clicked within the multiblock
      * @return The result of the interaction
      */
-    public InteractionResult onInteract(Level level, BlockPos anchorPos, Direction facing, boolean mirrored, 
-                                       Player player, InteractionHand hand, ItemStack itemInHand, BlockPos hitPos) {
+    public InteractionResult onInteract(Level level, BlockPos anchorPos, Direction facing, boolean mirrored, Player player, InteractionHand hand, ItemStack itemInHand, BlockPos hitPos) {
         // Default: do nothing
         return InteractionResult.PASS;
     }
