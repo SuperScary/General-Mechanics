@@ -110,6 +110,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         var overlayCornerBL = frameOverlay("corner_bottom_left");
         var overlayCornerBR = frameOverlay("corner_bottom_right");
         var overlayNone = frameOverlay("edge_none");
+		var overlayFrame = frameOverlay("frame");
 
 		// Combined overlays for exact patterns
 		var overlayColumn = frameOverlay("column");
@@ -130,6 +131,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 GM.getResource("block/machine/frame/corner_bottom_left"),
 				GM.getResource("block/machine/frame/corner_bottom_right"),
 				GM.getResource("block/machine/frame/edge_none"),
+				GM.getResource("block/machine/frame/frame"),
 				GM.getResource("block/machine/frame/column"),
 				GM.getResource("block/machine/frame/row"),
 				GM.getResource("block/machine/frame/u_top"),
@@ -150,6 +152,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
         addFaceNone(multipart, overlayNone, 0, 0,
                 MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
+		addFaceExact(multipart, overlayFrame, 0, 0,
+				MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
 		// exact patterns
 		addFaceExact(multipart, overlayColumn, 0, 0,
 				MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
@@ -171,6 +175,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
         addFaceNone(multipart, overlayNone, 180, 0,
                 MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
+		addFaceExact(multipart, overlayFrame, 180, 0,
+				MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
 		addFaceExact(multipart, overlayColumn, 180, 0,
 				MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
 		addFaceExact(multipart, overlayRow, 180, 0,
@@ -191,6 +197,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.EAST, MachineFrameBlock.WEST);
 		addFaceNone(multipart, overlayNone, 90, 0,
 				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.EAST, MachineFrameBlock.WEST);
+		addFaceExact(multipart, overlayFrame, 90, 0,
+				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
 		addFaceExact(multipart, overlayColumn, 90, 0,
 				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
 		addFaceExact(multipart, overlayRow, 90, 0,
@@ -213,6 +221,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
 		addFaceNone(multipart, overlayNone, 270, 0,
 				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
+		addFaceExact(multipart, overlayFrame, 270, 0,
+				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
 		addFaceExact(multipart, overlayColumn, 270, 0,
 				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
 		addFaceExact(multipart, overlayRow, 270, 0,
@@ -235,6 +245,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH);
 		addFaceNone(multipart, overlayNone, 90, 270,
 				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH);
+		addFaceExact(multipart, overlayFrame, 90, 270,
+				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
 		addFaceExact(multipart, overlayColumn, 90, 270,
 				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
 		addFaceExact(multipart, overlayRow, 90, 270,
@@ -257,6 +269,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH);
 		addFaceNone(multipart, overlayNone, 90, 90,
 				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH);
+		addFaceExact(multipart, overlayFrame, 90, 90,
+				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
 		addFaceExact(multipart, overlayColumn, 90, 90,
 				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
 		addFaceExact(multipart, overlayRow, 90, 90,
