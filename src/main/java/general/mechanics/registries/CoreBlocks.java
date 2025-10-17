@@ -75,7 +75,7 @@ public class CoreBlocks {
     public static final BlockDefinition<MatterFabricatorBlock> MATTER_FABRICATOR = reg("Matter Fabricator", MatterFabricatorBlock::new);
 
     // Machine block
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME = reg("Machine Frame", () -> new MachineFrameBlock(BlockBehaviour.Properties.ofFullCopy(POLYETHYLENE_BLOCK.block())));
+    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME = reg("Machine Frame", () -> new MachineFrameBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));
 
     /**
      * Formats a color name by capitalizing each word and replacing underscores with spaces.
