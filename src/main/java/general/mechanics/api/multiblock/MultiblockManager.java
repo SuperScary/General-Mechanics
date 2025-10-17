@@ -21,6 +21,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ArrayList;
 
 /**
  * Manages multiblock tracking and provides feedback when multiblocks are formed or destroyed.
@@ -530,7 +531,9 @@ public class MultiblockManager {
     private static void loadMultiblocksFromWorldData(ServerLevel level) {
         MultiblockWorldData worldData = MultiblockWorldData.get(level);
         
-        for (Map.Entry<BlockPos, MultiblockInfo> entry : worldData.getMultiblocks().entrySet()) {
+        var snapshot = new ArrayList<Map.Entry<BlockPos, MultiblockInfo>>(worldData.getMultiblocks().entrySet());
+        var toRemove = new ArrayList<BlockPos>();
+        for (Map.Entry<BlockPos, MultiblockInfo> entry : snapshot) {
             BlockPos pos = entry.getKey();
             MultiblockInfo info = entry.getValue();
             
@@ -551,10 +554,14 @@ public class MultiblockManager {
                 
                 System.out.println("DEBUG: Restored multiblock at " + pos + " from world data");
             } else {
-                // Multiblock is no longer valid, remove it from world data
-                worldData.removeMultiblock(pos);
-                System.out.println("DEBUG: Removed invalid multiblock at " + pos + " from world data");
+                // Multiblock is no longer valid, schedule removal after iteration
+                toRemove.add(pos);
             }
+        }
+        // Apply removals after the iteration to avoid ConcurrentModificationException
+        for (BlockPos pos : toRemove) {
+            worldData.removeMultiblock(pos);
+            System.out.println("DEBUG: Removed invalid multiblock at " + pos + " from world data");
         }
     }
 }

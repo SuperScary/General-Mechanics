@@ -1,7 +1,6 @@
 package general.mechanics.datagen.tags;
 
 import general.mechanics.GM;
-import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.IDataProvider;
 import net.minecraft.core.HolderLookup;
@@ -36,7 +35,7 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(ICE5.block())
                 .add(ICE6.block())
                 .add(ICE7.block())
-                .add(MACHINE_FRAME.block());
+                .add(MACHINE_FRAME_0.block());
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(ICE2.block())
@@ -45,7 +44,7 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(ICE5.block())
                 .add(ICE6.block())
                 .add(ICE7.block())
-                .add(MACHINE_FRAME.block());
+                .add(MACHINE_FRAME_0.block());
 
         for (var block : CoreBlocks.getAllColoredPlasticBlocks()) {
             this.tag(BlockTags.NEEDS_STONE_TOOL).add(block);

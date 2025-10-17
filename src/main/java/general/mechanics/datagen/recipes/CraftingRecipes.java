@@ -1,7 +1,6 @@
 package general.mechanics.datagen.recipes;
 
 import general.mechanics.GM;
-import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreItems;
@@ -48,7 +47,7 @@ public class CraftingRecipes extends CoreRecipeProvider {
     }
 
     private void block(RecipeOutput consumer) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MACHINE_FRAME, 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MACHINE_FRAME_0, 1)
                 .pattern("IPI")
                 .pattern("PRP")
                 .pattern("IPI")
@@ -68,12 +67,12 @@ public class CraftingRecipes extends CoreRecipeProvider {
                 .pattern("VFV")
                 .define('P', CoreTags.Items.PLASTIC_BLOCKS)
                 .define('V', CoreElements.VANADIUM_INGOT)
-                .define('F', MACHINE_FRAME)
+                .define('F', MACHINE_FRAME_0)
                 .define('U', CRAFTER)
                 .unlockedBy("has_vanadium_ingot", has(CoreElements.VANADIUM_INGOT))
                 .unlockedBy("has_plastic", has(CoreTags.Items.PLASTIC_BLOCKS))
                 .unlockedBy("has_crafter", has(CRAFTER))
-                .unlockedBy("has_machine_frame", has(MACHINE_FRAME))
+                .unlockedBy("has_machine_frame", has(MACHINE_FRAME_0))
                 .save(consumer, GM.getResource("crafting/matter_fabricator_from_plastic"));
     }
 

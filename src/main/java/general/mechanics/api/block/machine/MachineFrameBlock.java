@@ -1,20 +1,42 @@
 package general.mechanics.api.block.machine;
 
 import general.mechanics.api.block.base.BaseBlock;
+import general.mechanics.api.item.plastic.PlasticType;
+import general.mechanics.util.RomanNumeral;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class MachineFrameBlock extends BaseBlock {
 
-    public MachineFrameBlock(Properties properties) {
+    // Connectivity to adjacent MachineFrame blocks in each cardinal direction
+    public static final BooleanProperty NORTH = BooleanProperty.create("north");
+    public static final BooleanProperty SOUTH = BooleanProperty.create("south");
+    public static final BooleanProperty EAST = BooleanProperty.create("east");
+    public static final BooleanProperty WEST = BooleanProperty.create("west");
+    public static final BooleanProperty UP = BooleanProperty.create("up");
+    public static final BooleanProperty DOWN = BooleanProperty.create("down");
+
+    private final PlasticType plasticType;
+    private final int level;
+
+    public MachineFrameBlock(Properties properties, PlasticType plasticType) {
         super(properties);
         this.registerDefaultState(
                 this.stateDefinition.any()
@@ -25,18 +47,17 @@ public class MachineFrameBlock extends BaseBlock {
                         .setValue(UP, false)
                         .setValue(DOWN, false)
         );
+
+        this.plasticType = plasticType;
+        this.level = plasticType.ordinal() + 1;
     }
 
-    // Connectivity to adjacent MachineFrame blocks in each cardinal direction
-    public static final BooleanProperty NORTH = BooleanProperty.create("north");
-    public static final BooleanProperty SOUTH = BooleanProperty.create("south");
-    public static final BooleanProperty EAST = BooleanProperty.create("east");
-    public static final BooleanProperty WEST = BooleanProperty.create("west");
-    public static final BooleanProperty UP = BooleanProperty.create("up");
-    public static final BooleanProperty DOWN = BooleanProperty.create("down");
+    public MachineFrameBlock(PlasticType plasticType) {
+        this(Properties.ofFullCopy(Blocks.IRON_BLOCK), plasticType);
+    }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(NORTH, SOUTH, EAST, WEST, UP, DOWN);
     }
 
@@ -65,8 +86,28 @@ public class MachineFrameBlock extends BaseBlock {
         };
     }
 
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.literal(getPlasticType().getAbbreviation()));
+        tooltipComponents.add(Component.literal("§e" + getPlasticType().getFormula()));
+        if (Screen.hasShiftDown()) {
+            tooltipComponents.add(Component.literal("§oLevel: " + RomanNumeral.toRoman(level)));
+        } else {
+            tooltipComponents.add(Component.translatable("gui.gm.press_shift"));
+        }
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    }
+
     private boolean isSame(BlockGetter level, BlockPos pos) {
         BlockState st = level.getBlockState(pos);
         return st.getBlock() instanceof MachineFrameBlock;
+    }
+
+    public PlasticType getPlasticType() {
+        return plasticType;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

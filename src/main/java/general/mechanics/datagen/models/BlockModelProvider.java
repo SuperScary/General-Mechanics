@@ -44,11 +44,12 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 continue;
             } else if (block.block() instanceof ColoredPlasticBlock) {
                 plasticBlockWithItem(block);
+            } else if (block.block() instanceof MachineFrameBlock) {
+                machineFrame(block);
             }
         }
 
         machine(CoreBlocks.MATTER_FABRICATOR);
-        machineFrame(CoreBlocks.MACHINE_FRAME);
     }
 
     private void blockWithItem(BlockDefinition<?> block) {

@@ -35,7 +35,7 @@ public class EmptyMachineMultiblock extends Multiblock {
                 .layer("CCC", "CCC", "CCC")
                 .layer("CCC", "CCC", "CCC")
                 .layer("CCC", "CCC", "CCC")
-                .key('C', CoreBlocks.MACHINE_FRAME)
+                .key('C', CoreBlocks.MACHINE_FRAME_0)
                 .build();
     }
 }
