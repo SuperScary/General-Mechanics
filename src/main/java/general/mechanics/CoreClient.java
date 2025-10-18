@@ -2,6 +2,7 @@ package general.mechanics;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import general.mechanics.api.block.plastic.ColoredPlasticBlock;
+import general.mechanics.api.block.plastic.PlasticTypeBlock;
 import general.mechanics.api.item.element.metallic.*;
 import general.mechanics.api.item.plastic.ColoredPlasticItem;
 import general.mechanics.api.item.plastic.PlasticTypeItem;
@@ -46,11 +47,19 @@ public class CoreClient extends CoreBase {
         for (var block : CoreBlocks.getAllColoredPlasticBlocks()) {
             event.register(ColoredPlasticBlock::getColorForItemStack, block);
         }
+
+        for (var block : CoreBlocks.getAllPlasticTypeBlocks()) {
+            event.register(PlasticTypeBlock::getColorForItemStack, block);
+        }
     }
 
     public void registerBlockColors(RegisterColorHandlersEvent.Block event) {
         for (var block : CoreBlocks.getAllColoredPlasticBlocks()) {
             event.register(ColoredPlasticBlock::getColor, block);
+        }
+
+        for (var block : CoreBlocks.getAllPlasticTypeBlocks()) {
+            event.register(PlasticTypeBlock::getColor, block);
         }
     }
 
@@ -67,6 +76,10 @@ public class CoreClient extends CoreBase {
                 event.register(ElementDustItem::getColor, item);
             } else if (item instanceof ElementPlateItem) {
                 event.register(ElementPlateItem::getColor, item);
+            } else if (item instanceof ElementPileItem) {
+                event.register(ElementPileItem::getColor, item);
+            } else if (item instanceof ElementRodItem) {
+                event.register(ElementRodItem::getColor, item);
             }
         }
     }

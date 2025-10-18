@@ -3,6 +3,7 @@ package general.mechanics.api.block.machine;
 import general.mechanics.api.block.base.BaseBlock;
 import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.util.RomanNumeral;
+import lombok.Getter;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@Getter
 public class MachineFrameBlock extends BaseBlock {
 
     // Connectivity to adjacent MachineFrame blocks in each cardinal direction
@@ -103,11 +105,4 @@ public class MachineFrameBlock extends BaseBlock {
         return st.getBlock() instanceof MachineFrameBlock;
     }
 
-    public PlasticType getPlasticType() {
-        return plasticType;
-    }
-
-    public int getLevel() {
-        return level;
-    }
 }

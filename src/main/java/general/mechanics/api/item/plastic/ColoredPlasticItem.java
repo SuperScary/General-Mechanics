@@ -1,6 +1,7 @@
 package general.mechanics.api.item.plastic;
 
 import general.mechanics.api.item.base.BaseItem;
+import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Getter
 public class ColoredPlasticItem extends BaseItem {
 
     private final PlasticTypeItem parentPlastic;
@@ -26,14 +28,6 @@ public class ColoredPlasticItem extends BaseItem {
         tooltipComponents.add(Component.literal("§o" + getParentPlastic().getPlasticType().getAbbreviation()));
         tooltipComponents.add(Component.literal(String.format("§e" + getParentPlastic().getPlasticType().getFormula())));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-    }
-
-    public PlasticTypeItem getParentPlastic() {
-        return parentPlastic;
-    }
-
-    public DyeColor getColor() {
-        return color;
     }
 
     public static int getColor(ItemStack stack, int index) {

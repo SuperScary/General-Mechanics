@@ -40,8 +40,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
             } else if (block.block() instanceof IceBlock) {
                 iceBlockWithItem(block);
             } else if (block.block() instanceof PlasticTypeBlock) {
-                // Skip PlasticTypeBlock as it doesn't have its own texture
-                continue;
+                plasticBlockWithItem(block);
             } else if (block.block() instanceof ColoredPlasticBlock) {
                 plasticBlockWithItem(block);
             } else if (block.block() instanceof MachineFrameBlock) {

@@ -1,6 +1,7 @@
 package general.mechanics.datagen.recipes;
 
 import general.mechanics.GM;
+import general.mechanics.api.item.element.metallic.ElementItem;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreItems;
@@ -39,11 +40,11 @@ public class CraftingRecipes extends CoreRecipeProvider {
         tools(consumer);
         misc(consumer);
 
-        // im just testin shit
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, COBBLESTONE, 1)
-                .requires(FILE)
-                .unlockedBy("has_file", has(FILE))
-                .save(consumer, GM.getResource("crafting/cobblestone_from_file"));
+        for (var item : CoreElements.getElements()) {
+            if (item.get() instanceof ElementItem element) {
+                element.getRecipes(consumer, has(element::getDustItem));
+            }
+        }
     }
 
     private void block(RecipeOutput consumer) {

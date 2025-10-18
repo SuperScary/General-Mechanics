@@ -28,6 +28,8 @@ public class CoreTags {
         public static final TagKey<Item> POLYETHERETHERKETONE = createTag("polyetheretherketone");
 
         public static final TagKey<Item> PLATES = createTag("plates");
+        public static final TagKey<Item> RODS = createTag("rods");
+        public static final TagKey<Item> PILES = createTag("piles");
 
         public static final TagKey<Item> WRENCHES = createTag("wrenches");
         public static final TagKey<Item> FLATHEAD_SCREWDRIVERS = createTag("flathead_screwdrivers");

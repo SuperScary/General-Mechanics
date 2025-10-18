@@ -3,7 +3,6 @@ package general.mechanics.datagen.language;
 import general.mechanics.GM;
 import general.mechanics.api.electrical.capacitors.CapacitorItem;
 import general.mechanics.api.electrical.ics.IntegratedCircuitItem;
-import general.mechanics.api.electrical.ics.IntegratedCircuitType;
 import general.mechanics.api.electrical.resistors.ResistorItem;
 import general.mechanics.api.electrical.transformers.TransformerItem;
 import general.mechanics.api.electrical.transistor.TransistorItem;
@@ -11,7 +10,6 @@ import general.mechanics.api.upgrade.UpgradeBase;
 import general.mechanics.api.util.IDataProvider;
 import general.mechanics.registries.CoreBlocks;
 import general.mechanics.registries.CoreElements;
-import general.mechanics.api.item.element.metallic.ElementItem;
 import general.mechanics.registries.CoreItems;
 import general.mechanics.registries.CoreUpgrades;
 import net.minecraft.data.DataGenerator;
@@ -59,6 +57,7 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
 
     protected void addManualStrings() {
         add("itemGroup." + GM.MODID, GM.NAME);
+        add("itemGroup." + GM.MODID + ".elements", GM.NAME + ": Elements");
         add("gui.gm.progress", "Progress: "); // the space is important!!!!
         add("gui.gm.idle", "Idle");
         add("gui.gm.settings.right", "Right Click to Expand");

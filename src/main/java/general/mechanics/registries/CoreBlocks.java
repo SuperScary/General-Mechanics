@@ -149,6 +149,16 @@ public class CoreBlocks {
         return allColored;
     }
 
+    public static List<PlasticTypeBlock> getAllPlasticTypeBlocks() {
+        List<PlasticTypeBlock> allPlastic = new ArrayList<>();
+        for (var block : BLOCKS) {
+            if (block.block() instanceof PlasticTypeBlock plastic) {
+                allPlastic.add(plastic);
+            }
+        }
+        return allPlastic;
+    }
+
     public static List<BlockDefinition<?>> getBlocks () {
         return Collections.unmodifiableList(BLOCKS);
     }

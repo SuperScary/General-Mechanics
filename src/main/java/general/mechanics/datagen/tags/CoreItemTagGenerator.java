@@ -42,6 +42,10 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
                 this.tag(Tags.Items.DUSTS).add(element.asItem());
             } else if (element.get() instanceof ElementPlateItem) {
                 this.tag(CoreTags.Items.PLATES).add(element.asItem());
+            } else if (element.get() instanceof ElementPileItem) {
+                this.tag(CoreTags.Items.PILES).add(element.asItem());
+            } else if (element.get() instanceof ElementRodItem) {
+                this.tag(CoreTags.Items.RODS).add(element.asItem());
             }
         }
 

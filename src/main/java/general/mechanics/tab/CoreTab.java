@@ -22,17 +22,26 @@ import java.util.List;
 public class CoreTab {
 
     public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, GM.getResource("main"));
+    public static final ResourceKey<CreativeModeTab> ELEMENTS = ResourceKey.create(Registries.CREATIVE_MODE_TAB, GM.getResource("elements"));
 
     private static final Multimap<ResourceKey<CreativeModeTab>, ItemDefinition<?>> externalItemDefs = HashMultimap.create();
     private static final List<ItemDefinition<?>> itemDefs = new ArrayList<>();
+    private static final List<ItemDefinition<?>> elementDefs = new ArrayList<>();
 
     public static void init (Registry<CreativeModeTab> registry) {
-        var tab = CreativeModeTab.builder()
+        var mainTab = CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup." + GM.MODID))
                 .icon(CoreItems.WRENCH::stack)
                 .displayItems(CoreTab::buildDisplayItems)
                 .build();
-        Registry.register(registry, MAIN, tab);
+        Registry.register(registry, MAIN, mainTab);
+
+        var elementsTab = CreativeModeTab.builder()
+                .title(Component.translatable("itemGroup." + GM.MODID + ".elements"))
+                .icon(CoreElements.EINSTEINIUM_INGOT::stack)
+                .displayItems(CoreTab::buildElementDisplayItems)
+                .build();
+        Registry.register(registry, ELEMENTS, elementsTab);
     }
 
     public static void initExternal (BuildCreativeModeTabContentsEvent contents) {
@@ -45,6 +54,10 @@ public class CoreTab {
         itemDefs.add(itemDef);
     }
 
+    public static void addElements (ItemDefinition<?> itemDef) {
+        elementDefs.add(itemDef);
+    }
+
     public static void addExternal (ResourceKey<CreativeModeTab> tab, ItemDefinition<?> itemDef) {
         externalItemDefs.put(tab, itemDef);
     }
@@ -52,6 +65,19 @@ public class CoreTab {
     private static void buildDisplayItems (CreativeModeTab.ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output output) {
         for (var itemDef : itemDefs) {
             var item = itemDef.asItem();
+            if (item instanceof BaseBlockItem baseItem && baseItem.getBlock() instanceof BaseBlock baseBlock) {
+                baseBlock.addToCreativeTab(output);
+            } else if (item instanceof BaseItem baseItem) {
+                baseItem.addToCreativeTab(output);
+            } else {
+                output.accept(itemDef);
+            }
+        }
+    }
+
+    private static void buildElementDisplayItems (CreativeModeTab.ItemDisplayParameters itemDisplayParameters, CreativeModeTab.Output output) {
+        for (var itemDef : elementDefs) {
+            var item = itemDef.get();
             if (item instanceof BaseBlockItem baseItem && baseItem.getBlock() instanceof BaseBlock baseBlock) {
                 baseBlock.addToCreativeTab(output);
             } else if (item instanceof BaseItem baseItem) {

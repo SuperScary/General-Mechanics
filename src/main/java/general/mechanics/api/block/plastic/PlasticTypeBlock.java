@@ -5,10 +5,7 @@ import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.registries.CoreSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,5 +68,15 @@ public class PlasticTypeBlock extends BaseBlock {
             return defaultColor == -1 ? 0xFFFFFFFF : defaultColor;
         }
         return 0xFFFFFFFF; // Default to white if no specific color
+    }
+
+    public static int getColorForItemStack(ItemStack stack, int index) {
+        Item item = stack.getItem();
+
+        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof PlasticTypeBlock coloredBlock) {
+            return coloredBlock.getPlasticType().getDefaultColor();
+        }
+
+        return -1;
     }
 }

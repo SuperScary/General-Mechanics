@@ -3,7 +3,6 @@ package general.mechanics.datagen.loot;
 import com.google.common.collect.ImmutableMap;
 import general.mechanics.GM;
 import general.mechanics.registries.CoreBlocks;
-import general.mechanics.registries.CoreItems;
 import general.mechanics.registries.CoreElements;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;

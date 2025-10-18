@@ -1,6 +1,7 @@
 package general.mechanics.registries;
 
 import general.mechanics.GM;
+import general.mechanics.api.formula.Formula;
 import general.mechanics.api.multiblock.MultiblockDefinition;
 import general.mechanics.api.upgrade.UpgradeMap;
 import net.minecraft.core.Registry;
@@ -17,10 +18,12 @@ public class CoreRegistries {
 
     public static final ResourceKey<Registry<MultiblockDefinition>> MULTIBLOCKS = createRegistryKey("multiblock");
     public static final ResourceKey<Registry<UpgradeMap<?>>> UPGRADE_MAPS = createRegistryKey("upgrade_map");
+    public static final ResourceKey<Registry<Formula>> FORMULAS = createRegistryKey("formulas");
     //public static final ResourceKey<Registry<DeferredCoolant<?>>> DEFERRED_COOLANT = createRegistryKey("deferred_coolant");
 
     public static final Registry<MultiblockDefinition> MULTIBLOCK_DEFINITIONS = create(MULTIBLOCKS);
     public static final Registry<UpgradeMap<?>> UPGRADE_MAP_REGISTRY = create(UPGRADE_MAPS);
+    public static final Registry<Formula> FORMULAS_REGISTRY = create(FORMULAS);
 
     private static <T> Registry<T> create (ResourceKey<? extends Registry<T>> key) {
         var reg = new RegistryBuilder<>(key).sync(true).defaultKey(GM.getResource("empty")).create();

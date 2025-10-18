@@ -107,11 +107,15 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
         var raw = element.getRawItem();
         var dust = element.getDustItem();
         var plate = element.getPlateItem();
+        var pile = element.getPileItem();
+        var rod = element.getRodItem();
 
         this.getBuilder(nugget.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/nugget"));
         this.getBuilder(raw.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/raw_ore"));
         this.getBuilder(dust.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/dust"));
         this.getBuilder(plate.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/plate"));
+        this.getBuilder(pile.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/pile"));
+        this.getBuilder(rod.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/rod"));
 
         return this.getBuilder(item.id().getPath()).parent(new ModelFile.UncheckedModelFile("item/handheld")).texture("layer0", GM.getResource("item/ingot/ingot"));
     }

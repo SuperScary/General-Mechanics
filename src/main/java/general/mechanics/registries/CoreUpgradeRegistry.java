@@ -13,6 +13,7 @@ import general.mechanics.api.upgrade.UpgradeBase;
 import general.mechanics.api.upgrade.UpgradeMap;
 import general.mechanics.api.upgrade.Upgradeable;
 import general.mechanics.entity.block.MatterFabricatorBlockEntity;
+import lombok.Getter;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class CoreUpgradeRegistry {
         return supplier;
     }
 
+    @Getter
     public enum UpgradePairs {
         POWERED_CRAFTER (ImmutableList.of(
                 make(SPEED),
@@ -73,10 +75,6 @@ public class CoreUpgradeRegistry {
         private final ImmutableList<Pair<ItemDefinition<UpgradeBase>, Integer>> upgrades;
         UpgradePairs (ImmutableList<Pair<ItemDefinition<UpgradeBase>, Integer>> upgrades) {
             this.upgrades = upgrades;
-        }
-
-        public ImmutableList<Pair<ItemDefinition<UpgradeBase>, Integer>> getUpgrades () {
-            return this.upgrades;
         }
 
         private static Pair<ItemDefinition<UpgradeBase>, Integer> make (ItemDefinition<UpgradeBase> base, Integer maximum) {

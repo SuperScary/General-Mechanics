@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.UnaryOperator;
 
-public final class CoreComponents {
+public class CoreComponents {
     public static final DeferredRegister<DataComponentType<?>> REGISTRY =
             DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, GM.MODID);
 

@@ -2,6 +2,7 @@ package general.mechanics;
 
 import general.mechanics.api.multiblock.MultiblockManager;
 import general.mechanics.api.multiblock.feedback.MultiblockFeedbackHandler;
+import general.mechanics.hooks.ItemHoverHook;
 import general.mechanics.hooks.WrenchHooks;
 import general.mechanics.registries.*;
 import general.mechanics.tab.CoreTab;
@@ -39,10 +40,10 @@ public abstract class CoreBase implements GM {
 
         modEventBus.addListener(this::registerRegistries);
 
-
         MultiblockManager.init(modEventBus);
         NeoForge.EVENT_BUS.register(MultiblockFeedbackHandler.class);
         NeoForge.EVENT_BUS.addListener(WrenchHooks::onPlayerUseBlockEvent);
+        NeoForge.EVENT_BUS.addListener(ItemHoverHook::onItemHover);
 
     }
 
@@ -63,6 +64,7 @@ public abstract class CoreBase implements GM {
         CoreMenus.REGISTRY.register(modEventBus);
         CoreUpgrades.REGISTRY.register(modEventBus);
         CoreUpgradeRegistry.REGISTRY.register(modEventBus);
+        CoreFormulas.register(modEventBus);
     }
 
     @Override
