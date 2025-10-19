@@ -14,13 +14,10 @@ import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreItems;
 import general.mechanics.registries.CoreMenus;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
@@ -176,7 +173,7 @@ public class CoreClient extends CoreBase {
         ALLOY_MARKER = (g, font, stack, x, y) -> {
             var pose = g.pose();
             pose.pushPose();
-            pose.translate(x, y, 200); // Move to item position in GUI
+            pose.translate(x, y, 200); // Move to the item position in GUI
 
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
