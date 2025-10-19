@@ -1,5 +1,6 @@
 package general.mechanics.api.entity;
 
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -11,6 +12,7 @@ import java.util.function.Supplier;
 
 public final class DeferredBlockEntityType<T extends BlockEntity> implements Supplier<BlockEntityType<T>> {
 
+    @Getter
     private final Class<T> blockEntityClass;
 
     private final DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> holder;
@@ -18,10 +20,6 @@ public final class DeferredBlockEntityType<T extends BlockEntity> implements Sup
     public DeferredBlockEntityType (Class<T> blockEntityClass, DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> holder) {
         this.blockEntityClass = blockEntityClass;
         this.holder = holder;
-    }
-
-    public Class<T> getBlockEntityClass () {
-        return blockEntityClass;
     }
 
     @Override

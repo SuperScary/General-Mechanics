@@ -14,7 +14,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +31,7 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
     }
 
     @Override
-    protected void addTags (HolderLookup.@NotNull Provider provider) {
+    protected void addTags(HolderLookup.@NotNull Provider provider) {
 
         for (var element : CoreElements.getElements()) {
             if (element.get() instanceof ElementItem) {
@@ -70,9 +72,11 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
         for (var tool : CoreItems.getItems()) {
             if (tool.get() instanceof ToolItem toolItem) {
                 if (toolItem instanceof FileItem) this.tag(CoreTags.Items.FILES).add(toolItem);
-                if (toolItem instanceof FlatheadScrewdriverItem) this.tag(CoreTags.Items.FLATHEAD_SCREWDRIVERS).add(toolItem);
+                if (toolItem instanceof FlatheadScrewdriverItem)
+                    this.tag(CoreTags.Items.FLATHEAD_SCREWDRIVERS).add(toolItem);
                 if (toolItem instanceof HammerItem) this.tag(CoreTags.Items.HAMMERS).add(toolItem);
-                if (toolItem instanceof PhillipsScrewdriverItem) this.tag(CoreTags.Items.PHILLIPS_SCREWDRIVERS).add(toolItem);
+                if (toolItem instanceof PhillipsScrewdriverItem)
+                    this.tag(CoreTags.Items.PHILLIPS_SCREWDRIVERS).add(toolItem);
                 if (toolItem instanceof SocketDriverItem) this.tag(CoreTags.Items.SOCKET_DRIVERS).add(toolItem);
                 if (toolItem instanceof SawItem) this.tag(CoreTags.Items.SAWS).add(toolItem);
                 if (toolItem instanceof WireCuttersItem) this.tag(CoreTags.Items.WIRE_CUTTERS).add(toolItem);
@@ -133,7 +137,7 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
     }
 
     @Override
-    public @NotNull String getName () {
+    public @NotNull String getName() {
         return GM.NAME + " ItemTags";
     }
 }

@@ -3,8 +3,8 @@ package general.mechanics.registries;
 import general.mechanics.GM;
 import general.mechanics.api.block.BlockDefinition;
 import general.mechanics.api.block.base.BaseBlock;
-import general.mechanics.api.block.base.DecorativeBlock;
 import general.mechanics.api.block.base.OreBlock;
+import general.mechanics.api.item.element.ElementType;
 import general.mechanics.api.block.ice.Ice7Block;
 import general.mechanics.api.block.ice.IceBlock;
 import general.mechanics.api.block.machine.MachineFrameBlock;
@@ -13,6 +13,7 @@ import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.BaseBlockItem;
+import general.mechanics.block.HeatingElementBlock;
 import general.mechanics.block.MatterFabricatorBlock;
 import general.mechanics.tab.CoreTab;
 import net.minecraft.resources.ResourceLocation;
@@ -44,11 +45,89 @@ public class CoreBlocks {
     //################################
     //||            Ores            ||
     //################################
-    // Vanadium
-    public static final BlockDefinition<DecorativeBlock> VANADIUM_BLOCK = reg("Vanadium Block", DecorativeBlock::new);
-    //public static final BlockDefinition<DecorativeBlock> VANADIUM_BLOCK_RAW = reg("Block of Raw Vanadium", "raw_vanadium_block", DecorativeBlock::new);
-    public static final BlockDefinition<OreBlock> VANADIUM_ORE = reg("Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.STONE.getProperties().explosionResistance(500).strength(25)));
-    public static final BlockDefinition<OreBlock> DEEPSLATE_VANADIUM_ORE = reg("Deepslate Vanadium Ore", () -> new OreBlock(1, 3, OreBlock.Type.DEEPSLATE.getProperties().explosionResistance(500).strength(25)));
+    public static final BlockDefinition<OreBlock> LITHIUM_ORE_BLOCK = registerOre(ElementType.LITHIUM);
+    public static final BlockDefinition<OreBlock> BERYLLIUM_ORE_BLOCK = registerOre(ElementType.BERYLLIUM);
+    public static final BlockDefinition<OreBlock> BORON_ORE_BLOCK = registerOre(ElementType.BORON);
+
+    public static final BlockDefinition<OreBlock> SODIUM_ORE_BLOCK = registerOre(ElementType.SODIUM);
+    public static final BlockDefinition<OreBlock> MAGNESIUM_ORE_BLOCK = registerOre(ElementType.MAGNESIUM);
+    public static final BlockDefinition<OreBlock> ALUMINUM_ORE_BLOCK = registerOre(ElementType.ALUMINUM);
+    public static final BlockDefinition<OreBlock> SILICON_ORE_BLOCK = registerOre(ElementType.SILICON);
+    public static final BlockDefinition<OreBlock> PHOSPHORUS_ORE_BLOCK = registerOre(ElementType.PHOSPHORUS);
+    public static final BlockDefinition<OreBlock> SULFUR_ORE_BLOCK = registerOre(ElementType.SULFUR);
+
+    public static final BlockDefinition<OreBlock> POTASSIUM_ORE_BLOCK = registerOre(ElementType.POTASSIUM);
+    public static final BlockDefinition<OreBlock> CALCIUM_ORE_BLOCK = registerOre(ElementType.CALCIUM);
+    public static final BlockDefinition<OreBlock> SCANDIUM_ORE_BLOCK = registerOre(ElementType.SCANDIUM);
+    public static final BlockDefinition<OreBlock> TITANIUM_ORE_BLOCK = registerOre(ElementType.TITANIUM);
+    public static final BlockDefinition<OreBlock> VANADIUM_ORE_BLOCK = registerOre(ElementType.VANADIUM);
+    public static final BlockDefinition<OreBlock> CHROMIUM_ORE_BLOCK = registerOre(ElementType.CHROMIUM);
+    public static final BlockDefinition<OreBlock> MANGANESE_ORE_BLOCK = registerOre(ElementType.MANGANESE);
+    public static final BlockDefinition<OreBlock> IRON_ORE_BLOCK = registerOre(ElementType.IRON);
+    public static final BlockDefinition<OreBlock> COBALT_ORE_BLOCK = registerOre(ElementType.COBALT);
+    public static final BlockDefinition<OreBlock> NICKEL_ORE_BLOCK = registerOre(ElementType.NICKEL);
+    public static final BlockDefinition<OreBlock> COPPER_ORE_BLOCK = registerOre(ElementType.COPPER);
+    public static final BlockDefinition<OreBlock> ZINC_ORE_BLOCK = registerOre(ElementType.ZINC);
+    public static final BlockDefinition<OreBlock> GALLIUM_ORE_BLOCK = registerOre(ElementType.GALLIUM);
+    public static final BlockDefinition<OreBlock> GERMANIUM_ORE_BLOCK = registerOre(ElementType.GERMANIUM);
+    public static final BlockDefinition<OreBlock> ARSENIC_ORE_BLOCK = registerOre(ElementType.ARSENIC);
+    public static final BlockDefinition<OreBlock> SELENIUM_ORE_BLOCK = registerOre(ElementType.SELENIUM);
+    public static final BlockDefinition<OreBlock> BROMINE_ORE_BLOCK = registerOre(ElementType.BROMINE);
+
+    public static final BlockDefinition<OreBlock> RUBIDIUM_ORE_BLOCK = registerOre(ElementType.RUBIDIUM);
+    public static final BlockDefinition<OreBlock> STRONTIUM_ORE_BLOCK = registerOre(ElementType.STRONTIUM);
+    public static final BlockDefinition<OreBlock> YTTRIUM_ORE_BLOCK = registerOre(ElementType.YTTRIUM);
+    public static final BlockDefinition<OreBlock> ZIRCONIUM_ORE_BLOCK = registerOre(ElementType.ZIRCONIUM);
+    public static final BlockDefinition<OreBlock> NIOBIUM_ORE_BLOCK = registerOre(ElementType.NIOBIUM);
+    public static final BlockDefinition<OreBlock> MOLYBDENUM_ORE_BLOCK = registerOre(ElementType.MOLYBDENUM);
+    public static final BlockDefinition<OreBlock> RUTHENIUM_ORE_BLOCK = registerOre(ElementType.RUTHENIUM);
+    public static final BlockDefinition<OreBlock> RHODIUM_ORE_BLOCK = registerOre(ElementType.RHODIUM);
+    public static final BlockDefinition<OreBlock> PALLADIUM_ORE_BLOCK = registerOre(ElementType.PALLADIUM);
+    public static final BlockDefinition<OreBlock> SILVER_ORE_BLOCK = registerOre(ElementType.SILVER);
+    public static final BlockDefinition<OreBlock> CADMIUM_ORE_BLOCK = registerOre(ElementType.CADMIUM);
+    public static final BlockDefinition<OreBlock> INDIUM_ORE_BLOCK = registerOre(ElementType.INDIUM);
+    public static final BlockDefinition<OreBlock> TIN_ORE_BLOCK = registerOre(ElementType.TIN);
+    public static final BlockDefinition<OreBlock> ANTIMONY_ORE_BLOCK = registerOre(ElementType.ANTIMONY);
+    public static final BlockDefinition<OreBlock> TELLURIUM_ORE_BLOCK = registerOre(ElementType.TELLURIUM);
+    public static final BlockDefinition<OreBlock> IODINE_ORE_BLOCK = registerOre(ElementType.IODINE);
+
+    public static final BlockDefinition<OreBlock> CESIUM_ORE_BLOCK = registerOre(ElementType.CESIUM);
+    public static final BlockDefinition<OreBlock> BARIUM_ORE_BLOCK = registerOre(ElementType.BARIUM);
+    public static final BlockDefinition<OreBlock> LANTHANUM_ORE_BLOCK = registerOre(ElementType.LANTHANUM);
+    public static final BlockDefinition<OreBlock> CERIUM_ORE_BLOCK = registerOre(ElementType.CERIUM);
+    public static final BlockDefinition<OreBlock> PRASEODYMIUM_ORE_BLOCK = registerOre(ElementType.PRASEODYMIUM);
+    public static final BlockDefinition<OreBlock> NEODYMIUM_ORE_BLOCK = registerOre(ElementType.NEODYMIUM);
+    public static final BlockDefinition<OreBlock> SAMARIUM_ORE_BLOCK = registerOre(ElementType.SAMARIUM);
+    public static final BlockDefinition<OreBlock> EUROPIUM_ORE_BLOCK = registerOre(ElementType.EUROPIUM);
+    public static final BlockDefinition<OreBlock> GADOLINIUM_ORE_BLOCK = registerOre(ElementType.GADOLINIUM);
+    public static final BlockDefinition<OreBlock> TERBIUM_ORE_BLOCK = registerOre(ElementType.TERBIUM);
+    public static final BlockDefinition<OreBlock> DYSPROSIUM_ORE_BLOCK = registerOre(ElementType.DYSPROSIUM);
+    public static final BlockDefinition<OreBlock> HOLMIUM_ORE_BLOCK = registerOre(ElementType.HOLMIUM);
+    public static final BlockDefinition<OreBlock> ERBIUM_ORE_BLOCK = registerOre(ElementType.ERBIUM);
+    public static final BlockDefinition<OreBlock> THULIUM_ORE_BLOCK = registerOre(ElementType.THULIUM);
+    public static final BlockDefinition<OreBlock> YTTERBIUM_ORE_BLOCK = registerOre(ElementType.YTTERBIUM);
+    public static final BlockDefinition<OreBlock> LUTETIUM_ORE_BLOCK = registerOre(ElementType.LUTETIUM);
+    public static final BlockDefinition<OreBlock> HAFNIUM_ORE_BLOCK = registerOre(ElementType.HAFNIUM);
+    public static final BlockDefinition<OreBlock> TANTALUM_ORE_BLOCK = registerOre(ElementType.TANTALUM);
+    public static final BlockDefinition<OreBlock> TUNGSTEN_ORE_BLOCK = registerOre(ElementType.TUNGSTEN);
+    public static final BlockDefinition<OreBlock> RHENIUM_ORE_BLOCK = registerOre(ElementType.RHENIUM);
+    public static final BlockDefinition<OreBlock> OSMIUM_ORE_BLOCK = registerOre(ElementType.OSMIUM);
+    public static final BlockDefinition<OreBlock> IRIDIUM_ORE_BLOCK = registerOre(ElementType.IRIDIUM);
+    public static final BlockDefinition<OreBlock> PLATINUM_ORE_BLOCK = registerOre(ElementType.PLATINUM);
+    public static final BlockDefinition<OreBlock> GOLD_ORE_BLOCK = registerOre(ElementType.GOLD);
+    public static final BlockDefinition<OreBlock> MERCURY_ORE_BLOCK = registerOre(ElementType.MERCURY);
+    public static final BlockDefinition<OreBlock> THALLIUM_ORE_BLOCK = registerOre(ElementType.THALLIUM);
+    public static final BlockDefinition<OreBlock> LEAD_ORE_BLOCK = registerOre(ElementType.LEAD);
+    public static final BlockDefinition<OreBlock> BISMUTH_ORE_BLOCK = registerOre(ElementType.BISMUTH);
+    public static final BlockDefinition<OreBlock> POLONIUM_ORE_BLOCK = registerOre(ElementType.POLONIUM);
+    public static final BlockDefinition<OreBlock> ASTATINE_ORE_BLOCK = registerOre(ElementType.ASTATINE);
+
+    public static final BlockDefinition<OreBlock> FRANCIUM_ORE_BLOCK = registerOre(ElementType.FRANCIUM);
+    public static final BlockDefinition<OreBlock> RADIUM_ORE_BLOCK = registerOre(ElementType.RADIUM);
+    public static final BlockDefinition<OreBlock> ACTINIUM_ORE_BLOCK = registerOre(ElementType.ACTINIUM);
+    public static final BlockDefinition<OreBlock> THORIUM_ORE_BLOCK = registerOre(ElementType.THORIUM);
+    public static final BlockDefinition<OreBlock> PROTACTINIUM_ORE_BLOCK = registerOre(ElementType.PROTACTINIUM);
+    public static final BlockDefinition<OreBlock> URANIUM_ORE_BLOCK = registerOre(ElementType.URANIUM);
 
     // Plastic Blocks
     public static final BlockDefinition<PlasticTypeBlock> POLYETHYLENE_BLOCK = plasticTypeBlock("Polyethylene Block", PlasticType.POLYETHYLENE);
@@ -86,6 +165,9 @@ public class CoreBlocks {
     public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_8 = reg("Polyurethane Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYURETHANE));
     public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_9 = reg("Polytetrafluoroethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYTETRAFLUOROETHYLENE));
     public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_10 = reg("Polyetheretherketone Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHERETHERKETONE));
+
+    // Misc
+    public static final BlockDefinition<HeatingElementBlock> INDUSTRIAL_HEATING_ELEMENT = reg("Industrial Heating Element", HeatingElementBlock::new);
 
     /**
      * Formats a color name by capitalizing each word and replacing underscores with spaces.
@@ -136,6 +218,16 @@ public class CoreBlocks {
         return coloredVariants;
     }
 
+    public static List<OreBlock> getOreBlocks() {
+        List<OreBlock> ores = new ArrayList<>();
+        for (var block : BLOCKS) {
+            if (block.block() instanceof OreBlock ore) {
+                ores.add(ore);
+            }
+        }
+        return ores;
+    }
+
     /**
      * Get all colored plastic blocks
      */
@@ -157,6 +249,17 @@ public class CoreBlocks {
             }
         }
         return allPlastic;
+    }
+
+    private static BlockDefinition<OreBlock> registerOre(ElementType element) {
+        if (element.isAlloy() || !element.isNatural()) {
+            throw new IllegalArgumentException("Attempted to register ore for invalid element: " + element.name());
+        }
+        String name = element.getDisplayName() + " Ore";
+        String resourceName = name.toLowerCase().replace(' ', '_');
+        BlockDefinition<OreBlock> definition = reg(name, GM.getResource(resourceName), () -> new OreBlock(element), null, false);
+        CoreTab.addElements(definition.item());
+        return definition;
     }
 
     public static List<BlockDefinition<?>> getBlocks () {

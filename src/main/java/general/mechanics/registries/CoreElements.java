@@ -133,6 +133,14 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> FLEROVIUM_INGOT = elementIngot(ElementType.FLEROVIUM);
     public static final ItemDefinition<ElementItem> MOSCOVIUM_INGOT = elementIngot(ElementType.MOSCOVIUM);
     public static final ItemDefinition<ElementItem> LIVERMORIUM_INGOT = elementIngot(ElementType.LIVERMORIUM);
+    public static final ItemDefinition<ElementItem> SILICON_INGOT = elementIngot(ElementType.SILICON);
+    public static final ItemDefinition<ElementItem> PHOSPHORUS_INGOT = elementIngot(ElementType.PHOSPHORUS);
+
+    // Alloys
+    public static final ItemDefinition<ElementItem> STEEL_INGOT = elementIngot(ElementType.STEEL);
+    public static final ItemDefinition<ElementItem> STAINLESS_STEEL_INGOT = elementIngot(ElementType.STAINLESS_STEEL);
+    public static final ItemDefinition<ElementItem> BRASS_INGOT = elementIngot(ElementType.BRASS);
+    public static final ItemDefinition<ElementItem> BRONZE_INGOT = elementIngot(ElementType.BRONZE);
 
     /**
      * Creates an element ingot with automatic naming and all associated items (raw, nugget)

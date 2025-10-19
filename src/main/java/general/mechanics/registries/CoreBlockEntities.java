@@ -6,6 +6,7 @@ import general.mechanics.api.block.BlockDefinition;
 import general.mechanics.api.entity.DeferredBlockEntityType;
 import general.mechanics.api.entity.block.BaseBlockEntity;
 import general.mechanics.api.entity.block.BaseEntityBlock;
+import general.mechanics.entity.block.HeatingElementBlockEntity;
 import general.mechanics.entity.block.MatterFabricatorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -26,6 +27,8 @@ public class CoreBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, GM.MODID);
 
     public static final DeferredBlockEntityType<MatterFabricatorBlockEntity> MATTER_FABRICATOR = create("fabricator", MatterFabricatorBlockEntity.class, MatterFabricatorBlockEntity::new, CoreBlocks.MATTER_FABRICATOR);
+
+    public static final DeferredBlockEntityType<HeatingElementBlockEntity> HEATING_ELEMENT = create("heating_element", HeatingElementBlockEntity.class, HeatingElementBlockEntity::new, CoreBlocks.INDUSTRIAL_HEATING_ELEMENT);
 
     /**
      * Get all block entity types whose implementations extend the given base class.

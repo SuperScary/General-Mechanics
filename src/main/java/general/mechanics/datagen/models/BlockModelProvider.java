@@ -8,7 +8,9 @@ import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.IceBlock;
 import general.mechanics.api.block.plastic.PlasticTypeBlock;
 import general.mechanics.api.block.plastic.ColoredPlasticBlock;
+import general.mechanics.block.HeatingElementBlock;
 import general.mechanics.registries.CoreBlocks;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +18,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.neoforged.neoforge.client.model.generators.*;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -35,7 +38,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         for (var block : CoreBlocks.getBlocks()) {
-            if (block.block() instanceof OreBlock || block.block() instanceof DecorativeBlock) {
+            if (block.block() instanceof DecorativeBlock || block.block() instanceof HeatingElementBlock) {
                 blockWithItem(block);
             } else if (block.block() instanceof IceBlock) {
                 iceBlockWithItem(block);
@@ -45,6 +48,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 plasticBlockWithItem(block);
             } else if (block.block() instanceof MachineFrameBlock) {
                 machineFrame(block);
+            } else if (block.block() instanceof OreBlock) {
+                oreBlock(block);
             }
         }
 
@@ -91,6 +96,44 @@ public class BlockModelProvider extends CoreBlockStateProvider {
 
         simpleBlockItem(block.block(), modelOn);
     }
+
+    private void oreBlock(BlockDefinition<?> def) {
+        var base = modLoc("block/ore/ore_block_base");
+        var overlay = modLoc("block/ore/ore_block_overlay");
+        ModelFile blockModel = twoLayerCubeBlockModel(def.getRegistryFriendlyName(), base, overlay);
+        simpleBlock(def.block(), blockModel);
+        twoLayerCubeItemModel(def.getRegistryFriendlyName());
+    }
+
+    /** One block model with two elements (base + overlay). */
+    private ModelFile twoLayerCubeBlockModel(String name, ResourceLocation baseTex, ResourceLocation overlayTex) {
+        float eps = 0.001f;
+        BlockModelBuilder b = models().getBuilder("block/" + name)
+                .parent(new ModelFile.ExistingModelFile(mcLoc("block/block"), existingFileHelper))
+                .renderType("minecraft:cutout")
+                .texture("base", baseTex)
+                .texture("overlay", overlayTex)
+                .texture("particle", baseTex)
+                .guiLight(BlockModel.GuiLight.SIDE);
+
+        b.element()
+                .from(eps, eps, eps).to(16f - eps, 16f - eps, 16f - eps)
+                .allFaces((d, f) -> f.texture("#base").uvs(0, 0, 16, 16))
+                .end();
+
+        b.element()
+                .from(0f, 0f, 0f).to(16f, 16f, 16f)
+                .allFaces((d, f) -> f.texture("#overlay").uvs(0, 0, 16, 16).tintindex(1))
+                .end();
+
+        return b;
+    }
+
+    private void twoLayerCubeItemModel(String name) {
+        itemModels().getBuilder(name)
+                .parent(models().getExistingFile(modLoc("block/" + name)));
+    }
+
 
     private void machineFrame(BlockDefinition<?> def) {
         // Base fill for the cube (underlay for overlays)
@@ -302,14 +345,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 .end();
     }
 
-    private void addFaceOverlays(MultiPartBlockStateBuilder multipart,
-                                 ModelFile edgeTop, ModelFile edgeBottom, ModelFile edgeLeft, ModelFile edgeRight,
-                                 ModelFile cornerTL, ModelFile cornerTR, ModelFile cornerBL, ModelFile cornerBR,
-                                 int rotX, int rotY,
-                                 net.minecraft.world.level.block.state.properties.BooleanProperty topProp,
-                                 net.minecraft.world.level.block.state.properties.BooleanProperty bottomProp,
-                                 net.minecraft.world.level.block.state.properties.BooleanProperty leftProp,
-                                 net.minecraft.world.level.block.state.properties.BooleanProperty rightProp) {
+    private void addFaceOverlays(MultiPartBlockStateBuilder multipart, ModelFile edgeTop, ModelFile edgeBottom, ModelFile edgeLeft, ModelFile edgeRight, ModelFile cornerTL, ModelFile cornerTR, ModelFile cornerBL, ModelFile cornerBR, int rotX, int rotY, BooleanProperty topProp, BooleanProperty bottomProp, BooleanProperty leftProp, BooleanProperty rightProp) {
         // edges
         multipart.part().modelFile(edgeTop).rotationX(rotX).rotationY(rotY).uvLock(true).addModel().condition(topProp, false).end();
         multipart.part().modelFile(edgeBottom).rotationX(rotX).rotationY(rotY).uvLock(true).addModel().condition(bottomProp, false).end();
@@ -323,13 +359,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         multipart.part().modelFile(cornerBR).rotationX(rotX).rotationY(rotY).uvLock(true).addModel().condition(bottomProp, false).condition(rightProp, false).end();
     }
 
-    private void addFaceNone(MultiPartBlockStateBuilder multipart,
-                             ModelFile none,
-                             int rotX, int rotY,
-                             net.minecraft.world.level.block.state.properties.BooleanProperty topProp,
-                             net.minecraft.world.level.block.state.properties.BooleanProperty bottomProp,
-                             net.minecraft.world.level.block.state.properties.BooleanProperty leftProp,
-                             net.minecraft.world.level.block.state.properties.BooleanProperty rightProp) {
+    private void addFaceNone(MultiPartBlockStateBuilder multipart, ModelFile none, int rotX, int rotY, BooleanProperty topProp, BooleanProperty bottomProp, BooleanProperty leftProp, BooleanProperty rightProp) {
         multipart.part().modelFile(none).rotationX(rotX).rotationY(rotY).uvLock(true).addModel()
                 .condition(topProp, true)
                 .condition(bottomProp, true)
@@ -338,13 +368,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 .end();
     }
 
-    private void addFaceExact(MultiPartBlockStateBuilder multipart,
-                              ModelFile exact,
-                              int rotX, int rotY,
-                              net.minecraft.world.level.block.state.properties.BooleanProperty topProp, boolean top,
-                              net.minecraft.world.level.block.state.properties.BooleanProperty bottomProp, boolean bottom,
-                              net.minecraft.world.level.block.state.properties.BooleanProperty leftProp, boolean left,
-                              net.minecraft.world.level.block.state.properties.BooleanProperty rightProp, boolean right) {
+    private void addFaceExact(MultiPartBlockStateBuilder multipart, ModelFile exact, int rotX, int rotY, BooleanProperty topProp, boolean top, BooleanProperty bottomProp, boolean bottom, BooleanProperty leftProp, boolean left, BooleanProperty rightProp, boolean right) {
         multipart.part().modelFile(exact).rotationX(rotX).rotationY(rotY).uvLock(true).addModel()
                 .condition(topProp, top)
                 .condition(bottomProp, bottom)

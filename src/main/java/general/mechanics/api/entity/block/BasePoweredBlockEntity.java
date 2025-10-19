@@ -65,7 +65,6 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
 
     private final CoreEnergyStorage energyStorage;
     private final ItemStackHandler upgradeInventory = new ItemStackHandler(4);
-    private ArrayList<PropertyComponent<?>> dataComponents = new ArrayList<>();
 
     private boolean enabled;
     private boolean autoImport;

@@ -9,18 +9,18 @@ import lombok.Setter;
 @Getter
 public enum ElementType {
     // Period 1
-    HYDROGEN("Hydrogen", "H", 1L, 0L, -1, false, 1, 1.008f, 0xFFFFFFFF),
-    HELIUM("Helium", "He", 2L, 2L, -1, false, 2, 4.003f, 0xFFD9FFFF),
+    HYDROGEN("Hydrogen", "H", 1L, 0L, -1, false, 1, 1.008f, 0xFFFFFFFF, false, false),
+    HELIUM("Helium", "He", 2L, 2L, -1, false, 2, 4.003f, 0xFFD9FFFF, false, false),
 
     // Period 2
     LITHIUM("Lithium", "Li", 3L, 4L, -1, false, 3, 6.941f, 0xFFE0E0E0),
     BERYLLIUM("Beryllium", "Be", 4L, 5L, -1, false, 4, 9.012f, 0xFFB8B8B8),
     BORON("Boron", "B", 5L, 6L, -1, false, 5, 10.811f, 0xFF8B4513),
     CARBON("Carbon", "C", 6L, 6L, -1, false, 6, 12.011f, 0xFF2F2F2F),
-    NITROGEN("Nitrogen", "N", 7L, 7L, -1, false, 7, 14.007f, 0xFF87CEEB),
-    OXYGEN("Oxygen", "O", 8L, 8L, -1, false, 8, 15.999f, 0xFF87CEEB),
-    FLUORINE("Fluorine", "F", 9L, 10L, -1, false, 9, 18.998f, 0xFF90E050),
-    NEON("Neon", "Ne", 10L, 10L, -1, false, 10, 20.180f, 0xFFB3E3F5),
+    NITROGEN("Nitrogen", "N", 7L, 7L, -1, false, 7, 14.007f, 0xFF87CEEB, false, false),
+    OXYGEN("Oxygen", "O", 8L, 8L, -1, false, 8, 15.999f, 0xFF87CEEB, false, false),
+    FLUORINE("Fluorine", "F", 9L, 10L, -1, false, 9, 18.998f, 0xFF90E050, false, false),
+    NEON("Neon", "Ne", 10L, 10L, -1, false, 10, 20.180f, 0xFFB3E3F5, false, false),
 
     // Period 3
     SODIUM("Sodium", "Na", 11L, 12L, -1, false, 11, 22.990f, 0xFFD8D8D8),
@@ -29,8 +29,8 @@ public enum ElementType {
     SILICON("Silicon", "Si", 14L, 14L, -1, false, 14, 28.085f, 0xFFA0A0A0),
     PHOSPHORUS("Phosphorus", "P", 15L, 16L, -1, false, 15, 30.974f, 0xFFFF8000),
     SULFUR("Sulfur", "S", 16L, 16L, -1, false, 16, 32.065f, 0xFFFFFF00),
-    CHLORINE("Chlorine", "Cl", 17L, 18L, -1, false, 17, 35.453f, 0xFF90E050),
-    ARGON("Argon", "Ar", 18L, 22L, -1, false, 18, 39.948f, 0xFF87CEEB),
+    CHLORINE("Chlorine", "Cl", 17L, 18L, -1, false, 17, 35.453f, 0xFF90E050, false, false),
+    ARGON("Argon", "Ar", 18L, 22L, -1, false, 18, 39.948f, 0xFF87CEEB, false, false),
 
     // Period 4
     POTASSIUM("Potassium", "K", 19L, 20L, -1, false, 19, 39.098f, 0xFFD4D4D4),
@@ -50,7 +50,7 @@ public enum ElementType {
     ARSENIC("Arsenic", "As", 33L, 42L, -1, false, 33, 74.922f, 0xFF848484),
     SELENIUM("Selenium", "Se", 34L, 45L, -1, false, 34, 78.971f, 0xFF7C7C7C),
     BROMINE("Bromine", "Br", 35L, 45L, -1, false, 35, 79.904f, 0xFF8B4513),
-    KRYPTON("Krypton", "Kr", 36L, 48L, -1, false, 36, 83.798f, 0xFF87CEEB),
+    KRYPTON("Krypton", "Kr", 36L, 48L, -1, false, 36, 83.798f, 0xFF87CEEB, false, false),
 
     // Period 5
     RUBIDIUM("Rubidium", "Rb", 37L, 48L, -1, false, 37, 85.468f, 0xFFD0D0D0),
@@ -59,7 +59,7 @@ public enum ElementType {
     ZIRCONIUM("Zirconium", "Zr", 40L, 51L, -1, false, 40, 91.224f, 0xFFB4B4B4),
     NIOBIUM("Niobium", "Nb", 41L, 52L, -1, false, 41, 92.906f, 0xFFB0B0B0),
     MOLYBDENUM("Molybdenum", "Mo", 42L, 54L, -1, false, 42, 95.940f, 0xFFACACAC),
-    TECHNETIUM("Technetium", "Tc", 43L, 55L, -1, false, 43, 98.000f, 0xFFA8A8A8),
+    TECHNETIUM("Technetium", "Tc", 43L, 55L, -1, false, 43, 98.000f, 0xFFA8A8A8, false, false),
     RUTHENIUM("Ruthenium", "Ru", 44L, 57L, -1, false, 44, 101.070f, 0xFFA4A4A4),
     RHODIUM("Rhodium", "Rh", 45L, 58L, -1, false, 45, 102.906f, 0xFFA0A0A0),
     PALLADIUM("Palladium", "Pd", 46L, 60L, -1, false, 46, 106.420f, 0xFF9C9C9C),
@@ -70,7 +70,7 @@ public enum ElementType {
     ANTIMONY("Antimony", "Sb", 51L, 71L, -1, false, 51, 121.760f, 0xFF8C8C8C),
     TELLURIUM("Tellurium", "Te", 52L, 76L, -1, false, 52, 127.600f, 0xFF787878),
     IODINE("Iodine", "I", 53L, 74L, -1, false, 53, 126.904f, 0xFF8B4513),
-    XENON("Xenon", "Xe", 54L, 77L, -1, false, 54, 131.293f, 0xFF87CEEB),
+    XENON("Xenon", "Xe", 54L, 77L, -1, false, 54, 131.293f, 0xFF87CEEB, false, false),
 
     // Period 6
     CESIUM("Cesium", "Cs", 55L, 78L, -1, false, 55, 132.905f, 0xFFD4D4D4),
@@ -79,7 +79,7 @@ public enum ElementType {
     CERIUM("Cerium", "Ce", 58L, 82L, -1, false, 58, 140.116f, 0xFFB4B4B4),
     PRASEODYMIUM("Praseodymium", "Pr", 59L, 82L, -1, false, 59, 140.908f, 0xFFB0B0B0),
     NEODYMIUM("Neodymium", "Nd", 60L, 84L, -1, false, 60, 144.242f, 0xFFACACAC),
-    PROMETHIUM("Promethium", "Pm", 61L, 84L, -1, false, 61, 145.000f, 0xFFA8A8A8),
+    PROMETHIUM("Promethium", "Pm", 61L, 84L, -1, false, 61, 145.000f, 0xFFA8A8A8, false, false),
     SAMARIUM("Samarium", "Sm", 62L, 88L, -1, false, 62, 150.360f, 0xFFA4A4A4),
     EUROPIUM("Europium", "Eu", 63L, 89L, -1, false, 63, 151.964f, 0xFFA0A0A0),
     GADOLINIUM("Gadolinium", "Gd", 64L, 93L, -1, false, 64, 157.250f, 0xFF9C9C9C),
@@ -104,7 +104,7 @@ public enum ElementType {
     BISMUTH("Bismuth", "Bi", 83L, 127L, -1, false, 83, 208.980f, 0xFF7C7C7C),
     POLONIUM("Polonium", "Po", 84L, 125L, -1, false, 84, 209.000f, 0xFF6B6B6B),
     ASTATINE("Astatine", "At", 85L, 125L, -1, false, 85, 210.000f, 0xFF6B6B6B),
-    RADON("Radon", "Rn", 86L, 136L, -1, false, 86, 222.000f, 0xFF87CEEB),
+    RADON("Radon", "Rn", 86L, 136L, -1, false, 86, 222.000f, 0xFF87CEEB, false, false),
 
     // Period 7
     FRANCIUM("Francium", "Fr", 87L, 136L, -1, false, 87, 223.000f, 0xFFD0D0D0),
@@ -113,32 +113,38 @@ public enum ElementType {
     THORIUM("Thorium", "Th", 90L, 142L, -1, false, 90, 232.038f, 0xFF6B6B8C),
     PROTACTINIUM("Protactinium", "Pa", 91L, 140L, -1, false, 91, 231.036f, 0xFF787878),
     URANIUM("Uranium", "U", 92L, 146L, -1, false, 92, 238.029f, 0xFF6B6B6B),
-    NEPTUNIUM("Neptunium", "Np", 93L, 144L, -1, false, 93, 237.000f, 0xFF747474),
-    PLUTONIUM("Plutonium", "Pu", 94L, 150L, -1, false, 94, 244.000f, 0xFF707070),
-    AMERICIUM("Americium", "Am", 95L, 148L, -1, false, 95, 243.000f, 0xFF6C6C6C),
-    CURIUM("Curium", "Cm", 96L, 151L, -1, false, 96, 247.000f, 0xFF686868),
-    BERKELIUM("Berkelium", "Bk", 97L, 150L, -1, false, 97, 247.000f, 0xFF646464),
-    CALIFORNIUM("Californium", "Cf", 98L, 153L, -1, false, 98, 251.000f, 0xFF606060),
-    EINSTEINIUM("Einsteinium", "Es", 99L, 153L, -1, false, 99, 252.000f, 0xFF5C5C5C),
-    FERMIUM("Fermium", "Fm", 100L, 157L, -1, false, 100, 257.000f, 0xFF585858),
-    MENDELEVIUM("Mendelevium", "Md", 101L, 157L, -1, false, 101, 258.000f, 0xFF545454),
-    NOBELIUM("Nobelium", "No", 102L, 157L, -1, false, 102, 259.000f, 0xFF505050),
-    LAWRENCIUM("Lawrencium", "Lr", 103L, 159L, -1, false, 103, 262.000f, 0xFF4C4C4C),
-    RUTHERFORDIUM("Rutherfordium", "Rf", 104L, 157L, -1, false, 104, 261.000f, 0xFF484848),
-    DUBNIUM("Dubnium", "Db", 105L, 157L, -1, false, 105, 262.000f, 0xFF444444),
-    SEABORGIUM("Seaborgium", "Sg", 106L, 160L, -1, false, 106, 266.000f, 0xFF404040),
-    BOHRIUM("Bohrium", "Bh", 107L, 157L, -1, false, 107, 264.000f, 0xFF3C3C3C),
-    HASSIUM("Hassium", "Hs", 108L, 161L, -1, false, 108, 269.000f, 0xFF383838),
-    MEITNERIUM("Meitnerium", "Mt", 109L, 159L, -1, false, 109, 268.000f, 0xFF343434),
-    DARMSTADTIUM("Darmstadtium", "Ds", 110L, 161L, -1, false, 110, 271.000f, 0xFF303030),
-    ROENTGENIUM("Roentgenium", "Rg", 111L, 161L, -1, false, 111, 272.000f, 0xFF2C2C2C),
-    COPERNICIUM("Copernicium", "Cn", 112L, 173L, -1, false, 112, 285.000f, 0xFF282828),
-    NIHONIUM("Nihonium", "Nh", 113L, 171L, -1, false, 113, 284.000f, 0xFF4A4A6B),
-    FLEROVIUM("Flerovium", "Fl", 114L, 175L, -1, false, 114, 289.000f, 0xFF242424),
-    MOSCOVIUM("Moscovium", "Mc", 115L, 173L, -1, false, 115, 288.000f, 0xFF202020),
-    LIVERMORIUM("Livermorium", "Lv", 116L, 177L, -1, false, 116, 293.000f, 0xFF1C1C1C),
-    TENNESSINE("Tennessine", "Ts", 117L, 177L, -1, false, 117, 294.000f, 0xFF181818),
-    OGANESSON("Oganesson", "Og", 118L, 176L, -1, false, 118, 294.000f, 0xFF87CEEB);
+    NEPTUNIUM("Neptunium", "Np", 93L, 144L, -1, false, 93, 237.000f, 0xFF747474, false, false),
+    PLUTONIUM("Plutonium", "Pu", 94L, 150L, -1, false, 94, 244.000f, 0xFF707070, false, false),
+    AMERICIUM("Americium", "Am", 95L, 148L, -1, false, 95, 243.000f, 0xFF6C6C6C, false, false),
+    CURIUM("Curium", "Cm", 96L, 151L, -1, false, 96, 247.000f, 0xFF686868, false, false),
+    BERKELIUM("Berkelium", "Bk", 97L, 150L, -1, false, 97, 247.000f, 0xFF646464, false, false),
+    CALIFORNIUM("Californium", "Cf", 98L, 153L, -1, false, 98, 251.000f, 0xFF606060, false, false),
+    EINSTEINIUM("Einsteinium", "Es", 99L, 153L, -1, false, 99, 252.000f, 0xFF5C5C5C, false, false),
+    FERMIUM("Fermium", "Fm", 100L, 157L, -1, false, 100, 257.000f, 0xFF585858, false, false),
+    MENDELEVIUM("Mendelevium", "Md", 101L, 157L, -1, false, 101, 258.000f, 0xFF545454, false, false),
+    NOBELIUM("Nobelium", "No", 102L, 157L, -1, false, 102, 259.000f, 0xFF505050, false, false),
+    LAWRENCIUM("Lawrencium", "Lr", 103L, 159L, -1, false, 103, 262.000f, 0xFF4C4C4C, false, false),
+    RUTHERFORDIUM("Rutherfordium", "Rf", 104L, 157L, -1, false, 104, 261.000f, 0xFF484848, false, false),
+    DUBNIUM("Dubnium", "Db", 105L, 157L, -1, false, 105, 262.000f, 0xFF444444, false, false),
+    SEABORGIUM("Seaborgium", "Sg", 106L, 160L, -1, false, 106, 266.000f, 0xFF404040, false, false),
+    BOHRIUM("Bohrium", "Bh", 107L, 157L, -1, false, 107, 264.000f, 0xFF3C3C3C, false, false),
+    HASSIUM("Hassium", "Hs", 108L, 161L, -1, false, 108, 269.000f, 0xFF383838, false, false),
+    MEITNERIUM("Meitnerium", "Mt", 109L, 159L, -1, false, 109, 268.000f, 0xFF343434, false, false),
+    DARMSTADTIUM("Darmstadtium", "Ds", 110L, 161L, -1, false, 110, 271.000f, 0xFF303030, false, false),
+    ROENTGENIUM("Roentgenium", "Rg", 111L, 161L, -1, false, 111, 272.000f, 0xFF2C2C2C, false, false),
+    COPERNICIUM("Copernicium", "Cn", 112L, 173L, -1, false, 112, 285.000f, 0xFF282828, false, false),
+    NIHONIUM("Nihonium", "Nh", 113L, 171L, -1, false, 113, 284.000f, 0xFF4A4A6B, false, false),
+    FLEROVIUM("Flerovium", "Fl", 114L, 175L, -1, false, 114, 289.000f, 0xFF242424, false, false),
+    MOSCOVIUM("Moscovium", "Mc", 115L, 173L, -1, false, 115, 288.000f, 0xFF202020, false, false),
+    LIVERMORIUM("Livermorium", "Lv", 116L, 177L, -1, false, 116, 293.000f, 0xFF1C1C1C, false, false),
+    TENNESSINE("Tennessine", "Ts", 117L, 177L, -1, false, 117, 294.000f, 0xFF181818, false, false),
+    OGANESSON("Oganesson", "Og", 118L, 176L, -1, false, 118, 294.000f, 0xFF87CEEB, false, false),
+
+    // Alloys - cannot be mined
+    STEEL("Steel", "FeC", 26L, 30L, -1L, false, 0, 55.845f, 0xFFB0C4DE, true, false),
+    STAINLESS_STEEL("Stainless Steel", "FeCrNi", 26L, 30L, -1L, false, 0, 57.000f, 0xFFC0C0C0, true, false),
+    BRASS("Brass", "CuZn", 29L, 35L, -1L, false, 0, 63.500f, 0xFFFFD700, true, false),
+    BRONZE("Bronze", "CuSn", 29L, 35L, -1L, false, 0, 64.000f, 0xFFCD7F32, true, false);
 
     @Getter
     @Setter
@@ -173,11 +179,20 @@ public enum ElementType {
     private boolean isotope;
 
     @Getter
+    @Setter
+    private boolean isAlloy;
+
+    @Getter
+    private final boolean isNatural;
+
+    @Getter
     private final int tintColor;
 
-    // Removed constant STABLE_HALF_LIFE; using -1 directly in enum constants
-
     ElementType(String name, String symbol, long protons, long neutrons, long halfLife, boolean isotope, int atomicNumber, float atomicWeight, int tintColor) {
+        this(name, symbol, protons, neutrons, halfLife, isotope, atomicNumber, atomicWeight, tintColor, false, true);
+    }
+
+    ElementType(String name, String symbol, long protons, long neutrons, long halfLife, boolean isotope, int atomicNumber, float atomicWeight, int tintColor, boolean isAlloy, boolean isNatural) {
         this.name = name;
         this.symbol = symbol;
         this.protons = protons;
@@ -186,6 +201,8 @@ public enum ElementType {
         this.isotope = isotope;
         this.atomicNumber = atomicNumber;
         this.atomicWeight = atomicWeight;
+        this.isAlloy = isAlloy;
+        this.isNatural = isNatural;
         this.tintColor = tintColor;
     }
 
@@ -227,6 +244,21 @@ public enum ElementType {
      * @return the display name of this element (capitalized)
      */
     public String getDisplayName() {
-        return name().charAt(0) + name().substring(1).toLowerCase();
+        StringBuilder result = new StringBuilder();
+        boolean capitalizeNext = true;
+
+        for (char c : name().toCharArray()) {
+            if (c == '_') {
+                result.append(' ');
+                capitalizeNext = true;
+            } else if (capitalizeNext) {
+                result.append(Character.toUpperCase(c));
+                capitalizeNext = false;
+            } else {
+                result.append(Character.toLowerCase(c));
+            }
+        }
+
+        return result.toString();
     }
 }

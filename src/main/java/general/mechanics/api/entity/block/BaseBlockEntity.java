@@ -8,6 +8,8 @@ import general.mechanics.api.util.data.BlockData;
 import general.mechanics.api.util.data.Keys;
 import general.mechanics.components.InventoryComponent;
 import general.mechanics.registries.CoreComponents;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -40,6 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseBlockEntity extends BlockEntity implements MenuProvider, BlockData, CoreInventory, IWrenchable {
+    @Setter
+    @Getter
     private boolean settingsPanelOpen = false;
 
     private final CoreItemStackHandler inventory = createInventory();
@@ -190,14 +194,6 @@ public abstract class BaseBlockEntity extends BlockEntity implements MenuProvide
     @Override
     public CoreItemStackHandler getInventory () {
         return inventory;
-    }
-
-    public boolean isSettingsPanelOpen () {
-        return settingsPanelOpen;
-    }
-
-    public void setSettingsPanelOpen (boolean bool) {
-        settingsPanelOpen = bool;
     }
 
     /**

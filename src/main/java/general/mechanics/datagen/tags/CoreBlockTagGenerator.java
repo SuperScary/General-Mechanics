@@ -26,9 +26,6 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(VANADIUM_ORE.block())
-                .add(VANADIUM_BLOCK.block())
-                .add(DEEPSLATE_VANADIUM_ORE.block())
                 .add(ICE2.block())
                 .add(ICE3.block())
                 .add(ICE4.block())
@@ -52,15 +49,11 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
             this.tag(CoreTags.Blocks.PLASTIC).add(block);
         }
 
-        this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
-                .add(VANADIUM_ORE.block())
-                .add(VANADIUM_BLOCK.block())
-                .add(DEEPSLATE_VANADIUM_ORE.block());
-
-        this.tag(Tags.Blocks.ORES)
-                .add(VANADIUM_ORE.block())
-                .add(VANADIUM_BLOCK.block())
-                .add(DEEPSLATE_VANADIUM_ORE.block());
+        for (var block : CoreBlocks.getOreBlocks()) {
+            this.tag(BlockTags.NEEDS_STONE_TOOL).add(block);
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
+            this.tag(Tags.Blocks.ORES).add(block);
+        }
 
         this.tag(BlockTags.ICE)
                 .add(ICE2.block())

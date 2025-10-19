@@ -107,32 +107,13 @@ public class CraftingRecipes extends CoreRecipeProvider {
     }
 
     protected void misc(RecipeOutput consumer) {
-
-        // Vanadium
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, VANADIUM_BLOCK, 1)
-                .pattern("III")
-                .pattern("III")
-                .pattern("III")
-                .define('I', CoreElements.VANADIUM_INGOT)
-                .unlockedBy("has_vanadium_ingot", has(CoreElements.VANADIUM_INGOT))
-                .save(consumer, GM.getResource("crafting/vanadium_block_from_ingot"));
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, CoreElements.VANADIUM_INGOT, 1)
-                .pattern("III")
-                .pattern("III")
-                .pattern("III")
-                .define('I', CoreElements.VANADIUM_INGOT.get().getNuggetItem().asItem())
-                .unlockedBy("has_vanadium_nugget", has(CoreElements.VANADIUM_INGOT.get().getNuggetItem().asItem()))
-                .save(consumer, GM.getResource("crafting/vanadium_ingot_from_nugget"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, CoreElements.VANADIUM_INGOT.get().getNuggetItem().asItem(), 9)
-                .requires(CoreElements.VANADIUM_INGOT)
-                .unlockedBy("has_vanadium_ingot", has(CoreElements.VANADIUM_INGOT))
-                .save(consumer, GM.getResource("crafting/vanadium_nugget_from_ingot"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, CoreElements.VANADIUM_INGOT, 9)
-                .requires(VANADIUM_BLOCK)
-                .unlockedBy("has_vanadium_block", has(VANADIUM_BLOCK))
-                .save(consumer, GM.getResource("crafting/vanadium_ingot_from_block"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, CoreElements.STAINLESS_STEEL_INGOT.get().getDustItem(), 1)
+                .requires(CoreElements.IRON_INGOT.get().getDustItem())
+                .requires(CoreElements.CHROMIUM_INGOT.get().getDustItem())
+                .requires(CoreElements.NICKEL_INGOT.get().getDustItem())
+                .unlockedBy("has_iron_dust", has(CoreElements.IRON_INGOT.get().getDustItem()))
+                .unlockedBy("has_chromium_dust", has(CoreElements.CHROMIUM_INGOT.get().getDustItem()))
+                .unlockedBy("has_nickel_dust", has(CoreElements.NICKEL_INGOT.get().getDustItem()))
+                .save(consumer, GM.getResource("crafting/stainless_steel_dust_from_dusts"));
     }
 }
