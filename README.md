@@ -9,7 +9,7 @@ To add General Mechanics to your project as a dependency, add the following to y
 repositories {
     maven {
         name = 'GENLAB Maven'
-        url = 'https://maven.genlab.com'
+        url = 'https://maven.superscary.net'
         content {
             includeGroup 'general.mechanics'
         }

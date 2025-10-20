@@ -154,17 +154,17 @@ public class CoreBlocks {
     public static final BlockDefinition<MatterFabricatorBlock> MATTER_FABRICATOR = reg("Matter Fabricator", MatterFabricatorBlock::new);
 
     // Machine block
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_0 = reg("Polyethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_1 = reg("Polypropylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYPROPYLENE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_2 = reg("Polystyrene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYSTYRENE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_3 = reg("Polyvinyl Chloride Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYVINYL_CHLORIDE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_4 = reg("Polyethylene Terephthalate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE_TEREPHTHALATE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_5 = reg("Acrylonitrile Butadiene Styrene Machine Frame", () -> new MachineFrameBlock(PlasticType.ACRYLONITRILE_BUTADIENE_STYRENE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_6 = reg("Polycarbonate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYCARBONATE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_7 = reg("Nylon Machine Frame", () -> new MachineFrameBlock(PlasticType.NYLON));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_8 = reg("Polyurethane Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYURETHANE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_9 = reg("Polytetrafluoroethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYTETRAFLUOROETHYLENE));
-    public static final BlockDefinition<MachineFrameBlock> MACHINE_FRAME_10 = reg("Polyetheretherketone Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHERETHERKETONE));
+    public static final BlockDefinition<MachineFrameBlock> POLYETHYLENE_MACHINE_FRAME = reg("Polyethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYPROPYLENE_MACHINE_FRAME = reg("Polypropylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYPROPYLENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYSTYRENE_MACHINE_FRAME = reg("Polystyrene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYSTYRENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYVINYL_CHLORIDE_MACHINE_FRAME = reg("Polyvinyl Chloride Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYVINYL_CHLORIDE));
+    public static final BlockDefinition<MachineFrameBlock> POLYETHYLENE_TEREPHTHALATE_MACHINE_FRAME = reg("Polyethylene Terephthalate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE_TEREPHTHALATE));
+    public static final BlockDefinition<MachineFrameBlock> ACRYLONITRILE_BUTADIENE_STYRENE_MACHINE_FRAME = reg("Acrylonitrile Butadiene Styrene Machine Frame", () -> new MachineFrameBlock(PlasticType.ACRYLONITRILE_BUTADIENE_STYRENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYCARBONATE_MACHINE_FRAME = reg("Polycarbonate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYCARBONATE));
+    public static final BlockDefinition<MachineFrameBlock> NYLON_MACHINE_FRAME = reg("Nylon Machine Frame", () -> new MachineFrameBlock(PlasticType.NYLON));
+    public static final BlockDefinition<MachineFrameBlock> POLYURETHANE_MACHINE_FRAME = reg("Polyurethane Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYURETHANE));
+    public static final BlockDefinition<MachineFrameBlock> POLYTETRAFLUOROETHYLENE_MACHINE_FRAME = reg("Polytetrafluoroethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYTETRAFLUOROETHYLENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYETHERETHERKETONE_MACHINE_FRAME = reg("Polyetheretherketone Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHERETHERKETONE));
 
     // Misc
     public static final BlockDefinition<HeatingElementBlock> INDUSTRIAL_HEATING_ELEMENT = reg("Industrial Heating Element", HeatingElementBlock::new);

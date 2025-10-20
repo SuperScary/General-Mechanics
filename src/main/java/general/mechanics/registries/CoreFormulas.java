@@ -22,12 +22,12 @@ public class CoreFormulas {
 
     public static final DeferredRegister<Formula> REGISTRY = DeferredRegister.create(CoreRegistries.FORMULAS_REGISTRY, GM.MODID);
 
-    protected static void registerMinecraftFormulas() {
-        register(() -> new Formula(Items.COAL, "C"));
-        register(() -> new Formula(Items.CHARCOAL, "C"));
-        register(() -> new Formula(Blocks.COAL_BLOCK, "C"));
-        register(() -> new Formula(Blocks.COAL_ORE, "C"));
-        register(() -> new Formula(Blocks.DEEPSLATE_COAL_ORE, "C"));
+    protected static void registerDefaultFormulas() {
+        register(() -> new Formula(Items.COAL, ElementType.CARBON.getSymbol()));
+        register(() -> new Formula(Items.CHARCOAL, ElementType.CARBON.getSymbol()));
+        register(() -> new Formula(Blocks.COAL_BLOCK, ElementType.CARBON.getSymbol()));
+        register(() -> new Formula(Blocks.COAL_ORE, ElementType.CARBON.getSymbol()));
+        register(() -> new Formula(Blocks.DEEPSLATE_COAL_ORE, ElementType.CARBON.getSymbol()));
 
         register(() -> new Formula(Items.IRON_INGOT, ElementType.IRON.getSymbol()));
         register(() -> new Formula(Blocks.IRON_BLOCK, ElementType.IRON.getSymbol()));
@@ -113,7 +113,7 @@ public class CoreFormulas {
     }
 
     public static void register(IEventBus modEventBus) {
-        registerMinecraftFormulas();
+        registerDefaultFormulas();
         REGISTRY.register(modEventBus);
     }
 

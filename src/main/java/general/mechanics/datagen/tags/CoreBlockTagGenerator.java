@@ -32,7 +32,7 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(ICE5.block())
                 .add(ICE6.block())
                 .add(ICE7.block())
-                .add(MACHINE_FRAME_0.block());
+                .add(POLYETHYLENE_MACHINE_FRAME.block());
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(ICE2.block())
@@ -41,7 +41,7 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
                 .add(ICE5.block())
                 .add(ICE6.block())
                 .add(ICE7.block())
-                .add(MACHINE_FRAME_0.block());
+                .add(POLYETHYLENE_MACHINE_FRAME.block());
 
         for (var block : CoreBlocks.getAllColoredPlasticBlocks()) {
             this.tag(BlockTags.NEEDS_STONE_TOOL).add(block);

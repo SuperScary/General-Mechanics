@@ -6,9 +6,9 @@ import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.api.item.tools.*;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.IDataProvider;
-import general.mechanics.registries.CoreItems;
-import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreBlocks;
+import general.mechanics.registries.CoreElements;
+import general.mechanics.registries.CoreItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -16,7 +16,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
@@ -85,6 +84,16 @@ public class CoreItemTagGenerator extends ItemTagsProvider implements IDataProvi
             }
 
         }
+
+        this.tag(CoreTags.Items.BOLTS)
+                .add(CoreItems.BOLT.asItem());
+
+        this.tag(CoreTags.Items.SCREWS)
+                .add(CoreItems.SCREW.asItem());
+
+        this.tag(CoreTags.Items.CARBON)
+                .add(Items.COAL)
+                .add(Items.CHARCOAL);
 
         overrideMCTags();
 

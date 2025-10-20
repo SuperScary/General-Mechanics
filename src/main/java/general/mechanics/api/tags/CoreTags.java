@@ -42,6 +42,9 @@ public class CoreTags {
 
         public static final TagKey<Item> CARBON = createTag("carbon");
 
+        public static final TagKey<Item> BOLTS = createTag("bolts");
+        public static final TagKey<Item> SCREWS = createTag("screws");
+
         private static TagKey<Item> createTag (String key) {
             return ItemTags.create(GM.getResource(key));
         }

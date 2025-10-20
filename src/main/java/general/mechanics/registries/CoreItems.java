@@ -160,6 +160,8 @@ public class CoreItems {
 
     // Misc
     public static final ItemDefinition<BaseItem> BOLT = item("Bolt", BaseItem::new);
+    public static final ItemDefinition<BaseItem> SCREW = item("Screw", BaseItem::new);
+    public static final ItemDefinition<BaseItem> CARBON_DUST = item("Carbon Dust", BaseItem::new);
 
     public static List<ItemDefinition<?>> getItems() {
         return Collections.unmodifiableList(ITEMS);
