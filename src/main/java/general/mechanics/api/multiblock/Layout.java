@@ -12,7 +12,7 @@ import java.util.*;
  * - X increases to the east, comes from String column index.
  * - Z increases to the south, comes from row index within a layer.
  * - Y increases upward, comes from layer index (0 = bottom layer).
- *
+ * <p>
  * Special characters:
  * - ' ' (space) is ignored (no check).
  * - Anchor char (if provided) marks the origin within the layout and is ignored during validation.
@@ -66,12 +66,12 @@ public final class Layout {
     public Map<Character, BlockPredicate> keys() {
         return keys;
     }
-    
+
     /**
      * Gets the character at the specified layout coordinates.
-     * 
+     *
      * @param x X coordinate (0 to width-1)
-     * @param y Y coordinate (0 to height-1) 
+     * @param y Y coordinate (0 to height-1)
      * @param z Z coordinate (0 to depth-1)
      * @return The character at the specified position
      * @throws IndexOutOfBoundsException if coordinates are out of bounds

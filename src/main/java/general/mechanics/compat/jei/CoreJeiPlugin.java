@@ -1,6 +1,7 @@
 package general.mechanics.compat.jei;
 
 import general.mechanics.GM;
+import general.mechanics.compat.jei.categories.CrushingCategory;
 import general.mechanics.compat.jei.categories.MatterFabricatorCategory;
 import general.mechanics.gui.screen.MatterFabricatorScreen;
 import general.mechanics.gui.screen.base.BaseScreen;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @JeiPlugin
 public class CoreJeiPlugin implements IModPlugin {
 
@@ -33,6 +35,7 @@ public class CoreJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new MatterFabricatorCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new CrushingCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -41,11 +44,14 @@ public class CoreJeiPlugin implements IModPlugin {
 
         var fabricationRecipeList = recipeManager.getAllRecipesFor(CoreRecipes.FABRICATION_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
         registration.addRecipes(MatterFabricatorCategory.TYPE, fabricationRecipeList);
+
+        var crushingRecipeList = recipeManager.getAllRecipesFor(CoreRecipes.CRUSHING_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        registration.addRecipes(CrushingCategory.TYPE, crushingRecipeList);
     }
 
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-        registration.addRecipeClickArea(MatterFabricatorScreen.class, /*80*/ -16, /*35*/ 0, 16, 16, MatterFabricatorCategory.TYPE);
+        registration.addRecipeClickArea(MatterFabricatorScreen.class, -16, 0, 16, 16, MatterFabricatorCategory.TYPE);
 
         screenAdapter(registration);
     }

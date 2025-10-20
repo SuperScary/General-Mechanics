@@ -1,4 +1,4 @@
-package general.mechanics.block;
+package general.mechanics.block.machine;
 
 import com.mojang.serialization.MapCodec;
 import general.mechanics.api.block.base.BaseBlock;
@@ -8,8 +8,6 @@ import general.mechanics.api.util.data.PropertyHelper;
 import general.mechanics.entity.block.MatterFabricatorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;

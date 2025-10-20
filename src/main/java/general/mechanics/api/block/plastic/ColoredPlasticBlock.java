@@ -2,6 +2,7 @@ package general.mechanics.api.block.plastic;
 
 import general.mechanics.api.block.base.BaseBlock;
 import general.mechanics.api.item.plastic.PlasticType;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@Getter
 public class ColoredPlasticBlock extends BaseBlock {
 
     private final PlasticTypeBlock parentPlastic;
@@ -33,14 +35,6 @@ public class ColoredPlasticBlock extends BaseBlock {
         tooltipComponents.add(Component.literal("§o" + getParentPlastic().getPlasticType().getAbbreviation()));
         tooltipComponents.add(Component.literal(String.format("§e" + getParentPlastic().getPlasticType().getFormula())));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-    }
-
-    public PlasticTypeBlock getParentPlastic() {
-        return parentPlastic;
-    }
-
-    public DyeColor getColor() {
-        return color;
     }
 
     public PlasticType getPlasticType() {

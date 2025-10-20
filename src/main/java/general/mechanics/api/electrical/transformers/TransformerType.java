@@ -1,5 +1,8 @@
 package general.mechanics.api.electrical.transformers;
 
+import lombok.Getter;
+
+@Getter
 public enum TransformerType {
 
     STEP_UP("Step-Up Transformer", "STEP_UP", "Increases voltage, decreases current"),
@@ -21,18 +24,6 @@ public enum TransformerType {
         this.displayName = displayName;
         this.symbol = symbol;
         this.description = description;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getEnglishDisplayValue() {

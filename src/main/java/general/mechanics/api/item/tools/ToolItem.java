@@ -1,16 +1,10 @@
 package general.mechanics.api.item.tools;
 
 import general.mechanics.api.item.base.BaseItem;
-import general.mechanics.registries.CoreItems;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
-import java.util.function.Consumer;
 
 public abstract class ToolItem extends BaseItem {
 
@@ -27,7 +21,7 @@ public abstract class ToolItem extends BaseItem {
     }
 
     @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack) {
+    public boolean hasCraftingRemainingItem(@NotNull ItemStack stack) {
         return true;
     }
 
@@ -43,7 +37,7 @@ public abstract class ToolItem extends BaseItem {
     }
 
     @Override
-    public boolean isBarVisible(ItemStack stack) {
+    public boolean isBarVisible(@NotNull ItemStack stack) {
         return false;
     }
 

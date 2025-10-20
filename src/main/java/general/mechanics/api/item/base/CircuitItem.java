@@ -6,8 +6,7 @@ import org.jetbrains.annotations.NotNull;
 public class CircuitItem extends BaseItem {
 
     public CircuitItem(Properties properties) {
-        super(properties
-                .stacksTo(16));
+        super(properties.stacksTo(16));
     }
 
     @Override

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MatterFabricatorCategory implements IRecipeCategory<FabricationRecipe> {
+
     public static final ResourceLocation UID = GM.getResource("refabrication");
     public static final ResourceLocation TEXTURE = GM.getResource("textures/gui/matter_fabricator.png");
 

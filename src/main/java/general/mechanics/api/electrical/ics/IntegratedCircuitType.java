@@ -1,5 +1,8 @@
 package general.mechanics.api.electrical.ics;
 
+import lombok.Getter;
+
+@Getter
 public enum IntegratedCircuitType {
 
     // --- Logic ICs ---
@@ -52,18 +55,6 @@ public enum IntegratedCircuitType {
         this.displayName = displayName;
         this.category = category;
         this.description = description;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getEnglishDisplayValue() {

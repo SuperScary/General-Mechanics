@@ -6,6 +6,7 @@ import general.mechanics.api.tags.CoreTags;
 import general.mechanics.api.util.data.PropertyComponent;
 import general.mechanics.api.util.data.PropertyHelper;
 import general.mechanics.registries.CoreComponents;
+import lombok.Getter;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,6 +45,8 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public abstract class BaseEntityBlock<T extends BaseBlockEntity> extends BaseBlock implements EntityBlock {
 
     private Class<T> blockEntityClass;
+
+    @Getter
     private BlockEntityType<T> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     private boolean disassemble = false;
@@ -74,10 +77,6 @@ public abstract class BaseEntityBlock<T extends BaseBlockEntity> extends BaseBlo
     }
 
     public abstract MapCodec<BaseBlock> getCodec ();
-
-    public BlockEntityType<T> getBlockEntityType () {
-        return blockEntityType;
-    }
 
     @Nullable
     @Override

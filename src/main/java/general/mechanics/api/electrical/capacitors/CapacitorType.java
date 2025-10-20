@@ -1,5 +1,8 @@
 package general.mechanics.api.electrical.capacitors;
 
+import lombok.Getter;
+
+@Getter
 public enum CapacitorType {
 
     PF_100(100e-12f, "100pF", "Used for high-frequency filtering and tuning circuits"),
@@ -24,18 +27,6 @@ public enum CapacitorType {
         this.value = value;
         this.displayValue = displayValue;
         this.description = description;
-    }
-
-    public float getValue() {
-        return value;
-    }
-
-    public String getDisplayValue() {
-        return displayValue;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getEnglishDisplayValue() {

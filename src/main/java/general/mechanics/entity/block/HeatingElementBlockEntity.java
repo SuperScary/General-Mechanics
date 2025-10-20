@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
 public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeater {
@@ -40,9 +41,6 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
         return Component.translatable("block.gm.industrial_heating_element");
     }
 
-    /**
-     * Tick on server: if a furnace sits above, and we’re “on,” top its burn timers.
-     */
     public void serverTick() {
         Level level = getLevel();
         if (level == null || level.isClientSide) return;
@@ -51,7 +49,14 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
         var be = level.getBlockEntity(furnacePos);
         if (!(be instanceof AbstractFurnaceBlockEntity furnace)) return;
 
-        if (!isHeating(level, furnacePos)) return;
+        // forces to 0 instead of cooling down
+        if (!isHeating(level, furnacePos)) {
+            furnace.litTime = 0;
+            furnace.litDuration = 0;
+            setFurnaceLit(level, furnace, false);
+            furnace.setChanged();
+            return;
+        }
 
         final int chunk = burnChunkTicks(level, furnacePos);
         if (furnace.litTime <= 0) {
@@ -71,7 +76,7 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
      */
     private void setFurnaceLit(Level level, AbstractFurnaceBlockEntity furnace, boolean lit) {
         var state = level.getBlockState(furnace.getBlockPos());
-        var prop = net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT;
+        var prop = BlockStateProperties.LIT;
         if (state.hasProperty(prop) && state.getValue(prop) != lit) {
             level.setBlock(furnace.getBlockPos(), state.setValue(prop, lit), 3);
         }
@@ -83,12 +88,12 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
         // Put your own gating here: redstone check, internal energy, upgrades, etc.
         // Example: only heat if we have full power or a redstone signal:
         // return level.hasNeighborSignal(getBlockPos()) || hasInternalPower();
-        return true; // always on for the minimal example
+        return !level.hasNeighborSignal(getBlockPos()); // always on for the minimal example
     }
 
     @Override
     public int burnChunkTicks(Level level, BlockPos furnacePos) {
-        return 200; // 10 seconds at 20 TPS; adjust to taste or scale by upgrades
+        return 200;
     }
 
 }

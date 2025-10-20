@@ -1,6 +1,7 @@
 package general.mechanics.api.multiblock;
 
 import general.mechanics.registries.CoreRegistries;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -9,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,8 @@ import java.util.Map;
 public class MultiblockWorldData extends SavedData {
     
     private static final String DATA_NAME = "gm_multiblocks";
-    
+
+    @Getter
     private final Map<BlockPos, MultiblockInfo> multiblocks = new HashMap<>();
     
     public MultiblockWorldData() {
@@ -36,10 +39,7 @@ public class MultiblockWorldData extends SavedData {
      */
     public static MultiblockWorldData get(ServerLevel level) {
         DimensionDataStorage storage = level.getDataStorage();
-        return storage.computeIfAbsent(
-            new SavedData.Factory<MultiblockWorldData>(MultiblockWorldData::new, MultiblockWorldData::load),
-            DATA_NAME
-        );
+        return storage.computeIfAbsent(new SavedData.Factory<>(MultiblockWorldData::new, MultiblockWorldData::load), DATA_NAME);
     }
     
     /**
@@ -81,7 +81,7 @@ public class MultiblockWorldData extends SavedData {
     }
     
     @Override
-    public CompoundTag save(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag tag, net.minecraft.core.HolderLookup.@NotNull Provider provider) {
         ListTag multiblockList = new ListTag();
         
         for (Map.Entry<BlockPos, MultiblockInfo> entry : multiblocks.entrySet()) {
@@ -99,13 +99,6 @@ public class MultiblockWorldData extends SavedData {
         
         tag.put("multiblocks", multiblockList);
         return tag;
-    }
-    
-    /**
-     * Get all multiblocks in this world data.
-     */
-    public Map<BlockPos, MultiblockInfo> getMultiblocks() {
-        return multiblocks;
     }
     
     /**

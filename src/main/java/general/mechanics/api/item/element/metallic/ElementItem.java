@@ -21,12 +21,25 @@ public class ElementItem extends BaseItem {
 
     @Getter
     private final ElementType element;
-    private final ElementDustItem dust;
-    private final ElementPlateItem plate;
-    private final ElementNuggetItem nugget;
-    private final ElementRawItem raw;
-    private final ElementPileItem pile;
-    private final ElementRodItem rod;
+
+    @Getter
+    private final ElementDustItem dustItem;
+
+    @Getter
+    private final ElementPlateItem plateItem;
+
+    @Getter
+    private final ElementNuggetItem nuggetItem;
+
+    @Getter
+    private final ElementRawItem rawItem;
+
+    @Getter
+    private final ElementPileItem pileItem;
+
+    @Getter
+    private final ElementRodItem rodItem;
+
     @Getter
     private final Properties properties;
 
@@ -34,12 +47,12 @@ public class ElementItem extends BaseItem {
         super(properties);
         this.properties = properties;
         this.element = element;
-        this.dust = new ElementDustItem(this);
-        this.plate = new ElementPlateItem(this);
-        this.nugget = new ElementNuggetItem(this);
-        this.raw = new ElementRawItem(this);
-        this.pile = new ElementPileItem(this);
-        this.rod = new ElementRodItem(this);
+        this.dustItem = new ElementDustItem(this);
+        this.plateItem = new ElementPlateItem(this);
+        this.nuggetItem = new ElementNuggetItem(this);
+        this.rawItem = new ElementRawItem(this);
+        this.pileItem = new ElementPileItem(this);
+        this.rodItem = new ElementRodItem(this);
     }
 
     public int getAtomicNumber() {
@@ -52,30 +65,6 @@ public class ElementItem extends BaseItem {
 
     public int getTint() {
         return element.getTintColor();
-    }
-
-    public ElementDustItem getDustItem() {
-        return dust;
-    }
-
-    public ElementPlateItem getPlateItem() {
-        return plate;
-    }
-
-    public ElementNuggetItem getNuggetItem() {
-        return nugget;
-    }
-
-    public ElementRawItem getRawItem() {
-        return raw;
-    }
-
-    public ElementPileItem getPileItem() {
-        return pile;
-    }
-
-    public ElementRodItem getRodItem() {
-        return rod;
     }
 
     @Override

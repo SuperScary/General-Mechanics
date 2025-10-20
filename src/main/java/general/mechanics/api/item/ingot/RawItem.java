@@ -1,20 +1,18 @@
 package general.mechanics.api.item.ingot;
 
 import general.mechanics.api.item.base.BaseItem;
+import lombok.Getter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class RawItem extends BaseItem {
 
+    @Getter
     private final IngotItem parentIngot;
 
     public RawItem(IngotItem ingot) {
         super(ingot.getProperties());
         this.parentIngot = ingot;
-    }
-
-    public IngotItem getParentIngot() {
-        return parentIngot;
     }
 
     public static int getColor(ItemStack stack, int index) {

@@ -1,12 +1,17 @@
 package general.mechanics.datagen.recipes;
 
 import general.mechanics.GM;
+import general.mechanics.api.item.element.metallic.ElementItem;
+import general.mechanics.recipes.builder.CrushingRecipeBuilder;
 import general.mechanics.recipes.builder.FabricationRecipeBuilder;
+import general.mechanics.registries.CoreElements;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +33,7 @@ public class MachineRecipes extends CoreRecipeProvider {
     @Override
     public void buildRecipes (@NotNull RecipeOutput consumer) {
         refabricateRecipes(consumer);
+        crushingRecipes(consumer);
     }
 
     protected void refabricateRecipes (RecipeOutput consumer) {
@@ -38,6 +44,15 @@ public class MachineRecipes extends CoreRecipeProvider {
         FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_saplings"), ItemTags.SAPLINGS, whiteRawPlastic);
         FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/raw_plastic_from_flowers"), ItemTags.FLOWERS, whiteRawPlastic);
         FabricationRecipeBuilder.build(consumer, GM.getResource("fabrication/test"), whiteRawPlastic, Blocks.COBBLESTONE, whiteRawPlastic);
+    }
+
+    protected void crushingRecipes (RecipeOutput consumer) {
+        for (var item : CoreElements.getElements()) {
+            if (item.get() instanceof ElementItem element) {
+                CrushingRecipeBuilder.build(consumer, GM.getResource("crushing/" + element.getDustItem().getRegistryName().getPath() + "_from_" + element.getRegistryName().getPath()), Ingredient.of(element), new ItemStack(element.getDustItem(), 2));
+                CrushingRecipeBuilder.build(consumer, GM.getResource("crushing/" + element.getPileItem().getRegistryName().getPath() + "_from_" + element.getDustItem().getRegistryName().getPath()), Ingredient.of(element.getDustItem()), new ItemStack(element.getPileItem(), 6));
+            }
+        }
     }
 
 }

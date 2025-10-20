@@ -1,7 +1,7 @@
 package general.mechanics.hooks;
 
 import com.google.common.base.Preconditions;
-import general.mechanics.api.entity.IWrenchable;
+import general.mechanics.api.entity.DisassemblyHandler;
 import general.mechanics.api.entity.block.BaseBlockEntity;
 import general.mechanics.api.tags.CoreTags;
 import general.mechanics.util.ItemHelper;
@@ -43,12 +43,27 @@ public class WrenchHooks {
         // disassemble
         if (Utils.alternateUseMode(player) && canDisassemble(itemStack)) {
             var be = level.getBlockEntity(hitResult.getBlockPos());
-            if (be instanceof IWrenchable baseBlockEntity) {
+            if (be instanceof DisassemblyHandler baseBlockEntity) {
                 IS_DISASSEMBLING.set(true);
                 try {
                     var result = baseBlockEntity.disassemble(player, level, hitResult, itemStack, null);
                     if (result.consumesAction()) {
-                        //SoundHelper.fire(level, player, be.getBlockPos(), DECONSTRUCT);
+                        if (itemStack.is(CoreTags.Items.WRENCHES)) {
+                            ItemHelper.damageStack(itemStack, level, player);
+                        }
+                    }
+                    return result;
+                } finally {
+                    IS_DISASSEMBLING.remove();
+                }
+            }
+
+            var block = level.getBlockState(hitResult.getBlockPos()).getBlock();
+            if (block instanceof DisassemblyHandler baseBlockEntity) {
+                IS_DISASSEMBLING.set(true);
+                try {
+                    var result = baseBlockEntity.disassemble(player, level, hitResult, itemStack, null);
+                    if (result.consumesAction()) {
                         if (itemStack.is(CoreTags.Items.WRENCHES)) {
                             ItemHelper.damageStack(itemStack, level, player);
                         }

@@ -12,7 +12,7 @@ import net.minecraft.world.level.ItemLike;
 
 import java.util.Arrays;
 
-public class FabricationRecipeBuilder {
+public final class FabricationRecipeBuilder {
 
     public static void build(RecipeOutput out, ResourceLocation id, Ingredient input, ItemLike result) {
         NonNullList<Ingredient> list = NonNullList.create();

@@ -1,6 +1,7 @@
 package general.mechanics.api.electrical.resistors;
 
 import general.mechanics.api.item.base.ElectricalComponent;
+import lombok.Getter;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Getter
 public class ResistorItem extends ElectricalComponent {
 
     private final ResistorType resistor;
@@ -27,10 +29,6 @@ public class ResistorItem extends ElectricalComponent {
             tooltipComponents.add(Component.translatable("gui.gm.press_shift"));
         }
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-    }
-
-    public ResistorType getResistor() {
-        return resistor;
     }
 
 }

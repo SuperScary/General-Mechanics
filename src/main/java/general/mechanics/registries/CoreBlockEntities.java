@@ -37,7 +37,7 @@ public class CoreBlockEntities {
     public static <T extends BlockEntity> List<BlockEntityType<? extends T>> getSubclassesOf (Class<T> baseClass) {
         var result = new ArrayList<BlockEntityType<? extends T>>();
         for (var type : BLOCK_ENTITY_TYPES) {
-            if (baseClass.isAssignableFrom(type.getBlockEntityClass())) {
+            if (baseClass.isAssignableFrom(type.blockEntityClass())) {
                 result.add((BlockEntityType<? extends T>) type.get());
             }
         }
@@ -50,7 +50,7 @@ public class CoreBlockEntities {
     public static List<BlockEntityType<?>> getImplementorsOf (Class<?> iface) {
         var result = new ArrayList<BlockEntityType<?>>();
         for (var type : BLOCK_ENTITY_TYPES) {
-            if (iface.isAssignableFrom(type.getBlockEntityClass())) {
+            if (iface.isAssignableFrom(type.blockEntityClass())) {
                 result.add(type.get());
             }
         }

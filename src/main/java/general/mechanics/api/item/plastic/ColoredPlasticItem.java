@@ -14,7 +14,10 @@ import java.util.List;
 @Getter
 public class ColoredPlasticItem extends BaseItem {
 
+    @Getter
     private final PlasticTypeItem parentPlastic;
+
+    @Getter
     private final DyeColor color;
 
     public ColoredPlasticItem(PlasticTypeItem parentPlastic, DyeColor color) {

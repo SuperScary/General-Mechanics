@@ -1,11 +1,13 @@
 package general.mechanics.api.attributes;
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.*;
 
+@Getter
 public class Attribute {
 
     private final List<String> key;
@@ -14,14 +16,6 @@ public class Attribute {
     public <T> Attribute (List<String> key, Supplier<T> defaultSupplier, T defaultValue) {
         this.key = key;
         this.value = new AttributeValue<>(key, defaultSupplier, defaultValue);
-    }
-
-    public List<String> getKey () {
-        return key;
-    }
-
-    public AttributeValue<?> getValue () {
-        return value;
     }
 
     public static class Builder {

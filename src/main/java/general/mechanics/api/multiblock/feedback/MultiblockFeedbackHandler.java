@@ -25,12 +25,6 @@ public class MultiblockFeedbackHandler {
         
         // Spawn particles
         spawnFormationParticles(serverLevel, anchorPos);
-        
-        // You can add more effects here:
-        // - Light up the multiblock
-        // - Give experience points
-        // - Trigger redstone signals
-        // - etc.
     }
     
     @SubscribeEvent

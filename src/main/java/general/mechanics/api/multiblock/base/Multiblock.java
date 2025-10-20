@@ -3,6 +3,7 @@ package general.mechanics.api.multiblock.base;
 import general.mechanics.GM;
 import general.mechanics.api.multiblock.Layout;
 import general.mechanics.api.multiblock.MultiblockDefinition;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +26,8 @@ import java.util.Map;
 public abstract class Multiblock {
 
     protected MultiblockDefinition definition;
+
+    @Getter
     protected final String name;
     /**
      * Exact count requirements for specific blocks present within the validated structure region.
@@ -141,19 +144,19 @@ public abstract class Multiblock {
     public void onBlockChange(Level level, BlockPos anchorPos, Direction facing, boolean mirrored, BlockPos changedPos) {
         // Default: do nothing
     }
-    
+
     /**
      * Called when a player interacts with the multiblock (right-clicks on it).
      * Override this to add custom interaction behavior.
-     * 
-     * @param level The level where the interaction occurred
-     * @param anchorPos The anchor position of the multiblock
-     * @param facing The facing direction of the multiblock
-     * @param mirrored Whether the multiblock is mirrored
-     * @param player The player who interacted with the multiblock
-     * @param hand The hand the player used to interact
+     *
+     * @param level      The level where the interaction occurred
+     * @param anchorPos  The anchor position of the multiblock
+     * @param facing     The facing direction of the multiblock
+     * @param mirrored   Whether the multiblock is mirrored
+     * @param player     The player who interacted with the multiblock
+     * @param hand       The hand the player used to interact
      * @param itemInHand The item the player was holding
-     * @param hitPos The specific position that was clicked within the multiblock
+     * @param hitPos     The specific position that was clicked within the multiblock
      * @return The result of the interaction
      */
     public InteractionResult onInteract(Level level, BlockPos anchorPos, Direction facing, boolean mirrored, Player player, InteractionHand hand, ItemStack itemInHand, BlockPos hitPos) {
@@ -167,13 +170,6 @@ public abstract class Multiblock {
      */
     public boolean shouldTick() {
         return false; // Default: don't tick
-    }
-
-    /**
-     * Gets the display name of this multiblock.
-     */
-    public String getName() {
-        return name;
     }
 
     @Override

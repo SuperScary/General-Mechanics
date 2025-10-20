@@ -8,7 +8,7 @@ import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.IceBlock;
 import general.mechanics.api.block.plastic.PlasticTypeBlock;
 import general.mechanics.api.block.plastic.ColoredPlasticBlock;
-import general.mechanics.block.HeatingElementBlock;
+import general.mechanics.block.machine.HeatingElementBlock;
 import general.mechanics.registries.CoreBlocks;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.core.Direction;
@@ -90,8 +90,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
 
         err(List.of(on, off));
 
-        BlockModelBuilder modelOn = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
-        BlockModelBuilder modelOff = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
+        BlockModelBuilder modelOn = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE).guiLight(BlockModel.GuiLight.SIDE);
+        BlockModelBuilder modelOff = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE).guiLight(BlockModel.GuiLight.SIDE);
         directionBlock(block.block(), (state, builder) -> builder.modelFile(state.getValue(BlockStateProperties.POWERED) ? modelOn : modelOff));
 
         simpleBlockItem(block.block(), modelOn);
@@ -105,7 +105,9 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         twoLayerCubeItemModel(def.getRegistryFriendlyName());
     }
 
-    /** One block model with two elements (base + overlay). */
+    /**
+     * One block model with two elements (base + overlay).
+     */
     private ModelFile twoLayerCubeBlockModel(String name, ResourceLocation baseTex, ResourceLocation overlayTex) {
         float eps = 0.001f;
         BlockModelBuilder b = models().getBuilder("block/" + name)
@@ -153,18 +155,18 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         var overlayCornerBL = frameOverlay("corner_bottom_left");
         var overlayCornerBR = frameOverlay("corner_bottom_right");
         var overlayNone = frameOverlay("edge_none");
-		var overlayFrame = frameOverlay("frame");
+        var overlayFrame = frameOverlay("frame");
 
-		// Combined overlays for exact patterns
-		var overlayColumn = frameOverlay("column");
-		var overlayRow = frameOverlay("row");
-		var overlayUTop = frameOverlay("u_top");
-		var overlayUBottom = frameOverlay("u_bottom");
-		var overlayULeft = frameOverlay("u_left");
-		var overlayURight = frameOverlay("u_right");
+        // Combined overlays for exact patterns
+        var overlayColumn = frameOverlay("column");
+        var overlayRow = frameOverlay("row");
+        var overlayUTop = frameOverlay("u_top");
+        var overlayUBottom = frameOverlay("u_bottom");
+        var overlayULeft = frameOverlay("u_left");
+        var overlayURight = frameOverlay("u_right");
 
         // Track textures so missing ones don't fail generation
-		err(List.of(
+        err(List.of(
                 GM.getResource("block/machine/frame/edge_top"),
                 GM.getResource("block/machine/frame/edge_bottom"),
                 GM.getResource("block/machine/frame/edge_left"),
@@ -172,15 +174,15 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 GM.getResource("block/machine/frame/corner_top_left"),
                 GM.getResource("block/machine/frame/corner_top_right"),
                 GM.getResource("block/machine/frame/corner_bottom_left"),
-				GM.getResource("block/machine/frame/corner_bottom_right"),
-				GM.getResource("block/machine/frame/edge_none"),
-				GM.getResource("block/machine/frame/frame"),
-				GM.getResource("block/machine/frame/column"),
-				GM.getResource("block/machine/frame/row"),
-				GM.getResource("block/machine/frame/u_top"),
-				GM.getResource("block/machine/frame/u_bottom"),
-				GM.getResource("block/machine/frame/u_left"),
-				GM.getResource("block/machine/frame/u_right")
+                GM.getResource("block/machine/frame/corner_bottom_right"),
+                GM.getResource("block/machine/frame/edge_none"),
+                GM.getResource("block/machine/frame/frame"),
+                GM.getResource("block/machine/frame/column"),
+                GM.getResource("block/machine/frame/row"),
+                GM.getResource("block/machine/frame/u_top"),
+                GM.getResource("block/machine/frame/u_bottom"),
+                GM.getResource("block/machine/frame/u_left"),
+                GM.getResource("block/machine/frame/u_right")
         ));
 
         var multipart = getMultipartBuilder(def.block());
@@ -195,21 +197,21 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
         addFaceNone(multipart, overlayNone, 0, 0,
                 MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
-		addFaceExact(multipart, overlayFrame, 0, 0,
-				MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		// exact patterns
-		addFaceExact(multipart, overlayColumn, 0, 0,
-				MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayRow, 0, 0,
-				MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, true);
-		addFaceExact(multipart, overlayUTop, 0, 0,
-				MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayUBottom, 0, 0,
-				MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayULeft, 0, 0,
-				MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayURight, 0, 0,
-				MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, true);
+        addFaceExact(multipart, overlayFrame, 0, 0,
+                MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        // exact patterns
+        addFaceExact(multipart, overlayColumn, 0, 0,
+                MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayRow, 0, 0,
+                MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, true);
+        addFaceExact(multipart, overlayUTop, 0, 0,
+                MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayUBottom, 0, 0,
+                MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayULeft, 0, 0,
+                MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayURight, 0, 0,
+                MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, true);
 
         // DOWN face (rotate 180 around X); mapping flips top/bottom
         addFaceOverlays(multipart, overlayEdgeTop, overlayEdgeBottom, overlayEdgeLeft, overlayEdgeRight,
@@ -218,114 +220,114 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
         addFaceNone(multipart, overlayNone, 180, 0,
                 MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
-		addFaceExact(multipart, overlayFrame, 180, 0,
-				MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayColumn, 180, 0,
-				MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayRow, 180, 0,
-				MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, true);
-		addFaceExact(multipart, overlayUTop, 180, 0,
-				MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayUBottom, 180, 0,
-				MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayULeft, 180, 0,
-				MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayURight, 180, 0,
-				MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, true);
+        addFaceExact(multipart, overlayFrame, 180, 0,
+                MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayColumn, 180, 0,
+                MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayRow, 180, 0,
+                MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, true);
+        addFaceExact(multipart, overlayUTop, 180, 0,
+                MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayUBottom, 180, 0,
+                MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayULeft, 180, 0,
+                MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayURight, 180, 0,
+                MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, true);
 
-		// NORTH face (rotate 90 around X) - swap left/right mapping
+        // NORTH face (rotate 90 around X) - swap left/right mapping
         addFaceOverlays(multipart, overlayEdgeTop, overlayEdgeBottom, overlayEdgeLeft, overlayEdgeRight,
                 overlayCornerTL, overlayCornerTR, overlayCornerBL, overlayCornerBR,
                 90, 0,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.EAST, MachineFrameBlock.WEST);
-		addFaceNone(multipart, overlayNone, 90, 0,
-				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.EAST, MachineFrameBlock.WEST);
-		addFaceExact(multipart, overlayFrame, 90, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
-		addFaceExact(multipart, overlayColumn, 90, 0,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
-		addFaceExact(multipart, overlayRow, 90, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, true, MachineFrameBlock.WEST, true);
-		addFaceExact(multipart, overlayUTop, 90, 0,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
-		addFaceExact(multipart, overlayUBottom, 90, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
-		addFaceExact(multipart, overlayULeft, 90, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, true, MachineFrameBlock.WEST, false);
-		addFaceExact(multipart, overlayURight, 90, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, true);
+        addFaceNone(multipart, overlayNone, 90, 0,
+                MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.EAST, MachineFrameBlock.WEST);
+        addFaceExact(multipart, overlayFrame, 90, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
+        addFaceExact(multipart, overlayColumn, 90, 0,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
+        addFaceExact(multipart, overlayRow, 90, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, true, MachineFrameBlock.WEST, true);
+        addFaceExact(multipart, overlayUTop, 90, 0,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
+        addFaceExact(multipart, overlayUBottom, 90, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, false);
+        addFaceExact(multipart, overlayULeft, 90, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, true, MachineFrameBlock.WEST, false);
+        addFaceExact(multipart, overlayURight, 90, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.EAST, false, MachineFrameBlock.WEST, true);
         addFaceNone(multipart, overlayNone, 90, 0,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.EAST, MachineFrameBlock.WEST);
 
-		// SOUTH face (rotate 270 X) - swap left/right mapping
+        // SOUTH face (rotate 270 X) - swap left/right mapping
         addFaceOverlays(multipart, overlayEdgeTop, overlayEdgeBottom, overlayEdgeLeft, overlayEdgeRight,
                 overlayCornerTL, overlayCornerTR, overlayCornerBL, overlayCornerBR,
                 270, 0,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
-		addFaceNone(multipart, overlayNone, 270, 0,
-				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
-		addFaceExact(multipart, overlayFrame, 270, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayColumn, 270, 0,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayRow, 270, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, true);
-		addFaceExact(multipart, overlayUTop, 270, 0,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayUBottom, 270, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayULeft, 270, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, false);
-		addFaceExact(multipart, overlayURight, 270, 0,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, true);
+        addFaceNone(multipart, overlayNone, 270, 0,
+                MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
+        addFaceExact(multipart, overlayFrame, 270, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayColumn, 270, 0,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayRow, 270, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, true);
+        addFaceExact(multipart, overlayUTop, 270, 0,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayUBottom, 270, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayULeft, 270, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, true, MachineFrameBlock.EAST, false);
+        addFaceExact(multipart, overlayURight, 270, 0,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.WEST, false, MachineFrameBlock.EAST, true);
         addFaceNone(multipart, overlayNone, 270, 0,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.WEST, MachineFrameBlock.EAST);
 
-		// WEST face (rotate 90 X, 270 Y)
+        // WEST face (rotate 90 X, 270 Y)
         addFaceOverlays(multipart, overlayEdgeTop, overlayEdgeBottom, overlayEdgeLeft, overlayEdgeRight,
                 overlayCornerTL, overlayCornerTR, overlayCornerBL, overlayCornerBR,
                 90, 270,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH);
-		addFaceNone(multipart, overlayNone, 90, 270,
-				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH);
-		addFaceExact(multipart, overlayFrame, 90, 270,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
-		addFaceExact(multipart, overlayColumn, 90, 270,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
-		addFaceExact(multipart, overlayRow, 90, 270,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, true);
-		addFaceExact(multipart, overlayUTop, 90, 270,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
-		addFaceExact(multipart, overlayUBottom, 90, 270,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
-		addFaceExact(multipart, overlayULeft, 90, 270,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, false);
-		addFaceExact(multipart, overlayURight, 90, 270,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, true);
+        addFaceNone(multipart, overlayNone, 90, 270,
+                MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH);
+        addFaceExact(multipart, overlayFrame, 90, 270,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
+        addFaceExact(multipart, overlayColumn, 90, 270,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
+        addFaceExact(multipart, overlayRow, 90, 270,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, true);
+        addFaceExact(multipart, overlayUTop, 90, 270,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
+        addFaceExact(multipart, overlayUBottom, 90, 270,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, false);
+        addFaceExact(multipart, overlayULeft, 90, 270,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, true, MachineFrameBlock.SOUTH, false);
+        addFaceExact(multipart, overlayURight, 90, 270,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.NORTH, false, MachineFrameBlock.SOUTH, true);
         addFaceNone(multipart, overlayNone, 90, 270,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.NORTH, MachineFrameBlock.SOUTH);
 
-		// EAST face (rotate 90 X, 90 Y)
+        // EAST face (rotate 90 X, 90 Y)
         addFaceOverlays(multipart, overlayEdgeTop, overlayEdgeBottom, overlayEdgeLeft, overlayEdgeRight,
                 overlayCornerTL, overlayCornerTR, overlayCornerBL, overlayCornerBR,
                 90, 90,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH);
-		addFaceNone(multipart, overlayNone, 90, 90,
-				MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH);
-		addFaceExact(multipart, overlayFrame, 90, 90,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
-		addFaceExact(multipart, overlayColumn, 90, 90,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
-		addFaceExact(multipart, overlayRow, 90, 90,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, true);
-		addFaceExact(multipart, overlayUTop, 90, 90,
-				MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
-		addFaceExact(multipart, overlayUBottom, 90, 90,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
-		addFaceExact(multipart, overlayULeft, 90, 90,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, false);
-		addFaceExact(multipart, overlayURight, 90, 90,
-				MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, true);
+        addFaceNone(multipart, overlayNone, 90, 90,
+                MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH);
+        addFaceExact(multipart, overlayFrame, 90, 90,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
+        addFaceExact(multipart, overlayColumn, 90, 90,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, true, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
+        addFaceExact(multipart, overlayRow, 90, 90,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, true);
+        addFaceExact(multipart, overlayUTop, 90, 90,
+                MachineFrameBlock.UP, true, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
+        addFaceExact(multipart, overlayUBottom, 90, 90,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, true, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, false);
+        addFaceExact(multipart, overlayULeft, 90, 90,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, true, MachineFrameBlock.NORTH, false);
+        addFaceExact(multipart, overlayURight, 90, 90,
+                MachineFrameBlock.UP, false, MachineFrameBlock.DOWN, false, MachineFrameBlock.SOUTH, false, MachineFrameBlock.NORTH, true);
         addFaceNone(multipart, overlayNone, 90, 90,
                 MachineFrameBlock.UP, MachineFrameBlock.DOWN, MachineFrameBlock.SOUTH, MachineFrameBlock.NORTH);
 

@@ -1,6 +1,6 @@
 package general.mechanics.api.entity.block;
 
-import general.mechanics.api.entity.IWrenchable;
+import general.mechanics.api.entity.DisassemblyHandler;
 import general.mechanics.api.inventory.CoreInventory;
 import general.mechanics.api.inventory.CoreItemStackHandler;
 import general.mechanics.api.util.ContentDropper;
@@ -41,7 +41,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseBlockEntity extends BlockEntity implements MenuProvider, BlockData, CoreInventory, IWrenchable {
+public abstract class BaseBlockEntity extends BlockEntity implements MenuProvider, BlockData, CoreInventory, DisassemblyHandler {
+
     @Setter
     @Getter
     private boolean settingsPanelOpen = false;

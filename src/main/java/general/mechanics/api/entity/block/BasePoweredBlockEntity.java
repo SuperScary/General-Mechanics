@@ -8,6 +8,7 @@ import general.mechanics.api.util.ContentDropper;
 import general.mechanics.api.util.data.Keys;
 import general.mechanics.api.util.data.PropertyComponent;
 import general.mechanics.registries.CoreComponents;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -30,45 +31,14 @@ import java.util.ArrayList;
 
 public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements PoweredBlock, Upgradeable {
 
-    public enum MachineState {
-        ACTIVE,
-        INACTIVE,
-        ERROR
-    }
-
-    public enum RedstoneMode {
-        HIGH(0),
-        LOW(1),
-        IGNORED(2);
-
-        private final int id;
-        RedstoneMode(int id) { this.id = id; }
-        public int id() { return id; }
-
-        // Fast lookup table
-        private static final RedstoneMode[] BY_ID;
-        static {
-            var vals = values();
-            int max = 0;
-            for (var v : vals) max = Math.max(max, v.id);
-            BY_ID = new RedstoneMode[max + 1];
-            for (var v : vals) BY_ID[v.id] = v;
-        }
-
-        public static RedstoneMode fromId(int id) {
-            return (id >= 0 && id < BY_ID.length && BY_ID[id] != null) ? BY_ID[id] : IGNORED;
-        }
-
-        public RedstoneMode next() { return fromId((id + 1) % BY_ID.length); }
-        public RedstoneMode prev() { return fromId((id - 1 + BY_ID.length) % BY_ID.length); }
-    }
-
     private final CoreEnergyStorage energyStorage;
     private final ItemStackHandler upgradeInventory = new ItemStackHandler(4);
 
+    @Getter
     private boolean enabled;
     private boolean autoImport;
     private boolean autoExport;
+    @Getter
     private RedstoneMode redstoneMode;
 
     public BasePoweredBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive) {
@@ -208,15 +178,8 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
     }
 
     /**
-     * Gets whether the machine is enabled
-     * @return true if enabled, false if disabled
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
      * Sets the enabled state of the machine
+     *
      * @param enabled true to enable, false to disable
      */
     public void setEnabled(boolean enabled) {
@@ -272,18 +235,59 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         this.redstoneMode = RedstoneMode.fromId(i);
     }
 
-    public RedstoneMode getRedstoneMode() {
-        return redstoneMode;
-    }
-
     public boolean redstoneAllowsRunning() {
         if (level == null) return false;
         boolean powered = level.hasNeighborSignal(worldPosition); // true if any side gives power
         return switch (redstoneMode) {
             case IGNORED -> true;
-            case HIGH   -> powered;
-            case LOW    -> !powered;
+            case HIGH -> powered;
+            case LOW -> !powered;
         };
+    }
+
+    public enum MachineState {
+        ACTIVE,
+        INACTIVE,
+        ERROR
+    }
+
+    public enum RedstoneMode {
+        HIGH(0),
+        LOW(1),
+        IGNORED(2);
+
+        private final int id;
+
+        RedstoneMode(int id) {
+            this.id = id;
+        }
+
+        public int id() {
+            return id;
+        }
+
+        // Fast lookup table
+        private static final RedstoneMode[] BY_ID;
+
+        static {
+            var vals = values();
+            int max = 0;
+            for (var v : vals) max = Math.max(max, v.id);
+            BY_ID = new RedstoneMode[max + 1];
+            for (var v : vals) BY_ID[v.id] = v;
+        }
+
+        public static RedstoneMode fromId(int id) {
+            return (id >= 0 && id < BY_ID.length && BY_ID[id] != null) ? BY_ID[id] : IGNORED;
+        }
+
+        public RedstoneMode next() {
+            return fromId((id + 1) % BY_ID.length);
+        }
+
+        public RedstoneMode prev() {
+            return fromId((id - 1 + BY_ID.length) % BY_ID.length);
+        }
     }
 
 }

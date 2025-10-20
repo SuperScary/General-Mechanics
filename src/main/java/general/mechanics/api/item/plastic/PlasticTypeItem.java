@@ -1,6 +1,7 @@
 package general.mechanics.api.item.plastic;
 
 import general.mechanics.api.item.base.BaseItem;
+import lombok.Getter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -13,8 +14,13 @@ import java.util.List;
 
 public class PlasticTypeItem extends BaseItem {
 
+    @Getter
     private final PlasticType plasticType;
+
+    @Getter
     private final List<ColoredPlasticItem> coloredVariants;
+
+    @Getter
     private final Properties properties;
 
     public PlasticTypeItem(Properties properties, PlasticType plasticType) {
@@ -36,18 +42,6 @@ public class PlasticTypeItem extends BaseItem {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 
-    public PlasticType getPlasticType() {
-        return plasticType;
-    }
-
-    public List<ColoredPlasticItem> getColoredVariants() {
-        return coloredVariants;
-    }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
     public ColoredPlasticItem getColoredVariant(DyeColor color) {
         return coloredVariants.stream()
                 .filter(variant -> variant.getColor() == color)
@@ -60,9 +54,8 @@ public class PlasticTypeItem extends BaseItem {
 
         if (item instanceof PlasticTypeItem plasticTypeItem) {
             int defaultColor = plasticTypeItem.getPlasticType().getDefaultColor();
-            // If defaultColor is -1, return white (0xFFFFFFFF), otherwise return the default color
             return defaultColor == -1 ? 0xFFFFFFFF : defaultColor;
         }
-        return 0xFFFFFFFF; // Default to white if no specific color
+        return -1;
     }
 }

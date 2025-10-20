@@ -33,7 +33,6 @@ public class CoreUpgradeRegistry {
     public static final DeferredRegister<UpgradeMap<?>> REGISTRY = DeferredRegister.create(CoreRegistries.UPGRADE_MAP_REGISTRY, GM.MODID);
 
     public static final DeferredUpgradeMap<MatterFabricatorBlockEntity> MATTER_FABRICATOR_UPGRADES = build(CoreBlocks.MATTER_FABRICATOR, MatterFabricatorBlockEntity.class, CoreBlockEntities.MATTER_FABRICATOR, UpgradePairs.POWERED_CRAFTER.getUpgrades());
-    //public static final DeferredUpgradeMap<CoalGeneratorBlockEntity> COAL_GENERATOR_BLOCK_ENTITY_UPGRADES = build(FMBlocks.COAL_GENERATOR, CoalGeneratorBlockEntity.class, FMBlockEntities.COAL_GENERATOR, UpgradePairs.POWER_GENERATOR.getUpgrades());
 
     private static <T extends BasePoweredBlockEntity> DeferredUpgradeMap<T> build (BlockDefinition<?> id, Class<? extends BasePoweredBlockEntity> cl, DeferredBlockEntityType<T> entity, ImmutableList<Pair<ItemDefinition<UpgradeBase>, Integer>> upgrades) {
         return build(id.getRegistryFriendlyName(), cl, entity, upgrades);

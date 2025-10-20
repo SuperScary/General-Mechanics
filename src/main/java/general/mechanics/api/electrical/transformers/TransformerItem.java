@@ -1,18 +1,16 @@
 package general.mechanics.api.electrical.transformers;
 
 import general.mechanics.api.item.base.ElectricalComponent;
-import general.mechanics.registries.CoreComponents;
+import lombok.Getter;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Objects;
 
+@Getter
 public class TransformerItem extends ElectricalComponent {
 
     private final TransformerType transformerType;
@@ -31,10 +29,6 @@ public class TransformerItem extends ElectricalComponent {
         }
 
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-    }
-
-    public TransformerType getTransformerType() {
-        return transformerType;
     }
 
 }

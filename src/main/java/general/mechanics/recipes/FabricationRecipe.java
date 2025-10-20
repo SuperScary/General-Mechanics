@@ -115,7 +115,7 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
         }
     }
 
-    public static class FabricationRecipeSerializer implements RecipeSerializer<FabricationRecipe> {
+    public static class Serializer implements RecipeSerializer<FabricationRecipe> {
 
         public static final MapCodec<FabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").xmap(
@@ -132,7 +132,7 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
                 ItemStack.CODEC.fieldOf("result").forGetter(FabricationRecipe::output)
         ).apply(inst, FabricationRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> SIMPLE_STREAM_CODEC =
+        public static final StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> STREAM_CODEC =
                 new StreamCodec<>() {
                     @Override
                     public void encode(RegistryFriendlyByteBuf buf, FabricationRecipe recipe) {
@@ -165,7 +165,7 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
 
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> streamCodec() {
-            return SIMPLE_STREAM_CODEC;
+            return STREAM_CODEC;
         }
     }
 

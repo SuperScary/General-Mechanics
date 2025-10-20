@@ -1,6 +1,6 @@
 package general.mechanics.gui.menu;
 
-import general.mechanics.block.MatterFabricatorBlock;
+import general.mechanics.block.machine.MatterFabricatorBlock;
 import general.mechanics.entity.block.MatterFabricatorBlockEntity;
 import general.mechanics.gui.GuiPower;
 import general.mechanics.gui.menu.base.BaseMenu;

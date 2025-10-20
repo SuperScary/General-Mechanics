@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 public class CoreTags {
 
     public static class Items {
-        public static final TagKey<Item> RAW_PLASTIC = createTag("raw_plastic");
         public static final TagKey<Item> PLASTIC = createTag("plastic");
         public static final TagKey<Item> PLASTIC_BLOCKS = createTag("plastic_blocks");
 

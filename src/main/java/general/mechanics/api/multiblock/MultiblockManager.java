@@ -37,18 +37,13 @@ public class MultiblockManager {
      * Initialize the multiblock manager by registering event handlers.
      */
     public static void init(IEventBus modEventBus) {
-        // Block events are on the NeoForge event bus, not the mod event bus
-        // We need to listen to specific subclasses, not the abstract BlockEvent
         NeoForge.EVENT_BUS.addListener(MultiblockManager::onBlockBreak);
         NeoForge.EVENT_BUS.addListener(MultiblockManager::onBlockPlace);
 
-        // Register server tick event for multiblock object ticking
         NeoForge.EVENT_BUS.addListener(MultiblockManager::onServerTick);
-        
-        // Register player interaction event for multiblock interactions
+
         NeoForge.EVENT_BUS.addListener(MultiblockManager::onPlayerInteract);
-        
-        // Register world load event to restore multiblocks from saved data
+
         NeoForge.EVENT_BUS.addListener(MultiblockManager::onWorldLoad);
     }
     
@@ -60,48 +55,39 @@ public class MultiblockManager {
         if (!(level instanceof ServerLevel)) {
             return Optional.empty();
         }
-        
-        // Don't check if this position is already an active multiblock anchor
+
         if (activeMultiblocks.containsKey(pos)) {
             return Optional.empty();
         }
-        
-        // Check all registered multiblocks
+
         for (var definition : CoreRegistries.MULTIBLOCK_DEFINITIONS) {
             if (definition == null) continue;
             
             Optional<MultiblockValidator.ValidationResult> result = definition.findMatch(level, pos);
             if (result.isPresent() && result.get().success()) {
                 MultiblockValidator.ValidationResult validation = result.get();
-                
-                // Check if this multiblock would conflict with existing multiblocks
+
                 if (hasMultiblockConflict(level, pos, definition, validation.facing(), validation.mirrored())) {
-                    continue; // Try the next definition
+                    continue;
                 }
-                
-                // Check if this multiblock is already tracked
+
                 if (!isMultiblockActive(pos, definition, validation.facing(), validation.mirrored())) {
-                    
-                    // New multiblock formed!
                     MultiblockFormedEvent event = new MultiblockFormedEvent(definition, level, pos, validation.facing(), validation.mirrored());
                     MultiblockInfo info = new MultiblockInfo(definition, pos, validation.facing(), validation.mirrored());
                     activeMultiblocks.put(pos, info);
-                    
-                    // Save to world data
+
                     if (level instanceof ServerLevel serverLevel) {
                         saveMultiblockToWorldData(serverLevel, pos, info);
                     }
-                    
-                    // Create a multiblock object if the definition supports it
+
                     if (definition.hasObject()) {
-                        Multiblock multiblockObject = (Multiblock) definition.createObject();
+                        Multiblock multiblockObject = definition.createObject();
                         if (multiblockObject != null) {
                             activeMultiblockObjects.put(pos, multiblockObject);
                             multiblockObject.onCreate(level, pos, validation.facing(), validation.mirrored());
                         }
                     }
-                    
-                    // Fire the event
+
                     NeoForge.EVENT_BUS.post(event);
                     return Optional.of(event);
                 }
@@ -120,8 +106,6 @@ public class MultiblockManager {
         }
         
         BlockPos changedPos = event.getPos();
-        
-        // Check for destroyed multiblocks BEFORE the block is broken
         checkForDestroyedMultiblocksBeforeBreak(serverLevel, changedPos);
     }
     
@@ -134,14 +118,9 @@ public class MultiblockManager {
         }
         
         BlockPos changedPos = event.getPos();
-        
-        // Check for destroyed multiblocks first
+
         checkForDestroyedMultiblocks(serverLevel, changedPos);
-        
-        // Check for new multiblocks in the area
         checkAreaForMultiblocks(serverLevel, changedPos);
-        
-        // Notify multiblock objects about the block change
         notifyMultiblockObjects(serverLevel, changedPos);
     }
     
@@ -163,11 +142,9 @@ public class MultiblockManager {
             Player player = event.getEntity();
             InteractionHand hand = event.getHand();
             ItemStack itemInHand = player.getItemInHand(hand);
-            
-            // Try to handle multiblock interaction
+
             InteractionResult result = handlePlayerInteraction(serverLevel, hitPos, player, hand, itemInHand);
-            
-            // If multiblock handled the interaction, cancel the event
+
             if (result != InteractionResult.PASS) {
                 event.setCanceled(true);
                 event.setCancellationResult(result);
@@ -185,20 +162,15 @@ public class MultiblockManager {
         for (var entry : activeMultiblocks.entrySet()) {
             BlockPos anchorPos = entry.getKey();
             MultiblockInfo info = entry.getValue();
-            
-            // Check if the changed position affects this multiblock
+
             if (isPositionInMultiblock(anchorPos, info, changedPos)) {
-                
-                // Check if removing this block would make the multiblock invalid
+
                 if (wouldBreakMultiblock(level, anchorPos, info, changedPos)) {
-                    
-                    // Destroy multiblock object if it exists
                     Multiblock multiblockObject = activeMultiblockObjects.remove(anchorPos);
                     if (multiblockObject != null) {
                         multiblockObject.onDestroy(level, anchorPos, info.facing(), info.mirrored());
                     }
-                    
-                    // Multiblock will be destroyed
+
                     MultiblockDestroyedEvent destroyEvent = new MultiblockDestroyedEvent(
                         info.definition(), level, anchorPos, info.facing(), info.mirrored()
                     );
@@ -207,14 +179,12 @@ public class MultiblockManager {
                 }
             }
         }
-        
-        // Remove destroyed multiblocks
+
         for (var entry : toRemove) {
             BlockPos pos = entry.getKey();
             activeMultiblocks.remove(pos);
             activeMultiblockObjects.remove(pos);
-            
-            // Remove from world data
+
             if (level instanceof ServerLevel serverLevel) {
                 removeMultiblockFromWorldData(serverLevel, pos);
             }
@@ -230,13 +200,11 @@ public class MultiblockManager {
         for (var entry : activeMultiblocks.entrySet()) {
             BlockPos anchorPos = entry.getKey();
             MultiblockInfo info = entry.getValue();
-            
-            // Check if the changed position affects this multiblock
+
             if (isPositionInMultiblock(anchorPos, info, changedPos)) {
-                // Re-validate the multiblock
                 Optional<MultiblockValidator.ValidationResult> result = info.definition().findMatch(level, anchorPos);
+
                 if (result.isEmpty() || !result.get().success()) {
-                    // Multiblock was destroyed
                     MultiblockDestroyedEvent destroyEvent = new MultiblockDestroyedEvent(
                         info.definition(), level, anchorPos, info.facing(), info.mirrored()
                     );
@@ -245,14 +213,11 @@ public class MultiblockManager {
                 }
             }
         }
-        
-        // Remove destroyed multiblocks
+
         for (var entry : toRemove) {
             BlockPos pos = entry.getKey();
             activeMultiblocks.remove(pos);
             activeMultiblockObjects.remove(pos);
-            
-            // Remove from world data
             removeMultiblockFromWorldData(level, pos);
         }
     }
@@ -262,20 +227,16 @@ public class MultiblockManager {
      * Only checks positions that could potentially be anchor points for multiblocks.
      */
     private static void checkAreaForMultiblocks(ServerLevel level, BlockPos centerPos) {
-        // Only check a smaller radius to avoid interference with normal block placement
-        int checkRadius = 2; // Reduced from 5 to 2
+        int checkRadius = 2;
         
         for (int x = -checkRadius; x <= checkRadius; x++) {
             for (int y = -checkRadius; y <= checkRadius; y++) {
                 for (int z = -checkRadius; z <= checkRadius; z++) {
                     BlockPos checkPos = centerPos.offset(x, y, z);
-                    
-                    // Skip if this position is already an active multiblock anchor
                     if (activeMultiblocks.containsKey(checkPos)) {
                         continue;
                     }
-                    
-                    // Only check if the position has a block that could be part of a multiblock
+
                     if (level.getBlockState(checkPos).isAir()) {
                         continue;
                     }
@@ -291,39 +252,27 @@ public class MultiblockManager {
      */
     private static boolean isPositionInMultiblock(BlockPos anchorPos, MultiblockInfo info, BlockPos checkPos) {
         Layout layout = info.definition().layout();
-        
-        // Get the anchor offset from the layout
         BlockPos anchorOffset = layout.anchorOffset();
-        
-        // Calculate the origin position (where the layout starts)
         BlockPos origin = anchorPos.subtract(anchorOffset);
-        
-        // Calculate the relative position from the origin
         BlockPos relativePos = checkPos.subtract(origin);
-        
-        // Apply inverse rotation and mirroring to get layout coordinates
-        // We need to reverse the transformation that was applied during validation
         BlockPos layoutPos = RotationUtil.rotateAndMirrorInverse(
             relativePos.getX(), relativePos.getY(), relativePos.getZ(), 
             info.facing(), info.mirrored()
         );
-        
-        // Check if the layout position is within the layout bounds
+
+
         if (layoutPos.getX() < 0 || layoutPos.getX() >= layout.width() ||
             layoutPos.getY() < 0 || layoutPos.getY() >= layout.height() ||
             layoutPos.getZ() < 0 || layoutPos.getZ() >= layout.depth()) {
             return false;
         }
-        
-        // Get the character at this position in the layout
+
         char layoutChar = layout.getCharAt(layoutPos.getX(), layoutPos.getY(), layoutPos.getZ());
-        
-        // If the character is a space or the anchor character, this position is not part of the multiblock
+
         if (layoutChar == ' ' || (layout.anchorChar().isPresent() && layoutChar == layout.anchorChar().get())) {
             return false;
         }
-        
-        // This position is part of the multiblock structure
+
         return true;
     }
     
@@ -335,23 +284,19 @@ public class MultiblockManager {
         Layout layout = definition.layout();
         BlockPos anchorOffset = layout.anchorOffset();
         BlockPos origin = anchorPos.subtract(anchorOffset);
-        
-        // Check each position in the layout
+
         for (int y = 0; y < layout.height(); y++) {
             for (int z = 0; z < layout.depth(); z++) {
                 for (int x = 0; x < layout.width(); x++) {
                     char layoutChar = layout.getCharAt(x, y, z);
-                    
-                    // Skip spaces and anchor characters
+
                     if (layoutChar == ' ' || (layout.anchorChar().isPresent() && layoutChar == layout.anchorChar().get())) {
                         continue;
                     }
-                    
-                    // Transform layout coordinates to world coordinates
+
                     BlockPos layoutPos = new BlockPos(x, y, z);
                     BlockPos worldPos = origin.offset(RotationUtil.rotateAndMirror(layoutPos.getX(), layoutPos.getY(), layoutPos.getZ(), facing, mirrored));
-                    
-                    // Check if this world position is already part of an existing multiblock
+
                     if (isPositionInAnyMultiblock(level, worldPos)) {
                         return true; // Conflict found
                     }
@@ -359,15 +304,13 @@ public class MultiblockManager {
             }
         }
         
-        return false; // No conflicts
+        return false;
     }
     
     /**
      * Check if a position is part of any existing multiblock.
      */
     private static boolean isPositionInAnyMultiblock(Level level, BlockPos pos) {
-        // Check all active multiblocks to see if this position is part of any of them
-        // Note: We assume all multiblocks are in the same level since we only track by position
         for (MultiblockInfo info : activeMultiblocks.values()) {
             if (isPositionInMultiblock(info.anchorPos(), info, pos)) {
                 return true;
@@ -381,18 +324,14 @@ public class MultiblockManager {
      * This simulates the block break and validates the multiblock.
      */
     private static boolean wouldBreakMultiblock(ServerLevel level, BlockPos anchorPos, MultiblockInfo info, BlockPos breakPos) {
-        // Get the current block state at the position that will be broken
         var currentState = level.getBlockState(breakPos);
-        
-        // Temporarily set the block to air to simulate the break
+
         level.setBlock(breakPos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 0);
         
         try {
-            // Check if the multiblock is still valid with this block removed
             Optional<MultiblockValidator.ValidationResult> result = info.definition().findMatch(level, anchorPos);
             return result.isEmpty() || !result.get().success();
         } finally {
-            // Restore the original block state
             level.setBlock(breakPos, currentState, 0);
         }
     }
@@ -467,29 +406,23 @@ public class MultiblockManager {
      * @param itemInHand The item the player was holding
      * @return The result of the interaction, or PASS if no multiblock was found
      */
-    public static InteractionResult handlePlayerInteraction(Level level, BlockPos hitPos, Player player, 
-                                                           InteractionHand hand, ItemStack itemInHand) {
+    public static InteractionResult handlePlayerInteraction(Level level, BlockPos hitPos, Player player, InteractionHand hand, ItemStack itemInHand) {
         if (!(level instanceof ServerLevel)) {
             return InteractionResult.PASS;
         }
-        
-        // Check if the clicked position is part of any active multiblock
+
         for (Map.Entry<BlockPos, MultiblockInfo> entry : activeMultiblocks.entrySet()) {
             BlockPos anchorPos = entry.getKey();
             MultiblockInfo info = entry.getValue();
-            
-            // Check if the hit position is within this multiblock's bounds
+
             if (isPositionInMultiblock(anchorPos, info, hitPos)) {
-                // Get the multiblock object
                 Multiblock multiblockObject = activeMultiblockObjects.get(anchorPos);
                 if (multiblockObject != null) {
-                    // Call the multiblock's interaction method
                     InteractionResult result = multiblockObject.onInteract(
                         level, anchorPos, info.facing(), info.mirrored(), 
                         player, hand, itemInHand, hitPos
                     );
-                    
-                    // If the multiblock handled the interaction, return the result
+
                     if (result != InteractionResult.PASS) {
                         return result;
                     }
@@ -531,37 +464,31 @@ public class MultiblockManager {
     private static void loadMultiblocksFromWorldData(ServerLevel level) {
         MultiblockWorldData worldData = MultiblockWorldData.get(level);
         
-        var snapshot = new ArrayList<Map.Entry<BlockPos, MultiblockInfo>>(worldData.getMultiblocks().entrySet());
+        var snapshot = new ArrayList<>(worldData.getMultiblocks().entrySet());
         var toRemove = new ArrayList<BlockPos>();
         for (Map.Entry<BlockPos, MultiblockInfo> entry : snapshot) {
             BlockPos pos = entry.getKey();
             MultiblockInfo info = entry.getValue();
-            
-            // Validate that the multiblock still exists in the world
+
             Optional<MultiblockValidator.ValidationResult> result = info.definition().findMatch(level, pos);
             if (result.isPresent() && result.get().success()) {
-                // Multiblock is still valid, restore it
                 activeMultiblocks.put(pos, info);
-                
-                // Create multiblock object if the definition supports it
+
                 if (info.definition().hasObject()) {
-                    Multiblock multiblockObject = (Multiblock) info.definition().createObject();
+                    Multiblock multiblockObject = info.definition().createObject();
                     if (multiblockObject != null) {
                         activeMultiblockObjects.put(pos, multiblockObject);
                         multiblockObject.onCreate(level, pos, info.facing(), info.mirrored());
                     }
                 }
-                
-                System.out.println("DEBUG: Restored multiblock at " + pos + " from world data");
             } else {
                 // Multiblock is no longer valid, schedule removal after iteration
                 toRemove.add(pos);
             }
         }
-        // Apply removals after the iteration to avoid ConcurrentModificationException
+
         for (BlockPos pos : toRemove) {
             worldData.removeMultiblock(pos);
-            System.out.println("DEBUG: Removed invalid multiblock at " + pos + " from world data");
         }
     }
 }

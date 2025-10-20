@@ -10,43 +10,31 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public class ItemDefinition<T extends Item> implements ItemLike, Supplier<T> {
+public record ItemDefinition<T extends Item>(String englishName, DeferredItem<T> item) implements ItemLike, Supplier<T> {
 
-    private final String englishName;
-    private final DeferredItem<T> item;
-
-    public ItemDefinition(String englishName, DeferredItem<T> item) {
-        this.englishName = englishName;
-        this.item = item;
-    }
-
-    public String getEnglishName () {
-        return englishName;
-    }
-
-    public ResourceLocation id () {
+    public ResourceLocation id() {
         return this.item.getId();
     }
 
-    public ItemStack stack () {
+    public ItemStack stack() {
         return stack(1);
     }
 
-    public ItemStack stack (int stackSize) {
+    public ItemStack stack(int stackSize) {
         return new ItemStack((ItemLike) item, stackSize);
     }
 
-    public Holder<Item> holder () {
+    public Holder<Item> holder() {
         return item;
     }
 
     @Override
-    public T get () {
+    public T get() {
         return item.get();
     }
 
     @Override
-    public @NotNull T asItem () {
+    public @NotNull T asItem() {
         return item.get();
     }
 }

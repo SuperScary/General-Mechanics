@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
  * We assume the base (unrotated) layout faces SOUTH.
  */
 public final class RotationUtil {
+
     private RotationUtil() {}
 
     /**

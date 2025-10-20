@@ -1,11 +1,13 @@
 package general.mechanics.api.item.plastic;
 
+import lombok.Getter;
 import net.minecraft.world.item.DyeColor;
 
 /**
  * Enum representing different types of plastic materials.
  * Each type can be colored with any of the 16 dye colors.
  */
+@Getter
 public enum PlasticType {
     POLYETHYLENE("Polyethylene", "PE", "C₂H₄", 0xFFD9E0E0),
     POLYPROPYLENE("Polypropylene", "PP", "C₃H₆", 0xFFF0EAD6),
@@ -29,22 +31,6 @@ public enum PlasticType {
         this.abbreviation = abbreviation;
         this.formula = formula;
         this.defaultColor = defaultColor;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getAbbreviation() {
-        return abbreviation;
-    }
-
-    public String getFormula() {
-        return formula;
-    }
-
-    public int getDefaultColor() {
-        return defaultColor;
     }
 
     /**

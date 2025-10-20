@@ -1,6 +1,7 @@
 package general.mechanics.api.block.machine;
 
 import general.mechanics.api.block.base.BaseBlock;
+import general.mechanics.api.entity.DisassemblyHandler;
 import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.util.RomanNumeral;
 import lombok.Getter;
@@ -8,24 +9,28 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 @Getter
-public class MachineFrameBlock extends BaseBlock {
+public class MachineFrameBlock extends BaseBlock implements DisassemblyHandler {
 
     // Connectivity to adjacent MachineFrame blocks in each cardinal direction
     public static final BooleanProperty NORTH = BooleanProperty.create("north");
@@ -105,4 +110,9 @@ public class MachineFrameBlock extends BaseBlock {
         return st.getBlock() instanceof MachineFrameBlock;
     }
 
+    @Override
+    public InteractionResult disassemble(Player player, Level level, BlockHitResult hitResult, ItemStack stack, @Nullable ItemStack existingData) {
+        level.destroyBlock(hitResult.getBlockPos(), true, player);
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    }
 }

@@ -1,5 +1,8 @@
 package general.mechanics.api.electrical.transistor;
 
+import lombok.Getter;
+
+@Getter
 public enum TransistorType {
 
     NPN_BJT("NPN Bipolar Junction Transistor", "NPN", "BJT", "General-purpose amplifier or switch"),
@@ -23,22 +26,6 @@ public enum TransistorType {
         this.symbol = symbol;
         this.category = category;
         this.description = description;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getEnglishDisplayValue() {

@@ -3,6 +3,7 @@ package general.mechanics.api.block.plastic;
 import general.mechanics.api.block.base.BaseBlock;
 import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.registries.CoreSounds;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class PlasticTypeBlock extends BaseBlock {
 
     private final PlasticType plasticType;
@@ -26,8 +28,7 @@ public class PlasticTypeBlock extends BaseBlock {
         this.properties = properties;
         this.plasticType = plasticType;
         this.coloredVariants = new ArrayList<>();
-        
-        // Create all colored variants
+
         for (DyeColor color : PlasticType.getAllColors()) {
             coloredVariants.add(new ColoredPlasticBlock(this, color));
         }
@@ -38,18 +39,6 @@ public class PlasticTypeBlock extends BaseBlock {
         tooltipComponents.add(Component.literal("§o" + plasticType.getAbbreviation()));
         tooltipComponents.add(Component.literal(String.format("§e" + plasticType.getFormula())));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-    }
-
-    public PlasticType getPlasticType() {
-        return plasticType;
-    }
-
-    public List<ColoredPlasticBlock> getColoredVariants() {
-        return coloredVariants;
-    }
-
-    public Properties getProperties() {
-        return properties;
     }
 
     public ColoredPlasticBlock getColoredVariant(DyeColor color) {
@@ -64,10 +53,9 @@ public class PlasticTypeBlock extends BaseBlock {
 
         if (block instanceof PlasticTypeBlock plasticTypeBlock) {
             int defaultColor = plasticTypeBlock.getPlasticType().getDefaultColor();
-            // If defaultColor is -1, return white (0xFFFFFFFF), otherwise return the default color
             return defaultColor == -1 ? 0xFFFFFFFF : defaultColor;
         }
-        return 0xFFFFFFFF; // Default to white if no specific color
+        return -1;
     }
 
     public static int getColorForItemStack(ItemStack stack, int index) {

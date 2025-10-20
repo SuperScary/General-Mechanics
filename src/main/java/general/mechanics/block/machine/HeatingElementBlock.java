@@ -1,4 +1,4 @@
-package general.mechanics.block;
+package general.mechanics.block.machine;
 
 import com.mojang.serialization.MapCodec;
 import general.mechanics.api.block.base.BaseBlock;

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Used for any block that can be disassembled with a wrench.
  */
-public interface IWrenchable {
+public interface DisassemblyHandler {
 
     /**
      * Allows disassembly with wrench. Called by {@link WrenchHooks#onPlayerUseBlock(Player, Level, InteractionHand, BlockHitResult)}

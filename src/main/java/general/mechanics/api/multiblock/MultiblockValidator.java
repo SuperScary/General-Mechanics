@@ -30,26 +30,14 @@ public final class MultiblockValidator {
     /**
      * Tries all 8 combinations while also enforcing block count requirements.
      */
-    public static Optional<ValidationResult> findMatch(Layout layout,
-                                                       Level level,
-                                                       BlockPos anchorPos,
-                                                       Map<Block, Integer> requiredExact,
-                                                       Map<Block, Integer> requiredMinimum) {
-        return findMatch(layout, level, anchorPos,
-                EnumSet.of(Direction.SOUTH, Direction.WEST, Direction.NORTH, Direction.EAST),
-                true,
-                requiredExact,
-                requiredMinimum);
+    public static Optional<ValidationResult> findMatch(Layout layout, Level level, BlockPos anchorPos, Map<Block, Integer> requiredExact, Map<Block, Integer> requiredMinimum) {
+        return findMatch(layout, level, anchorPos, EnumSet.of(Direction.SOUTH, Direction.WEST, Direction.NORTH, Direction.EAST), true, requiredExact, requiredMinimum);
     }
 
     /**
      * Tries specified facings and optionally mirrored/not.
      */
-    public static Optional<ValidationResult> findMatch(Layout layout,
-                                                       Level level,
-                                                       BlockPos anchorPos,
-                                                       EnumSet<Direction> facings,
-                                                       boolean includeMirror) {
+    public static Optional<ValidationResult> findMatch(Layout layout, Level level, BlockPos anchorPos, EnumSet<Direction> facings, boolean includeMirror) {
         Objects.requireNonNull(layout, "layout");
         Objects.requireNonNull(level, "level");
         Objects.requireNonNull(anchorPos, "anchorPos");
@@ -68,13 +56,7 @@ public final class MultiblockValidator {
     /**
      * Tries specified facings and optionally mirrored/not, enforcing block count requirements.
      */
-    public static Optional<ValidationResult> findMatch(Layout layout,
-                                                       Level level,
-                                                       BlockPos anchorPos,
-                                                       EnumSet<Direction> facings,
-                                                       boolean includeMirror,
-                                                       Map<Block, Integer> requiredExact,
-                                                       Map<Block, Integer> requiredMinimum) {
+    public static Optional<ValidationResult> findMatch(Layout layout, Level level, BlockPos anchorPos, EnumSet<Direction> facings, boolean includeMirror, Map<Block, Integer> requiredExact, Map<Block, Integer> requiredMinimum) {
         Objects.requireNonNull(layout, "layout");
         Objects.requireNonNull(level, "level");
         Objects.requireNonNull(anchorPos, "anchorPos");
@@ -94,11 +76,7 @@ public final class MultiblockValidator {
      * Validates the layout at the given anchor position with a fixed orientation.
      * Returns a result containing success/failure and the first mismatch (if any).
      */
-    public static ValidationResult validateAt(Layout layout,
-                                              Level level,
-                                              BlockPos anchorPos,
-                                              Direction facing,
-                                              boolean mirrorX) {
+    public static ValidationResult validateAt(Layout layout, Level level, BlockPos anchorPos, Direction facing, boolean mirrorX) {
         Objects.requireNonNull(layout, "layout");
         Objects.requireNonNull(level, "level");
         Objects.requireNonNull(anchorPos, "anchorPos");
@@ -128,7 +106,6 @@ public final class MultiblockValidator {
                 throw new IllegalStateException("No predicate mapped for character '" + c + "'");
             }
 
-            // Relative from origin in layout-space
             BlockPos rel = RotationUtil.rotateAndMirror(lx, ly, lz, facing, mirrorX);
             BlockPos worldPos = origin.offset(rel);
 
@@ -145,17 +122,10 @@ public final class MultiblockValidator {
     /**
      * Validates the layout and enforces global block count requirements within the structure volume.
      */
-    public static ValidationResult validateAt(Layout layout,
-                                              Level level,
-                                              BlockPos anchorPos,
-                                              Direction facing,
-                                              boolean mirrorX,
-                                              Map<Block, Integer> requiredExact,
-                                              Map<Block, Integer> requiredMinimum) {
+    public static ValidationResult validateAt(Layout layout, Level level, BlockPos anchorPos, Direction facing, boolean mirrorX, Map<Block, Integer> requiredExact, Map<Block, Integer> requiredMinimum) {
         ValidationResult base = validateAt(layout, level, anchorPos, facing, mirrorX);
         if (!base.success()) return base;
 
-        // Count blocks within the transformed structure bounding box
         final int width = layout.width();
         final int depth = layout.depth();
         final int height = layout.height();
@@ -202,8 +172,5 @@ public final class MultiblockValidator {
      * - facing: the facing used for validation.
      * - mirrored: whether mirroring was used.
      */
-    public record ValidationResult(boolean success,
-                                   BlockPos firstMismatch,
-                                   Direction facing,
-                                   boolean mirrored) { }
+    public record ValidationResult(boolean success, BlockPos firstMismatch, Direction facing, boolean mirrored) {}
 }

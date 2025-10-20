@@ -54,7 +54,6 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
 
     @Override
     public Range getInputSlots() {
-        // Slots 0, 1, 2 are input slots
         return new Range(0, 2);
     }
 
@@ -66,7 +65,6 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
 
     @Override
     protected Object createRecipeInput(int[] inputSlots) {
-        // Create a RefabricationRecipeInput from the input slots
         ItemStack[] stacks = new ItemStack[inputSlots.length];
         for (int i = 0; i < inputSlots.length; i++) {
             stacks[i] = getInventory().getStackInSlot(inputSlots[i]);
@@ -90,12 +88,10 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
                 inputStacks.add(stack);
             }
         }
-        
-        // For each ingredient in the recipe, consume one matching item
+
         for (var ingredient : recipeValue.getIngredients()) {
             if (ingredient.isEmpty()) continue;
-            
-            // Find and consume one item that matches this ingredient
+
             for (int slot : inputSlots.toArray()) {
                 var stack = getInventory().getStackInSlot(slot);
                 if (stack != ItemStack.EMPTY && ingredient.test(stack)) {

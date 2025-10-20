@@ -1,5 +1,8 @@
 package general.mechanics.api.electrical.resistors;
 
+import lombok.Getter;
+
+@Getter
 public enum ResistorType {
 
     OHM_10(10f, "10Ω", "Used for current limiting and power applications"),
@@ -21,18 +24,6 @@ public enum ResistorType {
         this.value = value;
         this.displayValue = displayValue;
         this.description = description;
-    }
-
-    public float getValue() {
-        return value;
-    }
-
-    public String getDisplayValue() {
-        return displayValue;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public String getEnglishDisplayValue() {

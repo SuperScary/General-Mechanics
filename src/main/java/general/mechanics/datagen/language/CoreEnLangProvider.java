@@ -30,12 +30,12 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
 
         // ITEMS
         for (var item : CoreItems.getItems()) {
-            add(item.asItem(), item.getEnglishName());
+            add(item.asItem(), item.englishName());
         }
 
         // ELEMENT ITEMS
         for (var element : CoreElements.getElements()) {
-            add(element.asItem(), element.getEnglishName());
+            add(element.asItem(), element.englishName());
         }
 
         // BLOCKS
@@ -45,7 +45,7 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
 
         // UPGRADES
         for (var upgrade : CoreUpgrades.getUpgrades()) {
-            add(upgrade.get(), upgrade.getEnglishName());
+            add(upgrade.get(), upgrade.englishName());
         }
 
         // Upgrade descriptions
@@ -115,7 +115,7 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
             }
 
             if (item.get() instanceof CapacitorItem capacitorItem) {
-                add(capacitorItem.getDescriptionId() + ".desc", capacitorItem.getCapacitor().getDescription());
+                add(capacitorItem.getDescriptionId() + ".desc", capacitorItem.getCapacitorType().getDescription());
             }
 
         }

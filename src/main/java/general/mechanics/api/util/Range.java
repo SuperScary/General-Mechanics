@@ -1,10 +1,19 @@
 package general.mechanics.api.util;
 
+import lombok.Getter;
+
 public class Range {
 
+    @Getter
     private final int from;
+
+    @Getter
     private final int to;
+
+    @Getter
     private final boolean inclusive;
+
+    @Getter
     private int current;
 
     public Range(int from, int to, boolean inclusive) {
@@ -22,22 +31,10 @@ public class Range {
         this(value, value, true);
     }
 
-    public int getFrom() {
-        return from;
-    }
-
-    public int getTo() {
-        return to;
-    }
-
-    public boolean inclusive() {
-        return inclusive;
-    }
-
     /**
      * Returns the next number in the range.
-     * If the range is inclusive and we've reached `to`, return `to` again.
-     * If the range is exclusive and we've reached or passed `to`, throw an exception or wrap.
+     * If the range is inclusive, and we've reached `to`, return `to` again.
+     * If the range is exclusive, and we've reached or passed `to`, throw an exception or wrap.
      */
     public int getNext() {
         if (from < to) { // ascending
@@ -81,9 +78,8 @@ public class Range {
     }
 
     public int[] toArray() {
-        // If 'to' is -1, treat this as a single-value range
         if (to == -1) {
-            return new int[] { from };
+            return new int[]{from};
         }
 
         int size = Math.abs(to - from) + (inclusive ? 1 : 0);
