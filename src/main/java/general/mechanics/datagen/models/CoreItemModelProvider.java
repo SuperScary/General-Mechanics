@@ -13,10 +13,12 @@ import general.mechanics.api.item.plastic.ColoredPlasticItem;
 import general.mechanics.api.item.plastic.PlasticTypeItem;
 import general.mechanics.api.util.IDataProvider;
 import general.mechanics.registries.CoreElements;
+import general.mechanics.registries.CoreFluids;
 import general.mechanics.registries.CoreItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.item.BucketItem;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -75,6 +77,18 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
                 continue;
             }
 
+            if (item.asItem() instanceof BucketItem) {
+                boolean generated = false;
+                for (var fluid : CoreFluids.getFluids()) {
+                    if (fluid.getBucket().id().equals(item.id())) {
+                        bucket(item);
+                        generated = true;
+                        break;
+                    }
+                }
+                if (generated) continue; // prevent fallback from overriding the layered bucket model
+            }
+
             handheldItem(item);
         }
 
@@ -83,6 +97,18 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
                 element((ItemDefinition<ElementItem>) item);
             }
         }
+
+    }
+
+    public ItemModelBuilder bucket(ItemDefinition<?> item) {
+        var background = GM.getResource("item/bucket/bucket_background");
+        var overlay = GM.getResource("item/bucket/bucket_overlay");
+        existingFileHelper.trackGenerated(background, PackType.CLIENT_RESOURCES, ".png", "textures");
+        existingFileHelper.trackGenerated(overlay, PackType.CLIENT_RESOURCES, ".png", "textures");
+        return this.getBuilder(item.id().getPath())
+                .parent(new ModelFile.UncheckedModelFile("item/handheld"))
+                .texture("layer0", background)
+                .texture("layer1", overlay);
     }
 
     public ItemModelBuilder handheldItem(ItemDefinition<?> item) {

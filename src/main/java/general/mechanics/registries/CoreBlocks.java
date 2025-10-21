@@ -16,12 +16,15 @@ import general.mechanics.api.item.base.BaseBlockItem;
 import general.mechanics.block.machine.HeatingElementBlock;
 import general.mechanics.block.machine.MatterFabricatorBlock;
 import general.mechanics.tab.CoreTab;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -143,31 +147,31 @@ public class CoreBlocks {
     public static final BlockDefinition<PlasticTypeBlock> POLYETHERETHERKETONE_BLOCK = plasticTypeBlock("Polyetheretherketone Block", PlasticType.POLYETHERETHERKETONE);
 
     // Ice
-    public static final BlockDefinition<IceBlock> ICE2 = reg("Ice II", "ice_2", IceBlock::new);
-    public static final BlockDefinition<IceBlock> ICE3 = reg("Ice III", "ice_3", IceBlock::new);
-    public static final BlockDefinition<IceBlock> ICE4 = reg("Ice IV", "ice_4", IceBlock::new);
-    public static final BlockDefinition<IceBlock> ICE5 = reg("Ice V", "ice_5", IceBlock::new);
-    public static final BlockDefinition<IceBlock> ICE6 = reg("Ice VI", "ice_6", IceBlock::new);
-    public static final BlockDefinition<Ice7Block> ICE7 = reg("Ice VII", "ice_7", () -> new Ice7Block(BlockBehaviour.Properties.ofFullCopy(Blocks.ICE)));
+    public static final BlockDefinition<IceBlock> ICE2 = register("Ice II", "ice_2", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE3 = register("Ice III", "ice_3", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE4 = register("Ice IV", "ice_4", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE5 = register("Ice V", "ice_5", IceBlock::new);
+    public static final BlockDefinition<IceBlock> ICE6 = register("Ice VI", "ice_6", IceBlock::new);
+    public static final BlockDefinition<Ice7Block> ICE7 = register("Ice VII", "ice_7", () -> new Ice7Block(BlockBehaviour.Properties.ofFullCopy(Blocks.ICE)));
 
     // Crafting Machines
-    public static final BlockDefinition<MatterFabricatorBlock> MATTER_FABRICATOR = reg("Matter Fabricator", MatterFabricatorBlock::new);
+    public static final BlockDefinition<MatterFabricatorBlock> MATTER_FABRICATOR = register("Matter Fabricator", MatterFabricatorBlock::new);
 
     // Machine block
-    public static final BlockDefinition<MachineFrameBlock> POLYETHYLENE_MACHINE_FRAME = reg("Polyethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE));
-    public static final BlockDefinition<MachineFrameBlock> POLYPROPYLENE_MACHINE_FRAME = reg("Polypropylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYPROPYLENE));
-    public static final BlockDefinition<MachineFrameBlock> POLYSTYRENE_MACHINE_FRAME = reg("Polystyrene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYSTYRENE));
-    public static final BlockDefinition<MachineFrameBlock> POLYVINYL_CHLORIDE_MACHINE_FRAME = reg("Polyvinyl Chloride Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYVINYL_CHLORIDE));
-    public static final BlockDefinition<MachineFrameBlock> POLYETHYLENE_TEREPHTHALATE_MACHINE_FRAME = reg("Polyethylene Terephthalate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE_TEREPHTHALATE));
-    public static final BlockDefinition<MachineFrameBlock> ACRYLONITRILE_BUTADIENE_STYRENE_MACHINE_FRAME = reg("Acrylonitrile Butadiene Styrene Machine Frame", () -> new MachineFrameBlock(PlasticType.ACRYLONITRILE_BUTADIENE_STYRENE));
-    public static final BlockDefinition<MachineFrameBlock> POLYCARBONATE_MACHINE_FRAME = reg("Polycarbonate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYCARBONATE));
-    public static final BlockDefinition<MachineFrameBlock> NYLON_MACHINE_FRAME = reg("Nylon Machine Frame", () -> new MachineFrameBlock(PlasticType.NYLON));
-    public static final BlockDefinition<MachineFrameBlock> POLYURETHANE_MACHINE_FRAME = reg("Polyurethane Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYURETHANE));
-    public static final BlockDefinition<MachineFrameBlock> POLYTETRAFLUOROETHYLENE_MACHINE_FRAME = reg("Polytetrafluoroethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYTETRAFLUOROETHYLENE));
-    public static final BlockDefinition<MachineFrameBlock> POLYETHERETHERKETONE_MACHINE_FRAME = reg("Polyetheretherketone Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHERETHERKETONE));
+    public static final BlockDefinition<MachineFrameBlock> POLYETHYLENE_MACHINE_FRAME = register("Polyethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYPROPYLENE_MACHINE_FRAME = register("Polypropylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYPROPYLENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYSTYRENE_MACHINE_FRAME = register("Polystyrene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYSTYRENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYVINYL_CHLORIDE_MACHINE_FRAME = register("Polyvinyl Chloride Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYVINYL_CHLORIDE));
+    public static final BlockDefinition<MachineFrameBlock> POLYETHYLENE_TEREPHTHALATE_MACHINE_FRAME = register("Polyethylene Terephthalate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHYLENE_TEREPHTHALATE));
+    public static final BlockDefinition<MachineFrameBlock> ACRYLONITRILE_BUTADIENE_STYRENE_MACHINE_FRAME = register("Acrylonitrile Butadiene Styrene Machine Frame", () -> new MachineFrameBlock(PlasticType.ACRYLONITRILE_BUTADIENE_STYRENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYCARBONATE_MACHINE_FRAME = register("Polycarbonate Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYCARBONATE));
+    public static final BlockDefinition<MachineFrameBlock> NYLON_MACHINE_FRAME = register("Nylon Machine Frame", () -> new MachineFrameBlock(PlasticType.NYLON));
+    public static final BlockDefinition<MachineFrameBlock> POLYURETHANE_MACHINE_FRAME = register("Polyurethane Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYURETHANE));
+    public static final BlockDefinition<MachineFrameBlock> POLYTETRAFLUOROETHYLENE_MACHINE_FRAME = register("Polytetrafluoroethylene Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYTETRAFLUOROETHYLENE));
+    public static final BlockDefinition<MachineFrameBlock> POLYETHERETHERKETONE_MACHINE_FRAME = register("Polyetheretherketone Machine Frame", () -> new MachineFrameBlock(PlasticType.POLYETHERETHERKETONE));
 
     // Misc
-    public static final BlockDefinition<HeatingElementBlock> INDUSTRIAL_HEATING_ELEMENT = reg("Industrial Heating Element", HeatingElementBlock::new);
+    public static final BlockDefinition<HeatingElementBlock> INDUSTRIAL_HEATING_ELEMENT = register("Industrial Heating Element", HeatingElementBlock::new);
 
     /**
      * Formats a color name by capitalizing each word and replacing underscores with spaces.
@@ -188,13 +192,13 @@ public class CoreBlocks {
 
     static <T extends PlasticTypeBlock> BlockDefinition<T> plasticTypeBlock(String name, PlasticType plasticType) {
         // Create the main plastic type block
-        BlockDefinition<T> plasticTypeDef = reg(name, () -> (T) new PlasticTypeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), plasticType));
+        BlockDefinition<T> plasticTypeDef = register(name, () -> (T) new PlasticTypeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), plasticType));
         
         // Register all colored plastic block variants
         for (DyeColor color : PlasticType.getAllColors()) {
             String coloredName = formatColorName(color.getName()) + " " + name;
             String coloredResourceName = color.getName().toLowerCase() + "_" + name.toLowerCase().replace(' ', '_');
-            reg(coloredName, GM.getResource(coloredResourceName), () -> {
+            register(coloredName, GM.getResource(coloredResourceName), () -> {
                 T plasticTypeBlock = plasticTypeDef.block();
                 return (Block) plasticTypeBlock.getColoredVariant(color);
             }, null, true);
@@ -257,7 +261,7 @@ public class CoreBlocks {
         }
         String name = element.getDisplayName() + " Ore";
         String resourceName = name.toLowerCase().replace(' ', '_');
-        BlockDefinition<OreBlock> definition = reg(name, GM.getResource(resourceName), () -> new OreBlock(element), null, false);
+        BlockDefinition<OreBlock> definition = register(name, GM.getResource(resourceName), () -> new OreBlock(element), null, false);
         CoreTab.addElements(definition.item());
         return definition;
     }
@@ -266,16 +270,20 @@ public class CoreBlocks {
         return Collections.unmodifiableList(BLOCKS);
     }
 
-    public static <T extends Block> BlockDefinition<T> reg (final String name, final Supplier<T> supplier) {
+    public static <T extends Block> BlockDefinition<T> register(final String name, final Supplier<T> supplier) {
         String resourceFriendly = name.toLowerCase().replace(' ', '_');
-        return reg(name, GM.getResource(resourceFriendly), supplier, null, true);
+        return register(name, GM.getResource(resourceFriendly), supplier, null, true);
     }
 
-    public static <T extends Block> BlockDefinition<T> reg (final String name, String resourceName, final Supplier<T> supplier) {
-        return reg(name, GM.getResource(resourceName), supplier, null, true);
+    public static <T extends Block> BlockDefinition<T> register(final String name, String resourceName, final Supplier<T> supplier) {
+        return register(name, GM.getResource(resourceName), supplier, null, true);
     }
 
-    public static <T extends Block> BlockDefinition<T> reg (final String name, ResourceLocation id, final Supplier<T> supplier, @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory, boolean addToTab) {
+    public static <T extends Block> BlockDefinition<T> register(final String name, ResourceLocation id, final Supplier<T> supplier, @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory, boolean addToTab) {
+        return register(name, id, supplier, itemFactory, addToTab, CoreTab.MAIN);
+    }
+
+    public static <T extends Block> BlockDefinition<T> register(final String name, ResourceLocation id, final Supplier<T> supplier, @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory, boolean addToTab, @Nullable ResourceKey<CreativeModeTab> group) {
         var deferredBlock = REGISTRY.register(id.getPath(), supplier);
         var deferredItem = CoreItems.REGISTRY.register(id.getPath(), () -> {
             var block = deferredBlock.get();
@@ -293,7 +301,15 @@ public class CoreBlocks {
             }
         });
         var itemDef = new ItemDefinition<>(name, deferredItem);
-        if (addToTab) CoreTab.add(itemDef);
+        if (addToTab) {
+            if (Objects.equals(group, CoreTab.MAIN)) {
+                CoreTab.add(itemDef);
+            } else if (Objects.equals(group, CoreTab.FLUIDS)) {
+                CoreTab.addFluids(itemDef);
+            } else if (group != null) {
+                CoreTab.addExternal(group, itemDef);
+            }
+        }
         BlockDefinition<T> definition = new BlockDefinition<>(name, deferredBlock, itemDef);
         BLOCKS.add(definition);
         return definition;

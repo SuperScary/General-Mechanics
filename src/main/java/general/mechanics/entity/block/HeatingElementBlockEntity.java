@@ -65,7 +65,6 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
             setFurnaceLit(level, furnace, true);
             furnace.setChanged();
         } else {
-            // Keep topped up but don’t grow without a bound
             furnace.litTime = Math.min(furnace.litTime + chunk, Math.max(furnace.litDuration, chunk));
             furnace.setChanged();
         }
@@ -85,10 +84,7 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
     // ---- IHeater ----
     @Override
     public boolean isHeating(Level level, BlockPos furnacePos) {
-        // Put your own gating here: redstone check, internal energy, upgrades, etc.
-        // Example: only heat if we have full power or a redstone signal:
-        // return level.hasNeighborSignal(getBlockPos()) || hasInternalPower();
-        return !level.hasNeighborSignal(getBlockPos()); // always on for the minimal example
+        return !level.hasNeighborSignal(getBlockPos());
     }
 
     @Override

@@ -1,8 +1,12 @@
 package general.mechanics.api.fluid;
 
+import com.mojang.blaze3d.shaders.FogShape;
+import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -26,13 +30,28 @@ public class BaseFluid extends FluidType implements IClientFluidExtensions {
     @Getter
     private final Vector3f fogColor;
 
-    public BaseFluid(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, ResourceLocation overlayTexture, int tintColor, Vector3f fogColor) {
+    @Getter
+    @Setter
+    private boolean isAcidic;
+
+    @Getter
+    @Setter
+    private boolean isBasic;
+
+    @Getter
+    @Setter
+    private long temp; // kelvin
+
+    public BaseFluid(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, ResourceLocation overlayTexture, int tintColor, Vector3f fogColor, boolean isAcidic, boolean isBasic, long temp) {
         super(properties);
         this.stillTexture = stillTexture;
         this.flowingTexture = flowingTexture;
         this.overlayTexture = overlayTexture;
         this.tintColor = tintColor;
         this.fogColor = fogColor;
+        this.isAcidic = isAcidic;
+        this.isBasic = isBasic;
+        this.temp = temp;
     }
 
     @Override
@@ -66,8 +85,15 @@ public class BaseFluid extends FluidType implements IClientFluidExtensions {
 
             @Override
             public @NotNull Vector3f modifyFogColor(@NotNull Camera cam, float pt, @NotNull ClientLevel lvl, int renderDistance, float darken, @NotNull Vector3f original) {
-                return new Vector3f(fog);
+                return fog;
             }
+
+            @Override
+            public void modifyFogRender(@NotNull Camera camera, FogRenderer.@NotNull FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, @NotNull FogShape shape) {
+                RenderSystem.setShaderFogStart(1f);
+                RenderSystem.setShaderFogEnd(6f);
+            }
+
         };
     }
 }

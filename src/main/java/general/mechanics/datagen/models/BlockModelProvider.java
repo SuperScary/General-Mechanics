@@ -16,6 +16,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -50,10 +51,18 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 machineFrame(block);
             } else if (block.block() instanceof OreBlock) {
                 oreBlock(block);
+            } else if (block.block() instanceof LiquidBlock) {
+                simpleItem(block);
             }
         }
 
         machine(CoreBlocks.MATTER_FABRICATOR);
+    }
+
+    private void simpleItem(BlockDefinition<?> block) {
+        itemModels().getBuilder(block.id().getPath())
+                .parent(models().getExistingFile(GM.getMinecraftResource("item/generated")))
+                .texture("layer0", GM.getMinecraftResource("block/water_still"));
     }
 
     private void blockWithItem(BlockDefinition<?> block) {

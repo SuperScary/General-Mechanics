@@ -4,7 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import general.mechanics.api.item.element.metallic.*;
 import general.mechanics.api.item.tools.ToolItem;
 import general.mechanics.registries.CoreElements;
+import general.mechanics.registries.CoreFluids;
 import general.mechanics.registries.CoreItems;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
@@ -13,6 +16,10 @@ public class ClientItemDecorators {
 
     private static final IItemDecorator DURABILITY_GRADIENT;
     private static final IItemDecorator ALLOY_MARKER;
+    private static final IItemDecorator ACIDIC_MARKER;
+    private static final IItemDecorator BASIC_MARKER;
+    private static final IItemDecorator HOT_MARKER;
+    private static final IItemDecorator COLD_MARKER;
 
     public static void registerDecorators(RegisterItemDecorationsEvent event) {
         for (var item : CoreItems.getItems()) {
@@ -39,6 +46,37 @@ public class ClientItemDecorators {
                 event.register(element, ALLOY_MARKER);
             }
         }
+
+        for (var fluid : CoreFluids.getFluids()) {
+            var base = CoreFluids.getBaseFluid(fluid);
+            if (base != null) {
+                if (base.isAcidic()) event.register(fluid.getBlock(), ACIDIC_MARKER);
+                if (base.isBasic()) event.register(fluid.getBlock(), BASIC_MARKER);
+                if (base.getTemp() >= 373) event.register(fluid.getBlock(), HOT_MARKER);
+                if (base.getTemp() <= 273) event.register(fluid.getBlock(), COLD_MARKER);
+            }
+        }
+    }
+
+    private static boolean drawTextAt(GuiGraphics g, Font font, int x, int y, float posX, float posY, String text) {
+        var pose = g.pose();
+        pose.pushPose();
+        pose.translate(x, y, 200); // Move to the item position in GUI
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
+        float scale = 0.5f;
+        pose.scale(scale, scale, 1.0f);
+
+        g.drawString(font, text, (int) ((posX) / scale), (int) ((posY) / scale), 0xFFFFFF, true);
+
+        RenderSystem.disableBlend();
+        RenderSystem.enableDepthTest();
+        pose.popPose();
+
+        return false;
     }
 
     static {
@@ -81,26 +119,12 @@ public class ClientItemDecorators {
             return false;
         };
 
-        ALLOY_MARKER = (g, font, stack, x, y) -> {
-            var pose = g.pose();
-            pose.pushPose();
-            pose.translate(x, y, 200); // Move to the item position in GUI
+        ALLOY_MARKER = (g, font, stack, x, y) -> drawTextAt(g, font, x, y, 1f, 11f, "A");
 
-            RenderSystem.disableDepthTest();
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-
-            float scale = 0.5f;
-            pose.scale(scale, scale, 1.0f);
-
-            g.drawString(font, "A", (int) ((1f) / scale), (int) ((11f) / scale), 0xFFFFFF, true);
-
-            RenderSystem.disableBlend();
-            RenderSystem.enableDepthTest();
-            pose.popPose();
-
-            return false;
-        };
+        ACIDIC_MARKER = (g, font, stack, x, y) -> drawTextAt(g, font, x, y, 1f, 11f, "Ac");
+        BASIC_MARKER = (g, font, stack, x, y) -> drawTextAt(g, font, x, y, 1f, 11f, "B");
+        HOT_MARKER = (g, font, stack, x, y) -> drawTextAt(g, font, x, y, 1f, 1f, "§cH");
+        COLD_MARKER = (g, font, stack, x, y) -> drawTextAt(g, font, x, y, 1f, 1f, "§9C");
     }
 
 }

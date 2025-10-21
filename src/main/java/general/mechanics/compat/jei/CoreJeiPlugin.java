@@ -2,6 +2,7 @@ package general.mechanics.compat.jei;
 
 import general.mechanics.GM;
 import general.mechanics.compat.jei.categories.CrushingCategory;
+import general.mechanics.compat.jei.categories.FluidMixingCategory;
 import general.mechanics.compat.jei.categories.MatterFabricatorCategory;
 import general.mechanics.gui.screen.MatterFabricatorScreen;
 import general.mechanics.gui.screen.base.BaseScreen;
@@ -36,6 +37,7 @@ public class CoreJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new MatterFabricatorCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new CrushingCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new FluidMixingCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -47,6 +49,9 @@ public class CoreJeiPlugin implements IModPlugin {
 
         var crushingRecipeList = recipeManager.getAllRecipesFor(CoreRecipes.CRUSHING_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
         registration.addRecipes(CrushingCategory.TYPE, crushingRecipeList);
+
+        var fluidMixingRecipeList = recipeManager.getAllRecipesFor(CoreRecipes.FLUID_MIXING_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList();
+        registration.addRecipes(FluidMixingCategory.TYPE, fluidMixingRecipeList);
     }
 
     @Override

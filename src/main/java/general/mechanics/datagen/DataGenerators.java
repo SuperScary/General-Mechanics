@@ -6,12 +6,12 @@ import general.mechanics.datagen.language.CoreEnLangProvider;
 import general.mechanics.datagen.loot.CoreLootTableProvider;
 import general.mechanics.datagen.models.BlockModelProvider;
 import general.mechanics.datagen.models.CoreItemModelProvider;
+import general.mechanics.datagen.recipes.CoreFluidTagGenerator;
 import general.mechanics.datagen.recipes.CraftingRecipes;
 import general.mechanics.datagen.recipes.MachineRecipes;
 import general.mechanics.datagen.recipes.SmeltingRecipes;
 import general.mechanics.datagen.tags.CoreBlockTagGenerator;
 import general.mechanics.datagen.tags.CoreItemTagGenerator;
-import general.mechanics.datagen.world.WorldGenProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -50,6 +50,7 @@ public class DataGenerators {
         // TAGS
         var blockTagsProvider = pack.addProvider(pOutput -> new CoreBlockTagGenerator(pOutput, registries, existingFileHelper));
         pack.addProvider(pOutput -> new CoreItemTagGenerator(pOutput, registries, blockTagsProvider.contentsGetter(), existingFileHelper));
+        pack.addProvider(packOutput -> new CoreFluidTagGenerator(packOutput, registries, existingFileHelper));
 
         // MODELS & STATES
         pack.addProvider(pOutput -> new BlockModelProvider(pOutput, existingFileHelper));

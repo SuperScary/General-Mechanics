@@ -3,6 +3,7 @@ package general.mechanics.registries;
 import general.mechanics.GM;
 import general.mechanics.recipes.CrushingRecipe;
 import general.mechanics.recipes.FabricationRecipe;
+import general.mechanics.recipes.FluidMixingRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -19,5 +20,8 @@ public class CoreRecipes {
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CrushingRecipe>> CRUSHING_SERIALIZER = SERIALIZER_REGISTRY.register("crushing", CrushingRecipe.Serializer::new);
     public static final DeferredHolder<RecipeType<?>, RecipeType<CrushingRecipe>> CRUSHING_RECIPE_TYPE = RECIPE_REGISTRY.register("crushing", () -> RecipeType.simple(GM.getResource("crushing")));
+
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FluidMixingRecipe>> FLUID_MIXING_SERIALIZER = SERIALIZER_REGISTRY.register("fluid_mixing", FluidMixingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<FluidMixingRecipe>> FLUID_MIXING_RECIPE_TYPE = RECIPE_REGISTRY.register("fluid_mixing", () -> RecipeType.simple(GM.getResource("fluid_mixing")));
 
 }

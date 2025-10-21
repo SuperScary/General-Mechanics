@@ -9,6 +9,7 @@ import general.mechanics.api.electrical.transistor.TransistorItem;
 import general.mechanics.api.upgrade.UpgradeBase;
 import general.mechanics.api.util.IDataProvider;
 import general.mechanics.registries.CoreBlocks;
+import general.mechanics.registries.CoreFluids;
 import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreItems;
 import general.mechanics.registries.CoreUpgrades;
@@ -43,6 +44,12 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
             add(block.block(), block.getEnglishName());
         }
 
+        // FLUID TYPES (localize fluid type description IDs)
+        for (var def : CoreFluids.getFluids()) {
+            var key = "fluid_type." + GM.MODID + "." + def.getEnglishName().toLowerCase().replace(' ', '_');
+            add(key, def.getEnglishName());
+        }
+
         // UPGRADES
         for (var upgrade : CoreUpgrades.getUpgrades()) {
             add(upgrade.get(), upgrade.englishName());
@@ -58,6 +65,7 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
     protected void addManualStrings() {
         add("itemGroup." + GM.MODID, GM.NAME);
         add("itemGroup." + GM.MODID + ".elements", GM.NAME + ": Elements");
+        add("itemGroup." + GM.MODID + ".fluids", GM.NAME + ": Fluids & Acids");
         add("gui.gm.progress", "Progress: "); // the space is important!!!!
         add("gui.gm.idle", "Idle");
         add("gui.gm.settings.right", "Right Click to Expand");
