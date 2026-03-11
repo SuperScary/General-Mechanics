@@ -114,8 +114,12 @@ public class BlockModelProvider extends CoreBlockStateProvider {
 
         err(List.of(on, off));
 
-        BlockModelBuilder modelOn = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
-        BlockModelBuilder modelOff = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
+        BlockModelBuilder modelOn = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE)
+                .texture("particle", MACHINE_SIDE)
+                .guiLight(BlockModel.GuiLight.FRONT);
+        BlockModelBuilder modelOff = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE)
+                .texture("particle", MACHINE_SIDE)
+                .guiLight(BlockModel.GuiLight.FRONT);
         directionBlock(block.block(), (state, builder) -> builder.modelFile(state.getValue(BlockStateProperties.POWERED) ? modelOn : modelOff));
 
         simpleBlockItem(block.block(), modelOn);

@@ -78,7 +78,7 @@ public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlock
 
     @Override
     public int getLightEmission (@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 15 : 7;
+        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 15 : super.getLightEmission(state, level, pos);
     }
 
     @Override

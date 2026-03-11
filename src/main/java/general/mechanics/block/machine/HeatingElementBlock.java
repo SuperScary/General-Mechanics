@@ -96,9 +96,7 @@ public class HeatingElementBlock extends BaseEntityBlock<HeatingElementBlockEnti
     protected void entityInside(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (!(entity instanceof LivingEntity)) return;
 
-        System.out.println("checking hit");
         if (!isHeating(state)) return;
-        System.out.println("should hurt");
         entity.hurt(level.damageSources().campfire(), 1.0F);
     }
 
