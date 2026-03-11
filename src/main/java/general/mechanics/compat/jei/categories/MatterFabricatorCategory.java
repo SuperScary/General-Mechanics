@@ -76,12 +76,10 @@ public class MatterFabricatorCategory implements IRecipeCategory<FabricationReci
 
         for (int i = 0; i < count; i++) {
             var ing = ingredients.get(i);
-            if (ing == Ingredient.EMPTY) continue; // just in case
 
             int col = i % cols;
-            int row = i / cols;
             int x = baseX + col * step;
-            int y = baseY + row * step;
+            int y = baseY;
 
             builder.addSlot(RecipeIngredientRole.INPUT, x, y)
                     .addIngredients(ing);

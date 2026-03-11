@@ -50,10 +50,10 @@ public class ClientItemDecorators {
         for (var fluid : CoreFluids.getFluids()) {
             var base = CoreFluids.getBaseFluid(fluid);
             if (base != null) {
-                if (base.isAcidic()) event.register(fluid.getBlock(), ACIDIC_MARKER);
-                if (base.isBasic()) event.register(fluid.getBlock(), BASIC_MARKER);
-                if (base.getTemp() >= 373) event.register(fluid.getBlock(), HOT_MARKER);
-                if (base.getTemp() <= 273) event.register(fluid.getBlock(), COLD_MARKER);
+                if (base.isAcidic()) event.register(fluid.block(), ACIDIC_MARKER);
+                if (base.isBasic()) event.register(fluid.block(), BASIC_MARKER);
+                if (base.getTemp() >= 373) event.register(fluid.block(), HOT_MARKER);
+                if (base.getTemp() <= 273) event.register(fluid.block(), COLD_MARKER);
             }
         }
     }

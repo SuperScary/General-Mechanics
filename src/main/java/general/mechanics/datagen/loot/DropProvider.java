@@ -37,6 +37,8 @@ public class DropProvider extends BlockLootSubProvider {
 
     private final Map<Block, Function<Block, LootTable.Builder>> overrides = createOverrides();
 
+    // i hate it. do we really need this monstrosity?
+    // TODO: I'm going to look into a way to just generate this from each block and provide what it drops under non-silktouch conditions and map over that.
     @NotNull
     private ImmutableMap<Block, Function<Block, LootTable.Builder>> createOverrides() {
         return ImmutableMap.<Block, Function<Block, LootTable.Builder>>builder()

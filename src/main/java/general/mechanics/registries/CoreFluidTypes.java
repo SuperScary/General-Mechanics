@@ -16,8 +16,6 @@ public class CoreFluidTypes {
 
     public static final DeferredRegister<FluidType> REGISTRY = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, GM.MODID);
 
-    // Fluid types are now registered via CoreFluids.registerFluid
-
     static Supplier<FluidType> register(String name, FluidType type) {
         return REGISTRY.register(name, () -> type);
     }

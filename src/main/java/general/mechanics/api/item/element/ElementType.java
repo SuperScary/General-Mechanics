@@ -147,40 +147,31 @@ public enum ElementType {
     BRONZE("Bronze", "CuSn", 29L, 35L, -1L, false, 0, 64.000f, 0xFFCD7F32, true, false);
 
     @Getter
-    @Setter
-    private int atomicNumber;
+    private final int atomicNumber;
 
     @Getter
-    @Setter
-    private String symbol;
+    private final String symbol;
 
     @Getter
-    @Setter
-    private float atomicWeight;
+    private final float atomicWeight;
 
     @Getter
-    @Setter
-    private long protons;
+    private final long protons;
 
     @Getter
-    @Setter
-    private long neutrons;
+    private final long neutrons;
 
     @Getter
-    @Setter
-    private long halfLife;
+    private final long halfLife;
 
     @Getter
-    @Setter
-    private String name;
+    private final String name;
 
     @Getter
-    @Setter
-    private boolean isotope;
+    private final boolean isotope;
 
     @Getter
-    @Setter
-    private boolean isAlloy;
+    private final boolean isAlloy;
 
     @Getter
     private final boolean isNatural;
@@ -241,7 +232,7 @@ public enum ElementType {
     }
 
     /**
-     * @return the display name of this element (capitalized)
+     * @return the display name of this element
      */
     public String getDisplayName() {
         StringBuilder result = new StringBuilder();

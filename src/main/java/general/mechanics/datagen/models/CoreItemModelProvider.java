@@ -80,7 +80,7 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
             if (item.asItem() instanceof BucketItem) {
                 boolean generated = false;
                 for (var fluid : CoreFluids.getFluids()) {
-                    if (fluid.getBucket().id().equals(item.id())) {
+                    if (fluid.bucket().id().equals(item.id())) {
                         bucket(item);
                         generated = true;
                         break;

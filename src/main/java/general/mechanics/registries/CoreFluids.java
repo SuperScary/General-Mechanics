@@ -95,7 +95,7 @@ public class CoreFluids {
     }
 
     public static BaseFluid getBaseFluid(FluidDefinition definition) {
-        var type = definition.getType().get();
+        var type = definition.type().get();
         if (type instanceof BaseFluid baseFluid) {
             return baseFluid;
         }
@@ -116,9 +116,7 @@ public class CoreFluids {
         final AtomicReference<Supplier<FlowingFluid>> sourceRef = new AtomicReference<>();
         final AtomicReference<Supplier<FlowingFluid>> flowingRef = new AtomicReference<>();
 
-        BaseFlowingFluid.Properties properties = new BaseFlowingFluid.Properties(type,
-                () -> sourceRef.get().get(),
-                () -> flowingRef.get().get());
+        BaseFlowingFluid.Properties properties = new BaseFlowingFluid.Properties(type, () -> sourceRef.get().get(), () -> flowingRef.get().get());
 
         Supplier<FlowingFluid> SOURCE = REGISTRY.register("source_" + baseName, () -> new BaseFlowingFluid.Source(properties));
         Supplier<FlowingFluid> FLOWING = REGISTRY.register("flowing_" + baseName, () -> new BaseFlowingFluid.Flowing(properties));
@@ -126,12 +124,10 @@ public class CoreFluids {
         flowingRef.set(FLOWING);
 
         // Block
-        BlockDefinition<LiquidBlock> BLOCK = CoreBlocks.register(englishName, GM.getResource(baseName + "_block"),
-                () -> new LiquidBlock(SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()), null, false, CoreTab.FLUIDS);
+        BlockDefinition<LiquidBlock> BLOCK = CoreBlocks.register(englishName, GM.getResource(baseName + "_block"), () -> new LiquidBlock(SOURCE.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).noLootTable()), null, false, CoreTab.FLUIDS);
 
         // Bucket
-        ItemDefinition<BucketItem> BUCKET = CoreItems.register(englishName + " Bucket", GM.getResource("bucket_" + baseName),
-                (Item.Properties p) -> new BucketItem(SOURCE.get(), p.stacksTo(1).craftRemainder(Items.BUCKET)), CoreTab.FLUIDS);
+        ItemDefinition<BucketItem> BUCKET = CoreItems.register(englishName + " Bucket", GM.getResource("bucket_" + baseName), (Item.Properties p) -> new BucketItem(SOURCE.get(), p.stacksTo(1).craftRemainder(Items.BUCKET)), CoreTab.FLUIDS);
 
         properties.block(BLOCK::block).bucket(BUCKET);
 

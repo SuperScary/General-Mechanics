@@ -4,15 +4,15 @@ import general.mechanics.GM;
 import general.mechanics.api.block.BlockDefinition;
 import general.mechanics.api.block.base.BaseBlock;
 import general.mechanics.api.block.base.OreBlock;
-import general.mechanics.api.item.element.ElementType;
 import general.mechanics.api.block.ice.Ice7Block;
 import general.mechanics.api.block.ice.IceBlock;
 import general.mechanics.api.block.machine.MachineFrameBlock;
-import general.mechanics.api.block.plastic.PlasticTypeBlock;
 import general.mechanics.api.block.plastic.ColoredPlasticBlock;
-import general.mechanics.api.item.plastic.PlasticType;
+import general.mechanics.api.block.plastic.PlasticTypeBlock;
 import general.mechanics.api.item.ItemDefinition;
 import general.mechanics.api.item.base.BaseBlockItem;
+import general.mechanics.api.item.element.ElementType;
+import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.block.machine.HeatingElementBlock;
 import general.mechanics.block.machine.MatterFabricatorBlock;
 import general.mechanics.tab.CoreTab;
@@ -24,7 +24,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +39,7 @@ import java.util.function.Supplier;
  * Block definitions are blocks that are shared across all child mods.
  * If your block is specific to a child mod, it should be registered in that mod's block registry.
  */
+@SuppressWarnings("unused")
 public class CoreBlocks {
 
     public static final DeferredRegister.Blocks REGISTRY = DeferredRegister.createBlocks(GM.MODID);
@@ -173,10 +173,6 @@ public class CoreBlocks {
     // Misc
     public static final BlockDefinition<HeatingElementBlock> INDUSTRIAL_HEATING_ELEMENT = register("Industrial Heating Element", HeatingElementBlock::new);
 
-    /**
-     * Formats a color name by capitalizing each word and replacing underscores with spaces.
-     * Example: "light_blue" -> "Light Blue"
-     */
     private static String formatColorName(String colorName) {
         String[] words = colorName.split("_");
         StringBuilder formatted = new StringBuilder();
@@ -190,6 +186,7 @@ public class CoreBlocks {
         return formatted.toString();
     }
 
+    @SuppressWarnings("unchecked")
     static <T extends PlasticTypeBlock> BlockDefinition<T> plasticTypeBlock(String name, PlasticType plasticType) {
         // Create the main plastic type block
         BlockDefinition<T> plasticTypeDef = register(name, () -> (T) new PlasticTypeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), plasticType));

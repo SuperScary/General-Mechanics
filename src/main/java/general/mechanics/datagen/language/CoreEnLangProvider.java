@@ -46,8 +46,8 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
 
         // FLUID TYPES (localize fluid type description IDs)
         for (var def : CoreFluids.getFluids()) {
-            var key = "fluid_type." + GM.MODID + "." + def.getEnglishName().toLowerCase().replace(' ', '_');
-            add(key, def.getEnglishName());
+            var key = "fluid_type." + GM.MODID + "." + def.englishName().toLowerCase().replace(' ', '_');
+            add(key, def.englishName());
         }
 
         // UPGRADES

@@ -30,10 +30,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlockEntity> {
 
     public MatterFabricatorBlock() {
         super(Blocks.IRON_BLOCK.properties());
+        registerDefaultState(getStateDefinition().any().setValue(BlockStateProperties.POWERED, false));
     }
 
     public MatterFabricatorBlock(Properties properties) {
@@ -75,7 +78,7 @@ public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlock
 
     @Override
     public int getLightEmission (@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
-        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 16 : 8;
+        return PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() ? 15 : 7;
     }
 
     @Override
@@ -90,7 +93,7 @@ public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlock
 
     @Override
     public void animateTick (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource random) {
-        if (!PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() || !this.getBlockEntity(level, pos).isEnabled() || !this.getBlockEntity(level, pos).redstoneAllowsRunning()) {
+        if (!PropertyHelper.of(BlockStateProperties.POWERED, state).getValue() || !Objects.requireNonNull(this.getBlockEntity(level, pos)).isEnabled() || !Objects.requireNonNull(this.getBlockEntity(level, pos)).redstoneAllowsRunning()) {
             return;
         }
 

@@ -1,13 +1,13 @@
 package general.mechanics.datagen.models;
 
 import general.mechanics.GM;
-import general.mechanics.api.block.machine.MachineFrameBlock;
 import general.mechanics.api.block.BlockDefinition;
 import general.mechanics.api.block.base.DecorativeBlock;
 import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.IceBlock;
-import general.mechanics.api.block.plastic.PlasticTypeBlock;
+import general.mechanics.api.block.machine.MachineFrameBlock;
 import general.mechanics.api.block.plastic.ColoredPlasticBlock;
+import general.mechanics.api.block.plastic.PlasticTypeBlock;
 import general.mechanics.block.machine.HeatingElementBlock;
 import general.mechanics.registries.CoreBlocks;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -39,7 +39,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         for (var block : CoreBlocks.getBlocks()) {
-            if (block.block() instanceof DecorativeBlock || block.block() instanceof HeatingElementBlock) {
+            if (block.block() instanceof DecorativeBlock) {
                 blockWithItem(block);
             } else if (block.block() instanceof IceBlock) {
                 iceBlockWithItem(block);
@@ -53,6 +53,8 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 oreBlock(block);
             } else if (block.block() instanceof LiquidBlock) {
                 simpleItem(block);
+            } else if (block.block() instanceof HeatingElementBlock) {
+                heater(block);
             }
         }
 
@@ -93,14 +95,27 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         simpleBlockWithItem(block.block(), model);
     }
 
+    private void heater(BlockDefinition<?> block) {
+        var texture_on = modLoc("block/ihe/" + block.id().getPath() + "_on");
+        var texture_off = modLoc("block/ihe/" + block.id().getPath() + "_off");
+
+        err(List.of(texture_on));
+
+        var model_on = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", texture_on, texture_on, texture_on, texture_on, texture_on, texture_on).texture("particle", texture_on);
+        var model_off = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", texture_off, texture_off, texture_off, texture_off, texture_off, texture_off).texture("particle", texture_off);
+        directionBlock(block.block(), (state, builder) -> builder.modelFile(state.getValue(HeatingElementBlock.HEATING) ? model_on : model_off));
+
+        simpleBlockItem(block.block(), model_off);
+    }
+
     private void machine(BlockDefinition<?> block) {
         var on = modLoc("block/machine/" + block.id().getPath() + "/on");
         var off = modLoc("block/machine/" + block.id().getPath() + "/off");
 
         err(List.of(on, off));
 
-        BlockModelBuilder modelOn = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE).guiLight(BlockModel.GuiLight.SIDE);
-        BlockModelBuilder modelOff = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE).guiLight(BlockModel.GuiLight.SIDE);
+        BlockModelBuilder modelOn = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_on", MACHINE_BOTTOM, MACHINE_TOP, on, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
+        BlockModelBuilder modelOff = models().cube("block/machine/" + block.id().getPath() + "/" + block.id().getPath() + "_off", MACHINE_BOTTOM, MACHINE_TOP, off, MACHINE_SIDE, MACHINE_SIDE, MACHINE_SIDE).texture("particle", MACHINE_SIDE);
         directionBlock(block.block(), (state, builder) -> builder.modelFile(state.getValue(BlockStateProperties.POWERED) ? modelOn : modelOff));
 
         simpleBlockItem(block.block(), modelOn);

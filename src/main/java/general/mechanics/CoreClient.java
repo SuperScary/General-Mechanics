@@ -32,7 +32,7 @@ public class CoreClient extends CoreBase {
 
     private void registerClientFluidExtensions(RegisterClientExtensionsEvent event) {
         for (var def : CoreFluids.getFluids()) {
-            event.registerFluidType(((BaseFluid) def.getType().get()).getFluidTypeExtensions(), def.getType().get());
+            event.registerFluidType(((BaseFluid) def.type().get()).getFluidTypeExtensions(), def.type().get());
         }
     }
 

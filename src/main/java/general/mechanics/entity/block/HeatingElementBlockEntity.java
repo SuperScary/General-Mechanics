@@ -3,6 +3,7 @@ package general.mechanics.entity.block;
 import general.mechanics.api.capability.heat.IHeater;
 import general.mechanics.api.entity.block.BaseBlockEntity;
 import general.mechanics.api.inventory.CoreItemStackHandler;
+import general.mechanics.block.machine.HeatingElementBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +34,7 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
 
     @Override
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide) serverTick();
+        if (!level.isClientSide) serverTick(state);
     }
 
     @Override
@@ -41,16 +42,27 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
         return Component.translatable("block.gm.industrial_heating_element");
     }
 
-    public void serverTick() {
+    public void updateHeating(boolean heating) {
+        if (level == null) return;
+
+        BlockState state = level.getBlockState(worldPosition);
+        if (state.getValue(HeatingElementBlock.HEATING) != heating) {
+            level.setBlock(worldPosition, state.setValue(HeatingElementBlock.HEATING, heating), 3);
+        }
+    }
+
+    public void serverTick(BlockState state) {
         Level level = getLevel();
         if (level == null || level.isClientSide) return;
+
+        updateHeating(isHeating(level, getBlockPos()));
 
         BlockPos furnacePos = getBlockPos().above();
         var be = level.getBlockEntity(furnacePos);
         if (!(be instanceof AbstractFurnaceBlockEntity furnace)) return;
 
         // forces to 0 instead of cooling down
-        if (!isHeating(level, furnacePos)) {
+        if (!state.getValue(HeatingElementBlock.HEATING)) {
             furnace.litTime = 0;
             furnace.litDuration = 0;
             setFurnaceLit(level, furnace, false);
@@ -84,7 +96,7 @@ public class HeatingElementBlockEntity extends BaseBlockEntity implements IHeate
     // ---- IHeater ----
     @Override
     public boolean isHeating(Level level, BlockPos furnacePos) {
-        return !level.hasNeighborSignal(getBlockPos());
+        return level.hasNeighborSignal(getBlockPos());
     }
 
     @Override

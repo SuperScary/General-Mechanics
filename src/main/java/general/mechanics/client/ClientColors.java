@@ -38,14 +38,14 @@ public class ClientColors {
 
         // Fluid bucket item tinting: apply fluid color to overlay layer (layer1)
         for (var fluid : CoreFluids.getFluids()) {
-            var type = fluid.getType().get();
-            event.register((stack, index) -> index == 1 ? ((BaseFluid) type).getTintColor() : -1, fluid.getBucket().get());
+            var type = fluid.type().get();
+            event.register((stack, index) -> index == 1 ? ((BaseFluid) type).getTintColor() : -1, fluid.bucket().get());
         }
 
         // Fluid block item tinting: use the fluid type tint color on layer0
         for (var fluid : CoreFluids.getFluids()) {
-            var type = fluid.getType().get();
-            event.register((stack, index) -> index == 0 ? ((BaseFluid) type).getTintColor() : -1, fluid.getBlock().block());
+            var type = fluid.type().get();
+            event.register((stack, index) -> index == 0 ? ((BaseFluid) type).getTintColor() : -1, fluid.block().block());
         }
     }
 

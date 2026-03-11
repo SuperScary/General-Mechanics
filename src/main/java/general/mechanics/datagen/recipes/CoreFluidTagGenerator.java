@@ -24,10 +24,10 @@ public class CoreFluidTagGenerator extends FluidTagsProvider implements IDataPro
     @Override
     protected void addTags(@Nonnull HolderLookup.Provider provider) {
         this.tag(FluidTags.WATER)
-                .add(CoreFluids.CRUDE_OIL.getSource().get())
-                .add(CoreFluids.CRUDE_OIL.getFlowing().get())
-                .add(CoreFluids.DIESEL.getSource().get())
-                .add(CoreFluids.DIESEL.getFlowing().get());
+                .add(CoreFluids.CRUDE_OIL.source().get())
+                .add(CoreFluids.CRUDE_OIL.flowing().get())
+                .add(CoreFluids.DIESEL.source().get())
+                .add(CoreFluids.DIESEL.flowing().get());
     }
 
     @Override

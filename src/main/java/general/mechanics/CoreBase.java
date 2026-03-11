@@ -16,6 +16,8 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -51,7 +53,7 @@ public abstract class CoreBase implements GM {
         CoreRegistries.registerRegistries(event);
     }
 
-    private void register(IEventBus modEventBus) {
+    private void register(@NotNull IEventBus modEventBus) {
         CoreComponents.REGISTRY.register(modEventBus);
         CoreBlocks.REGISTRY.register(modEventBus);
         CoreItems.REGISTRY.register(modEventBus);

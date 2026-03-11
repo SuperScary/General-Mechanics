@@ -50,7 +50,7 @@ public class CoreTab {
 
         var fluidsTab = CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup." + GM.MODID + ".fluids"))
-                .icon(CoreFluids.CRUDE_OIL.getBucket()::stack)
+                .icon(CoreFluids.CRUDE_OIL.bucket()::stack)
                 .displayItems(CoreTab::buildFluidDisplayItems)
                 .build();
         Registry.register(registry, FLUIDS, fluidsTab);
