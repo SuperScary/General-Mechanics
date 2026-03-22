@@ -2,6 +2,7 @@ package general.mechanics.registries;
 
 import general.mechanics.GM;
 import general.mechanics.api.capability.heat.IHeater;
+import general.mechanics.api.component.io.ISidedItemAccess;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -17,7 +18,15 @@ public class CoreCapabilities {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         // Matter Fabricator
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CoreBlockEntities.MATTER_FABRICATOR.get(), (o, direction) -> o.getInventory());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CoreBlockEntities.MATTER_FABRICATOR.get(), (o, direction) -> {
+            var sided = ((ISidedItemAccess) o).getSidedItemIO();
+
+            if (direction == null) {
+                return sided.forAutomationWithoutSide();
+            }
+
+            return sided.forSide(direction);
+        });
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, CoreBlockEntities.MATTER_FABRICATOR.get(), (o, direction) -> o.getEnergyStorage());
 
         // Heating Element

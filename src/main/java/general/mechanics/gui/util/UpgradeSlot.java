@@ -14,16 +14,17 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class UpgradeSlot extends SlotItemHandler {
 
     private final Block block;
-    private final BaseBlockEntity blockEntity;
+    private final BooleanSupplier settingsPanelOpen;
 
-    public UpgradeSlot (Block block, IItemHandler itemHandler, int index, int x, int y, BaseBlockEntity blockEntity) {
+    public UpgradeSlot (Block block, IItemHandler itemHandler, int index, int x, int y, BaseBlockEntity blockEntity, BooleanSupplier settingsPanelOpen) {
         super(itemHandler, index, x, y);
         this.block = block;
-        this.blockEntity = blockEntity;
+        this.settingsPanelOpen = settingsPanelOpen;
     }
 
     @Override
@@ -48,7 +49,6 @@ public class UpgradeSlot extends SlotItemHandler {
             }
         }
 
-        // Prevent inserting if the max is already reached
         return currentCount < maxAllowed;
     }
 
@@ -74,15 +74,13 @@ public class UpgradeSlot extends SlotItemHandler {
             }
         }
 
-        // Don't allow more than the remaining amount
         int remaining = maxAllowed - currentCount;
         return Math.max(0, Math.min(super.getMaxStackSize(), remaining));
     }
 
     @Override
     public boolean isActive () {
-        // Only show upgrade slots when the settings panel is open
-        return blockEntity.isSettingsPanelOpen();
+        return settingsPanelOpen.getAsBoolean();
     }
 
     /**

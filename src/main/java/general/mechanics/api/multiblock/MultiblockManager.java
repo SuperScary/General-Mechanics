@@ -269,11 +269,7 @@ public class MultiblockManager {
 
         char layoutChar = layout.getCharAt(layoutPos.getX(), layoutPos.getY(), layoutPos.getZ());
 
-        if (layoutChar == ' ' || (layout.anchorChar().isPresent() && layoutChar == layout.anchorChar().get())) {
-            return false;
-        }
-
-        return true;
+        return layoutChar != ' ' && (layout.anchorChar().isEmpty() || layoutChar != layout.anchorChar().get());
     }
     
     /**

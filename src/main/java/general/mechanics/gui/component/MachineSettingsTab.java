@@ -1,7 +1,7 @@
 package general.mechanics.gui.component;
 
 import general.mechanics.GM;
-import general.mechanics.api.entity.block.BasePoweredBlockEntity;
+import general.mechanics.api.gui.MachineUiState;
 import general.mechanics.gui.component.button.AutoExportButton;
 import general.mechanics.gui.component.button.AutoImportButton;
 import general.mechanics.gui.component.button.CloseTabButton;
@@ -16,6 +16,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.glfw.GLFW;
+
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Supplier;
 
@@ -33,6 +35,7 @@ public class MachineSettingsTab {
 
     @Getter
     private boolean isSideTabOpen;
+
     @Getter
     private boolean settingsPanelOpen;
     private boolean buttonsAdded;
@@ -73,7 +76,7 @@ public class MachineSettingsTab {
     public void closeScreen() {
         isSideTabOpen = false;
         settingsPanelOpen = false;
-        getMenu().blockEntity.setSettingsPanelOpen(false);
+        getMenu().setSettingsPanelOpen(false);
         removeButtonsFromScreen();
     }
 
@@ -86,7 +89,7 @@ public class MachineSettingsTab {
                 && button == GLFW.GLFW_MOUSE_BUTTON_1) {
             isSideTabOpen = true;
             settingsPanelOpen = true;
-            getMenu().blockEntity.setSettingsPanelOpen(true);
+            getMenu().setSettingsPanelOpen(true);
             addButtonsToScreen();
             return true;
         }
@@ -148,23 +151,20 @@ public class MachineSettingsTab {
         int panelWidth = 80;
         int buttonCenter = posX + (panelWidth / 2) - 10;
 
-        Supplier<BasePoweredBlockEntity> entitySupplier = () -> {
-            if (getMenu().blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
-                return poweredEntity;
-            }
-            return null;
-        };
+        Supplier<MachineUiState> stateSupplier = () -> getMenu().getUiState();
+        Supplier<BlockPos> posSupplier = () -> getMenu().blockEntity.getBlockPos();
 
-        this.redstoneButton = new RedstoneButton(buttonCenter - 21, posY + 85, entitySupplier);
-        this.autoExportButton = new AutoExportButton(buttonCenter, posY + 85, entitySupplier);
-        this.autoImportButton = new AutoImportButton(buttonCenter, posY + 106, entitySupplier);
-        this.enabledToggleButton = new EnabledToggleButton(buttonCenter + 21, posY + 85, entitySupplier);
+        this.redstoneButton = new RedstoneButton(buttonCenter - 21, posY + 85, stateSupplier, posSupplier);
+        this.autoExportButton = new AutoExportButton(buttonCenter, posY + 85, stateSupplier, posSupplier);
+        this.autoImportButton = new AutoImportButton(buttonCenter, posY + 106, stateSupplier, posSupplier);
+        this.enabledToggleButton = new EnabledToggleButton(buttonCenter + 21, posY + 85, stateSupplier, posSupplier);
 
         this.sideConfigButton = new SideConfigButton((buttonCenter + 10) - 35, posY + 135, 70, 20, this::sidedConfig);
         this.closeTabButton = new CloseTabButton(buttonCenter + 35, posY, this::closeScreen);
     }
 
     private void sidedConfig() {
+        parent.openSideConfig();
     }
 
     private void addButtonsToScreen() {

@@ -6,11 +6,11 @@ import general.mechanics.api.energy.PoweredBlock;
 import general.mechanics.api.upgrade.Upgradeable;
 import general.mechanics.api.util.ContentDropper;
 import general.mechanics.api.util.data.Keys;
-import general.mechanics.api.util.data.PropertyComponent;
 import general.mechanics.registries.CoreComponents;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +27,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements PoweredBlock, Upgradeable {
 
@@ -41,6 +41,8 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
     @Getter
     private RedstoneMode redstoneMode;
 
+    private final SideMode[] sideModes;
+
     public BasePoweredBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive) {
         this(type, pos, blockState, capacity, maxReceive, Attribute.Builder.of(Keys.POWER, 0));
     }
@@ -52,6 +54,9 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         this.autoExport = false;
         this.autoImport = false;
         this.redstoneMode = RedstoneMode.IGNORED;
+
+        this.sideModes = new SideMode[Direction.values().length];
+        Arrays.fill(this.sideModes, SideMode.IGNORED);
     }
 
     @Override
@@ -63,6 +68,7 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         tag.putBoolean(Keys.AUTO_EXPORT, autoExport);
         tag.putBoolean(Keys.AUTO_IMPORT, autoImport);
         tag.putInt(Keys.REDSTONE_MODE, redstoneMode.id());
+        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes());
     }
 
     @Override
@@ -76,6 +82,7 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         if (tag.contains(Keys.AUTO_IMPORT)) autoImport = tag.getBoolean(Keys.AUTO_IMPORT);
         if (tag.contains(Keys.AUTO_EXPORT)) autoExport = tag.getBoolean(Keys.AUTO_EXPORT);
         if (tag.contains(Keys.REDSTONE_MODE)) redstoneMode = RedstoneMode.fromId(tag.getInt(Keys.REDSTONE_MODE));
+        if (tag.contains(Keys.SIDE_MODES)) deserializeSideModes(tag.getIntArray(Keys.SIDE_MODES));
     }
 
     @Override
@@ -85,6 +92,7 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         tag.putBoolean(Keys.AUTO_EXPORT, autoExport);
         tag.putBoolean(Keys.AUTO_IMPORT, autoImport);
         tag.putInt(Keys.REDSTONE_MODE, redstoneMode.id());
+        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes());
     }
 
     @Override
@@ -94,6 +102,7 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         autoExport = tag.getBoolean(Keys.AUTO_EXPORT);
         autoImport = tag.getBoolean(Keys.AUTO_IMPORT);
         redstoneMode = RedstoneMode.fromId(tag.getInt(Keys.REDSTONE_MODE));
+        if (tag.contains(Keys.SIDE_MODES)) deserializeSideModes(tag.getIntArray(Keys.SIDE_MODES));
     }
 
     @Override
@@ -103,7 +112,38 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         tag.putBoolean(Keys.AUTO_IMPORT, autoImport);
         tag.putBoolean(Keys.AUTO_EXPORT, autoExport);
         tag.putInt(Keys.REDSTONE_MODE, redstoneMode.id());
+        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes());
         return tag;
+    }
+
+    public SideMode getSideMode(Direction dir) {
+        return sideModes[dir.ordinal()];
+    }
+
+    public void setSideMode(Direction dir, SideMode mode) {
+        this.sideModes[dir.ordinal()] = mode;
+        setChanged();
+
+        if (getLevel() instanceof ServerLevel sl) {
+            sl.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    private int[] serializeSideModes() {
+        int[] result = new int[Direction.values().length];
+        for (Direction dir : Direction.values()) {
+            result[dir.ordinal()] = sideModes[dir.ordinal()].id();
+        }
+        return result;
+    }
+
+    private void deserializeSideModes(int[] data) {
+        for (Direction dir : Direction.values()) {
+            int idx = dir.ordinal();
+            if (idx < data.length) {
+                sideModes[idx] = SideMode.fromId(data[idx]);
+            }
+        }
     }
 
     @Override
@@ -287,6 +327,40 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
 
         public RedstoneMode prev() {
             return fromId((id - 1 + BY_ID.length) % BY_ID.length);
+        }
+    }
+
+    public enum SideMode {
+        IGNORED(0),
+        INPUT(1),
+        OUTPUT(2);
+
+        private final int id;
+
+        SideMode(int id) {
+            this.id = id;
+        }
+
+        public int id() {
+            return id;
+        }
+
+        private static final SideMode[] BY_ID;
+
+        static {
+            var vals = values();
+            int max = 0;
+            for (var v : vals) max = Math.max(max, v.id);
+            BY_ID = new SideMode[max + 1];
+            for (var v : vals) BY_ID[v.id] = v;
+        }
+
+        public static SideMode fromId(int id) {
+            return (id >= 0 && id < BY_ID.length && BY_ID[id] != null) ? BY_ID[id] : IGNORED;
+        }
+
+        public SideMode next() {
+            return fromId((id + 1) % BY_ID.length);
         }
     }
 

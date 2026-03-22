@@ -17,9 +17,9 @@ public class QuickMoveStack {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
     private final int slotCount;
 
-    private AbstractContainerMenu menu;
-    private Player player;
-    private int index;
+    private final AbstractContainerMenu menu;
+    private final Player player;
+    private final int index;
 
     public QuickMoveStack (AbstractContainerMenu menu, int slotCount, Player player, int index) {
         this.slotCount = slotCount;

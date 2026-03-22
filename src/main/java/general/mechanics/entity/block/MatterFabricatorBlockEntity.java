@@ -54,7 +54,7 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
 
     @Override
     public Range getInputSlots() {
-        return new Range(0, 2);
+        return new Range(0, 2, true);
     }
 
     @Override

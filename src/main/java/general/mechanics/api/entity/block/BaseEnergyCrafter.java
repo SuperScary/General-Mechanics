@@ -1,6 +1,8 @@
 package general.mechanics.api.entity.block;
 
 import general.mechanics.api.attributes.Attribute;
+import general.mechanics.api.component.io.ISidedItemAccess;
+import general.mechanics.api.component.io.SidedItemIOComponent;
 import general.mechanics.api.energy.EnergizedCrafter;
 import general.mechanics.api.recipe.CoreRecipe;
 import general.mechanics.api.util.Range;
@@ -22,10 +24,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePoweredBlockEntity implements EnergizedCrafter<T> {
+public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePoweredBlockEntity implements EnergizedCrafter<T>, ISidedItemAccess {
 
     private final Attribute.FloatValue progress;
     private final Attribute.BooleanValue isCrafting;
+
+    private SidedItemIOComponent sidedItemIO;
 
     public BaseEnergyCrafter(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive) {
         this(type, pos, blockState, capacity, maxReceive, Attribute.Builder.of(Keys.POWER, 0));
@@ -35,6 +39,23 @@ public abstract class BaseEnergyCrafter<T extends CoreRecipe<?>> extends BasePow
         super(type, pos, blockState, capacity, maxReceive, current);
         progress = Attribute.Builder.of(Keys.PROGRESS, 0f);
         isCrafting = Attribute.Builder.of(Keys.CRAFTING, false);
+    }
+
+    public SidedItemIOComponent getSidedItemIO() {
+        if (sidedItemIO == null) {
+            sidedItemIO = new SidedItemIOComponent(this, getInventory(), new SidedItemIOComponent.SlotRanges() {
+                @Override
+                public Range getInputSlots() {
+                    return BaseEnergyCrafter.this.getInputSlots();
+                }
+
+                @Override
+                public Range getOutputSlots() {
+                    return BaseEnergyCrafter.this.getOutputSlots();
+                }
+            });
+        }
+        return sidedItemIO;
     }
 
     @Override

@@ -66,6 +66,21 @@ public class NetInit {
                 be.setRedstoneMode(payload.setTo());
             });
         });
+
+        reg.playToServer(SetSideModeC2S.TYPE, SetSideModeC2S.CODEC, (payload, ctx) -> {
+            ServerPlayer sp = (ServerPlayer) ctx.player();
+
+            sp.server.execute(() -> {
+                ServerLevel level = sp.serverLevel();
+                BlockPos pos = payload.pos();
+
+                if (!(level.getBlockEntity(pos) instanceof BasePoweredBlockEntity be)) return;
+
+                var dir = net.minecraft.core.Direction.from3DDataValue(payload.direction());
+                var mode = BasePoweredBlockEntity.SideMode.fromId(payload.mode());
+                be.setSideMode(dir, mode);
+            });
+        });
     }
 
 }

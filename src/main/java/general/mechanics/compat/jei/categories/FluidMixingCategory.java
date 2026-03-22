@@ -1,8 +1,6 @@
 package general.mechanics.compat.jei.categories;
 
 import general.mechanics.GM;
-import general.mechanics.recipes.CrushingRecipe;
-import general.mechanics.recipes.FabricationRecipe;
 import general.mechanics.recipes.FluidMixingRecipe;
 import general.mechanics.registries.CoreBlocks;
 import mezz.jei.api.constants.VanillaTypes;
@@ -19,7 +17,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

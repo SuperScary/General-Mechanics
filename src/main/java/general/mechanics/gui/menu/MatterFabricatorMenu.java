@@ -39,7 +39,7 @@ public class MatterFabricatorMenu extends BaseMenu<MatterFabricatorBlock, Matter
 
     @Override
     public int getPower () {
-        return blockEntity.getEnergyStorage().getEnergyStored();
+        return getPowerStored();
     }
 
 }

@@ -22,9 +22,7 @@ import java.util.function.Function;
 public class CoreElements {
 
     public static final DeferredRegister.Items REGISTRY = DeferredRegister.createItems(GM.MODID);
-
     private static final List<ItemDefinition<?>> ITEMS = new ArrayList<>();
-
     // Alkali Metals
     public static final ItemDefinition<ElementItem> LITHIUM_INGOT = elementIngot(ElementType.LITHIUM);
     public static final ItemDefinition<ElementItem> SODIUM_INGOT = elementIngot(ElementType.SODIUM);
@@ -32,7 +30,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> RUBIDIUM_INGOT = elementIngot(ElementType.RUBIDIUM);
     public static final ItemDefinition<ElementItem> CESIUM_INGOT = elementIngot(ElementType.CESIUM);
     public static final ItemDefinition<ElementItem> FRANCIUM_INGOT = elementIngot(ElementType.FRANCIUM);
-    
     // Alkaline Earth Metals
     public static final ItemDefinition<ElementItem> BERYLLIUM_INGOT = elementIngot(ElementType.BERYLLIUM);
     public static final ItemDefinition<ElementItem> MAGNESIUM_INGOT = elementIngot(ElementType.MAGNESIUM);
@@ -40,7 +37,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> STRONTIUM_INGOT = elementIngot(ElementType.STRONTIUM);
     public static final ItemDefinition<ElementItem> BARIUM_INGOT = elementIngot(ElementType.BARIUM);
     public static final ItemDefinition<ElementItem> RADIUM_INGOT = elementIngot(ElementType.RADIUM);
-    
     // Transition Metals - Period 4
     public static final ItemDefinition<ElementItem> SCANDIUM_INGOT = elementIngot(ElementType.SCANDIUM);
     public static final ItemDefinition<ElementItem> TITANIUM_INGOT = elementIngot(ElementType.TITANIUM);
@@ -52,7 +48,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> NICKEL_INGOT = elementIngot(ElementType.NICKEL);
     public static final ItemDefinition<ElementItem> COPPER_INGOT = elementIngot(ElementType.COPPER);
     public static final ItemDefinition<ElementItem> ZINC_INGOT = elementIngot(ElementType.ZINC);
-    
     // Transition Metals - Period 5
     public static final ItemDefinition<ElementItem> YTTRIUM_INGOT = elementIngot(ElementType.YTTRIUM);
     public static final ItemDefinition<ElementItem> ZIRCONIUM_INGOT = elementIngot(ElementType.ZIRCONIUM);
@@ -64,7 +59,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> PALLADIUM_INGOT = elementIngot(ElementType.PALLADIUM);
     public static final ItemDefinition<ElementItem> SILVER_INGOT = elementIngot(ElementType.SILVER);
     public static final ItemDefinition<ElementItem> CADMIUM_INGOT = elementIngot(ElementType.CADMIUM);
-    
     // Transition Metals - Period 6
     public static final ItemDefinition<ElementItem> LANTHANUM_INGOT = elementIngot(ElementType.LANTHANUM);
     public static final ItemDefinition<ElementItem> HAFNIUM_INGOT = elementIngot(ElementType.HAFNIUM);
@@ -76,7 +70,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> PLATINUM_INGOT = elementIngot(ElementType.PLATINUM);
     public static final ItemDefinition<ElementItem> GOLD_INGOT = elementIngot(ElementType.GOLD);
     public static final ItemDefinition<ElementItem> MERCURY_INGOT = elementIngot(ElementType.MERCURY);
-    
     // Transition Metals - Period 7
     public static final ItemDefinition<ElementItem> ACTINIUM_INGOT = elementIngot(ElementType.ACTINIUM);
     public static final ItemDefinition<ElementItem> RUTHERFORDIUM_INGOT = elementIngot(ElementType.RUTHERFORDIUM);
@@ -88,7 +81,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> DARMSTADTIUM_INGOT = elementIngot(ElementType.DARMSTADTIUM);
     public static final ItemDefinition<ElementItem> ROENTGENIUM_INGOT = elementIngot(ElementType.ROENTGENIUM);
     public static final ItemDefinition<ElementItem> COPERNICIUM_INGOT = elementIngot(ElementType.COPERNICIUM);
-    
     // Lanthanides (Rare Earth Metals)
     public static final ItemDefinition<ElementItem> CERIUM_INGOT = elementIngot(ElementType.CERIUM);
     public static final ItemDefinition<ElementItem> PRASEODYMIUM_INGOT = elementIngot(ElementType.PRASEODYMIUM);
@@ -104,7 +96,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> THULIUM_INGOT = elementIngot(ElementType.THULIUM);
     public static final ItemDefinition<ElementItem> YTTERBIUM_INGOT = elementIngot(ElementType.YTTERBIUM);
     public static final ItemDefinition<ElementItem> LUTETIUM_INGOT = elementIngot(ElementType.LUTETIUM);
-    
     // Actinides
     public static final ItemDefinition<ElementItem> THORIUM_INGOT = elementIngot(ElementType.THORIUM);
     public static final ItemDefinition<ElementItem> PROTACTINIUM_INGOT = elementIngot(ElementType.PROTACTINIUM);
@@ -120,7 +111,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> MENDELEVIUM_INGOT = elementIngot(ElementType.MENDELEVIUM);
     public static final ItemDefinition<ElementItem> NOBELIUM_INGOT = elementIngot(ElementType.NOBELIUM);
     public static final ItemDefinition<ElementItem> LAWRENCIUM_INGOT = elementIngot(ElementType.LAWRENCIUM);
-    
     // Post-Transition Metals
     public static final ItemDefinition<ElementItem> ALUMINUM_INGOT = elementIngot(ElementType.ALUMINUM);
     public static final ItemDefinition<ElementItem> GALLIUM_INGOT = elementIngot(ElementType.GALLIUM);
@@ -135,7 +125,6 @@ public class CoreElements {
     public static final ItemDefinition<ElementItem> LIVERMORIUM_INGOT = elementIngot(ElementType.LIVERMORIUM);
     public static final ItemDefinition<ElementItem> SILICON_INGOT = elementIngot(ElementType.SILICON);
     public static final ItemDefinition<ElementItem> PHOSPHORUS_INGOT = elementIngot(ElementType.PHOSPHORUS);
-
     // Alloys
     public static final ItemDefinition<ElementItem> STEEL_INGOT = elementIngot(ElementType.STEEL);
     public static final ItemDefinition<ElementItem> STAINLESS_STEEL_INGOT = elementIngot(ElementType.STAINLESS_STEEL);
@@ -144,6 +133,7 @@ public class CoreElements {
 
     /**
      * Creates an element ingot with automatic naming and all associated items (raw, nugget)
+     *
      * @param element the element to create an ingot for
      * @return the ItemDefinition for the element ingot
      */
@@ -163,7 +153,7 @@ public class CoreElements {
             T elementItem = elementDef.get();
             return elementItem.getRawItem();
         });
-        
+
         // Register the nugget item
         String nuggetName = name.replace(" Ingot", " Nugget");
         String nuggetResourceName = name.toLowerCase().replace(' ', '_').replace("_ingot", "_nugget");
@@ -171,7 +161,7 @@ public class CoreElements {
             T elementItem = elementDef.get();
             return elementItem.getNuggetItem();
         });
-        
+
         // Register the dust item
         String dustName = name.replace(" Ingot", " Dust");
         String dustResourceName = name.toLowerCase().replace(' ', '_').replace("_ingot", "_dust");
@@ -179,7 +169,7 @@ public class CoreElements {
             T elementItem = elementDef.get();
             return elementItem.getDustItem();
         });
-        
+
         // Register the plate item
         String plateName = name.replace(" Ingot", " Plate");
         String plateResourceName = name.toLowerCase().replace(' ', '_').replace("_ingot", "_plate");
@@ -203,7 +193,7 @@ public class CoreElements {
             T elementItem = elementDef.get();
             return elementItem.getRodItem();
         });
-        
+
         return elementDef;
     }
 
@@ -211,12 +201,12 @@ public class CoreElements {
         return Collections.unmodifiableList(ITEMS);
     }
 
-    static <T extends ElementItem> ItemDefinition<T> item (String name, Function<Item.Properties, T> factory) {
+    static <T extends ElementItem> ItemDefinition<T> item(String name, Function<Item.Properties, T> factory) {
         String resourceFriendly = name.toLowerCase().replace(' ', '_');
         return item(name, GM.getResource(resourceFriendly), factory, CoreTab.ELEMENTS);
     }
 
-    static <T extends ElementItem> ItemDefinition<T> item (String name, ResourceLocation id, Function<Item.Properties, T> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static <T extends ElementItem> ItemDefinition<T> item(String name, ResourceLocation id, Function<Item.Properties, T> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -230,11 +220,11 @@ public class CoreElements {
         return definition;
     }
 
-    static ItemDefinition<ElementDustItem> itemDust (String name, String resourceName, Function<Item.Properties, ElementDustItem> factory) {
+    static ItemDefinition<ElementDustItem> itemDust(String name, String resourceName, Function<Item.Properties, ElementDustItem> factory) {
         return itemDust(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementDustItem> itemDust (String name, ResourceLocation id, Function<Item.Properties, ElementDustItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementDustItem> itemDust(String name, ResourceLocation id, Function<Item.Properties, ElementDustItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -248,11 +238,11 @@ public class CoreElements {
         return definition;
     }
 
-    static ItemDefinition<ElementPlateItem> itemPlate (String name, String resourceName, Function<Item.Properties, ElementPlateItem> factory) {
+    static ItemDefinition<ElementPlateItem> itemPlate(String name, String resourceName, Function<Item.Properties, ElementPlateItem> factory) {
         return itemPlate(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementPlateItem> itemPlate (String name, ResourceLocation id, Function<Item.Properties, ElementPlateItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementPlateItem> itemPlate(String name, ResourceLocation id, Function<Item.Properties, ElementPlateItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -266,11 +256,11 @@ public class CoreElements {
         return definition;
     }
 
-    static ItemDefinition<ElementPileItem> itemPile (String name, String resourceName, Function<Item.Properties, ElementPileItem> factory) {
+    static ItemDefinition<ElementPileItem> itemPile(String name, String resourceName, Function<Item.Properties, ElementPileItem> factory) {
         return itemPile(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementPileItem> itemPile (String name, ResourceLocation id, Function<Item.Properties, ElementPileItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementPileItem> itemPile(String name, ResourceLocation id, Function<Item.Properties, ElementPileItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -284,11 +274,11 @@ public class CoreElements {
         return definition;
     }
 
-    static ItemDefinition<ElementRodItem> itemRod (String name, String resourceName, Function<Item.Properties, ElementRodItem> factory) {
+    static ItemDefinition<ElementRodItem> itemRod(String name, String resourceName, Function<Item.Properties, ElementRodItem> factory) {
         return itemRod(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementRodItem> itemRod (String name, ResourceLocation id, Function<Item.Properties, ElementRodItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementRodItem> itemRod(String name, ResourceLocation id, Function<Item.Properties, ElementRodItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -302,11 +292,11 @@ public class CoreElements {
         return definition;
     }
 
-    static ItemDefinition<ElementRawItem> itemElementRaw (String name, String resourceName, Function<Item.Properties, ElementRawItem> factory) {
+    static ItemDefinition<ElementRawItem> itemElementRaw(String name, String resourceName, Function<Item.Properties, ElementRawItem> factory) {
         return itemElementRaw(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementRawItem> itemElementRaw (String name, ResourceLocation id, Function<Item.Properties, ElementRawItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementRawItem> itemElementRaw(String name, ResourceLocation id, Function<Item.Properties, ElementRawItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -320,11 +310,11 @@ public class CoreElements {
         return definition;
     }
 
-    static ItemDefinition<ElementNuggetItem> itemElementNugget (String name, String resourceName, Function<Item.Properties, ElementNuggetItem> factory) {
+    static ItemDefinition<ElementNuggetItem> itemElementNugget(String name, String resourceName, Function<Item.Properties, ElementNuggetItem> factory) {
         return itemElementNugget(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementNuggetItem> itemElementNugget (String name, ResourceLocation id, Function<Item.Properties, ElementNuggetItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementNuggetItem> itemElementNugget(String name, ResourceLocation id, Function<Item.Properties, ElementNuggetItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 

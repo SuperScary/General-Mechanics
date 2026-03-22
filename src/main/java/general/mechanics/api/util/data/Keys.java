@@ -17,4 +17,6 @@ public class Keys {
     public static final String AUTO_IMPORT = "auto_import";
     public static final String REDSTONE_MODE = "redstone_mode";
 
+    public static final String SIDE_MODES = "side_modes";
+
 }

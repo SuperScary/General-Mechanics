@@ -4,8 +4,8 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class HeatBarRenderer extends BarRenderer {
 
-	private double amount;
-	private double maxAmount = 0;//ReactorCoreBlockEntity.MAX_HEAT;
+	private final double amount;
+	private final double maxAmount = 0;//ReactorCoreBlockEntity.MAX_HEAT;
 
 	public HeatBarRenderer(int xPos, int yPos, int width, int height, double amount) {
 		super(xPos, yPos, width, height);

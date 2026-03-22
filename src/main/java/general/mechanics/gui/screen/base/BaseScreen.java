@@ -3,13 +3,12 @@ package general.mechanics.gui.screen.base;
 import com.mojang.blaze3d.systems.RenderSystem;
 import general.mechanics.GM;
 import general.mechanics.api.energy.CoreEnergyStorage;
-import general.mechanics.api.energy.PoweredBlock;
-import general.mechanics.api.entity.Crafter;
 import general.mechanics.api.entity.block.BasePoweredBlockEntity;
+import general.mechanics.api.gui.MachineUiState;
 import general.mechanics.gui.GuiFluid;
-import general.mechanics.gui.GuiPower;
 import general.mechanics.gui.menu.base.BaseMenu;
 import general.mechanics.gui.component.MachineSettingsTab;
+import general.mechanics.gui.overlay.SideConfigOverlay;
 import general.mechanics.gui.renderers.EnergyDisplayTooltipArea;
 import general.mechanics.gui.renderers.FluidTankRenderer;
 import general.mechanics.gui.renderers.ProgressDisplayTooltipArea;
@@ -18,15 +17,20 @@ import general.mechanics.util.MouseUtil;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -43,12 +47,13 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
     private final MachineSettingsTab machineSettingsTab;
 
+    private SideConfigOverlay sideConfigOverlay;
+
     private EnergyDisplayTooltipArea energyInfoArea;
     private ProgressDisplayTooltipArea progressDisplayTooltipArea;
 
     private IconButtonNoBG lockedButton = null;
 
-    private final ResourceLocation upgradeSlotGui = GM.getResource("textures/gui/elements/upgrade_slot.png");
     private final ResourceLocation progressArrow = GM.getResource("textures/gui/elements/arrow.png");
     private final ResourceLocation progressBar = GM.getResource("textures/gui/elements/progress_bar.png");
     private final ResourceLocation machineActive = GM.getResource("textures/gui/elements/machine_active.png");
@@ -82,6 +87,8 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         this.lockedButton = new IconButtonNoBG(this.leftPos - 17, this.topPos + 16, 20, 20, unlockedIcon, 0, 0, 16, 16, 16, 16, 0, 0.75f, button -> toggleLocked());
         machineSettingsTab.init();
         addRenderableWidget(lockedButton);
+
+        sideConfigOverlay = new SideConfigOverlay(this, menu::getUiState, menu.blockEntity.getBlockPos());
     }
 
     @Override
@@ -176,10 +183,12 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        if (isConfigurable() && !machineSettingsTab.isSideTabOpen()) renderOptionsAreaTooltips(graphics, mouseX, mouseY, x, y);
-        if (isPoweredMenu()) renderEnergyAreaTooltips(graphics, mouseX, mouseY, x, y);
-        if (menu.isUpgradeable()) renderUpgradeSlotTooltips(graphics, mouseX, mouseY, x, y);
-        renderProgressAreaTooltips(graphics, mouseX, mouseY, x, y);
+        if (!shouldHideSlots()) {
+            if (isConfigurable() && !machineSettingsTab.isSideTabOpen()) renderOptionsAreaTooltips(graphics, mouseX, mouseY, x, y);
+            if (isPoweredMenu()) renderEnergyAreaTooltips(graphics, mouseX, mouseY, x, y);
+            if (menu.isUpgradeable()) renderUpgradeSlotTooltips(graphics, mouseX, mouseY, x, y);
+            renderProgressAreaTooltips(graphics, mouseX, mouseY, x, y);
+        }
     }
 
     public void renderTitles(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -199,7 +208,30 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         renderBackground(guiGraphics, mouseX, mouseY, delta);
         super.render(guiGraphics, mouseX, mouseY, delta);
+
+        if (shouldHideSlots()) {
+            // AbstractContainerScreen computes hoveredSlot during render; clear it so slot/item tooltips don't show.
+            this.hoveredSlot = null;
+        }
+
+        if (sideConfigOverlay != null) sideConfigOverlay.renderOnTop(guiGraphics, mouseX, mouseY, delta);
         renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    public void openSideConfig() {
+        if (sideConfigOverlay != null) sideConfigOverlay.setVisible(true);
+    }
+
+    private boolean shouldHideSlots() {
+        return sideConfigOverlay != null
+                && sideConfigOverlay.isVisible()
+                && sideConfigOverlay.getTerminal().blocksSlotRendering();
+    }
+
+    @Override
+    protected void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
+        if (shouldHideSlots()) return;
+        super.renderSlot(guiGraphics, slot);
     }
 
     /**
@@ -212,8 +244,27 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      */
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (sideConfigOverlay != null && sideConfigOverlay.isVisible() && sideConfigOverlay.mouseClicked(mouseX, mouseY, button)) return true;
         if (machineSettingsTab.mouseClicked(mouseX, mouseY, button)) return true;
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (sideConfigOverlay != null && sideConfigOverlay.isVisible() && sideConfigOverlay.mouseDragged(mouseX, mouseY, button, dragX, dragY)) return true;
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (sideConfigOverlay != null && sideConfigOverlay.isVisible() && sideConfigOverlay.mouseReleased(mouseX, mouseY, button)) return true;
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (sideConfigOverlay != null && sideConfigOverlay.isVisible() && sideConfigOverlay.keyPressed(keyCode, scanCode, modifiers)) return true;
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     /**
@@ -259,9 +310,10 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      * @param posY     Y position of the arrow
      */
     public void renderArrow(GuiGraphics graphics, int posX, int posY) {
-        if (menu.blockEntity instanceof Crafter<?>) {
-            int progress = menu.getSyncedProgress();
-            int maxProgress = 176;
+        MachineUiState state = menu.getUiState();
+        if (state.hasCrafting()) {
+            int progress = state.progress();
+            int maxProgress = state.maxProgress();
             int arrowSize = 26;
 
             int scaledProgress = progress != 0 ? progress * arrowSize / maxProgress : 0;
@@ -273,13 +325,15 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     }
 
     public void renderProgressBar(GuiGraphics graphics, int posX, int posY) {
-        if (menu.blockEntity instanceof Crafter<?>) {
+        MachineUiState state = menu.getUiState();
+        if (state.hasCrafting()) {
             graphics.blit(progressBar, posX + 138, posY + 31, 0, 0, 5, 24, 5, 24);
 
             int left = leftPos + (139 - guiOffset / 2) + guiOffset;
             int top = topPos + 32;
-            int progress = menu.getSyncedProgress();
-            float prog = progress != 0 ? (progress * 22f) / 176 + 1 : 0; // Add 1 or else it technically never reaches the top.
+            int progress = state.progress();
+            int maxProgress = state.maxProgress();
+            float prog = (progress != 0 && maxProgress > 0) ? (progress * 22f) / maxProgress + 1 : 0; // Add 1 or else it technically never reaches the top.
 
             progressDisplayTooltipArea.render(graphics, (int) prog, left, top);
         }
@@ -298,7 +352,14 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      * Creates the energy info area
      */
     private void assignEnergyInfoArea() {
-        this.energyInfoArea = new EnergyDisplayTooltipArea(energyLeft, energyTop, getEnergyStorage(), energyWidth, energyHeight);
+        this.energyInfoArea = new EnergyDisplayTooltipArea(
+                energyLeft,
+                energyTop,
+                () -> menu.getUiState().energyStored(),
+                () -> menu.getUiState().energyCapacity(),
+                energyWidth,
+                energyHeight
+        );
     }
 
     private void assignProgressBarArea() {
@@ -339,13 +400,13 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      * @param y           Y position
      */
     private void renderEnergyAreaTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
-        if (isMouseAboveArea(mouseX, mouseY, x, y, energyLeft, energyTop, energyWidth, energyHeight)) {
+        if (isPoweredMenu() && menu.getUiState().energyCapacity() > 0 && isMouseAboveArea(mouseX, mouseY, x, y, energyLeft, energyTop, energyWidth, energyHeight)) {
             guiGraphics.renderTooltip(this.font, getEnergyTooltips(), Optional.empty(), mouseX - x, mouseY - y);
         }
     }
 
     private void renderUpgradeSlotTooltips(GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
-        if (!menu.isUpgradeable() || !menu.blockEntity.isSettingsPanelOpen()) {
+        if (!menu.isUpgradeable() || !isSettingsPanelOpen()) {
             return;
         }
 
@@ -389,11 +450,11 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         return isMouseAboveArea(pMouseX, pMouseY, x, y, offsetX, offsetY, width, height);
     }
 
-    public <W extends net.minecraft.client.gui.components.Renderable & net.minecraft.client.gui.components.events.GuiEventListener & net.minecraft.client.gui.narration.NarratableEntry> W gmAddRenderableWidget(W widget) {
+    public <W extends Renderable & GuiEventListener & NarratableEntry> W gmAddRenderableWidget(W widget) {
         return this.addRenderableWidget(widget);
     }
 
-    public void gmRemoveWidget(net.minecraft.client.gui.components.events.GuiEventListener widget) {
+    public void gmRemoveWidget(GuiEventListener widget) {
         this.removeWidget(widget);
     }
 
@@ -402,24 +463,22 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     }
 
     public List<Component> getEnergyTooltips() {
-        GuiPower power = (GuiPower) menu;
+        MachineUiState state = menu.getUiState();
         DecimalFormat format = new DecimalFormat("#,###");
-        return List.of(Component.literal(format.format(power.getPower()) + " / " + format.format(getEnergyStorage().getMaxEnergyStored()) + " FE"));
+        return List.of(Component.literal(format.format(state.energyStored()) + " / " + format.format(state.energyCapacity()) + " FE"));
     }
 
     public List<Component> getOptionsTooltips() {
         return List.of(Component.translatable("gui.gm.settings.left"));
     }
 
+    @Nullable
     public CoreEnergyStorage getEnergyStorage() {
-        if (menu.blockEntity instanceof PoweredBlock entity) {
-            return entity.getEnergyStorage();
-        }
-        return null;
+        return menu.getEnergyStorage();
     }
 
     public boolean isPoweredMenu() {
-        return menu instanceof GuiPower;
+        return menu.getUiState().hasPower();
     }
 
     public boolean isFluidMenu() {

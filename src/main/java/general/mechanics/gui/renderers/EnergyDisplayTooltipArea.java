@@ -5,9 +5,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
+import java.util.function.IntSupplier;
 
 public class EnergyDisplayTooltipArea extends BarRenderer {
-    private final CoreEnergyStorage energy;
+    private final IntSupplier energyStored;
+    private final IntSupplier energyCapacity;
 
     public EnergyDisplayTooltipArea(int xMin, int yMin, CoreEnergyStorage energy) {
         this(xMin, yMin, energy, 8, 64);
@@ -15,22 +17,39 @@ public class EnergyDisplayTooltipArea extends BarRenderer {
 
     public EnergyDisplayTooltipArea(int xMin, int yMin, CoreEnergyStorage energy, int width, int height) {
         super(xMin, yMin, width, height);
-        this.energy = energy;
+        this.energyStored = energy::getEnergyStored;
+        this.energyCapacity = energy::getMaxEnergyStored;
+    }
+
+    public EnergyDisplayTooltipArea(int xMin, int yMin, IntSupplier energyStored, IntSupplier energyCapacity) {
+        this(xMin, yMin, energyStored, energyCapacity, 8, 64);
+    }
+
+    public EnergyDisplayTooltipArea(int xMin, int yMin, IntSupplier energyStored, IntSupplier energyCapacity, int width, int height) {
+        super(xMin, yMin, width, height);
+        this.energyStored = energyStored;
+        this.energyCapacity = energyCapacity;
     }
 
     public List<Component> getTooltips () {
-        return List.of(Component.literal(energy.getEnergyStored() + " / " + energy.getMaxEnergyStored() + " FE"));
+        int stored = energyStored.getAsInt();
+        int cap = energyCapacity.getAsInt();
+        return List.of(Component.literal(stored + " / " + cap + " FE"));
     }
 
     @Override
     public void render (GuiGraphics guiGraphics) {
-        int stored = (int) (getHeight() * (energy.getEnergyStored() / (float) energy.getMaxEnergyStored()));
-        guiGraphics.fillGradient(getXPos(), getYPos() + (getHeight() - stored), getXPos() + getWidth(), getYPos() + getHeight(), Color.BRIGHT_RED.getArgb(), Color.RED.getArgb());
+        int cap = energyCapacity.getAsInt();
+        if (cap <= 0) return;
+        int storedPx = (int) (getHeight() * (energyStored.getAsInt() / (float) cap));
+        guiGraphics.fillGradient(getXPos(), getYPos() + (getHeight() - storedPx), getXPos() + getWidth(), getYPos() + getHeight(), Color.BRIGHT_RED.getArgb(), Color.RED.getArgb());
     }
 
     public void render (GuiGraphics guiGraphics, int x, int y) {
-        int stored = (int) (getHeight() * (energy.getEnergyStored() / (float) energy.getMaxEnergyStored()));
-        guiGraphics.fillGradient(x, y + (getHeight() - stored), x + getWidth(), y + getHeight(), Color.BRIGHT_RED.getArgb(), Color.RED.getArgb());
+        int cap = energyCapacity.getAsInt();
+        if (cap <= 0) return;
+        int storedPx = (int) (getHeight() * (energyStored.getAsInt() / (float) cap));
+        guiGraphics.fillGradient(x, y + (getHeight() - storedPx), x + getWidth(), y + getHeight(), Color.BRIGHT_RED.getArgb(), Color.RED.getArgb());
     }
 
 }
