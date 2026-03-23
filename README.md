@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/SuperScary/General-Mechanics/refs/heads/master/src/main/resources/logo.png" alt="Logo"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/iso2t/General-Mechanics/refs/heads/master/src/main/resources/logo.png" alt="Logo"></p>
 
 <h1 align="center">General Mechanics</h1>
 <p align="center">General Mechanics: Realistic technology for the modern era.</p>
@@ -8,15 +8,15 @@ To add General Mechanics to your project as a dependency, add the following to y
 ```groovy
 repositories {
     maven {
-        name = 'GENLAB Maven'
-        url = 'https://maven.superscary.net'
+        name = 'ISO2T Maven'
+        url = 'https://maven.iso2t.com'
         content {
             includeGroup 'general.mechanics'
         }
     }
 }
 ```
-Then, you can add it as a dependency, with `${mc_version}` being your Minecraft version target and `${gtm_version}` being the version of General Mechanics you want to use.
+Then, you can add it as a dependency, with `${mc_version}` being your Minecraft version target and `${version}` being the version of General Mechanics you want to use.
 ```groovy
 dependencies {
 	// NeoForge
@@ -31,3 +31,6 @@ dependencies {
 - Oracle JDK 21
 - [Project Lombok plugin](https://plugins.jetbrains.com/plugin/6317-lombok)
 - [Minecraft Development plugin](https://plugins.jetbrains.com/plugin/8327-minecraft-development) is recommended.
+
+### Texturing
+Many of the textures were made with PhotoShop. 
