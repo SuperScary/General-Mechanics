@@ -33,4 +33,4 @@ dependencies {
 - [Minecraft Development plugin](https://plugins.jetbrains.com/plugin/8327-minecraft-development) is recommended.
 
 ### Texturing
-Many of the textures were made with PhotoShop. 
+Many of the textures were made with Photoshop. The Photoshop files are available in the `/Photoshop` folder.
