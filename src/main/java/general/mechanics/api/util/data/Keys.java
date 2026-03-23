@@ -19,4 +19,8 @@ public class Keys {
 
     public static final String SIDE_MODES = "side_modes";
 
+    public static final String SIDE_MODES_ITEMS = "side_modes_items";
+    public static final String SIDE_MODES_ENERGY = "side_modes_energy";
+    public static final String SIDE_MODES_FLUIDS = "side_modes_fluids";
+
 }

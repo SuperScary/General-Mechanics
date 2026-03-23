@@ -71,14 +71,14 @@ public final class SidedItemIOComponent {
         private boolean canInsert(int slot) {
             if (side == null) return false;
             if (!be.isImportEnabled()) return false;
-            if (be.getSideMode(side) != BasePoweredBlockEntity.SideMode.INPUT) return false;
+            if (be.getSideMode(IoType.ITEMS, side) != BasePoweredBlockEntity.SideMode.INPUT) return false;
             return contains(inputSlots, slot);
         }
 
         private boolean canExtract(int slot) {
             if (side == null) return false;
             if (!be.isExportEnabled()) return false;
-            if (be.getSideMode(side) != BasePoweredBlockEntity.SideMode.OUTPUT) return false;
+            if (be.getSideMode(IoType.ITEMS, side) != BasePoweredBlockEntity.SideMode.OUTPUT) return false;
             return contains(outputSlots, slot);
         }
 

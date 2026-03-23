@@ -13,6 +13,7 @@ import general.mechanics.gui.renderers.EnergyDisplayTooltipArea;
 import general.mechanics.gui.renderers.FluidTankRenderer;
 import general.mechanics.gui.renderers.ProgressDisplayTooltipArea;
 import general.mechanics.gui.util.IconButtonNoBG;
+import general.mechanics.gui.util.UpgradeSlot;
 import general.mechanics.util.MouseUtil;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
@@ -412,7 +413,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
         // Find upgrade slots and render their tooltips
         for (var slot : menu.slots) {
-            if (slot instanceof general.mechanics.gui.util.UpgradeSlot upgradeSlot && upgradeSlot.isActive()) {
+            if (slot instanceof UpgradeSlot upgradeSlot && upgradeSlot.isActive()) {
                 if (isMouseAboveArea(mouseX, mouseY, x, y, slot.x - 1, slot.y - 1, 18, 18)) {
                     graphics.renderTooltip(this.font, upgradeSlot.getTooltip(), Optional.empty(), mouseX - x, mouseY - y);
                     break; // Only show one tooltip at a time

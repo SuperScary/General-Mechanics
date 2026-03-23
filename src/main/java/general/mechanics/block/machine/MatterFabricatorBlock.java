@@ -7,7 +7,6 @@ import general.mechanics.api.entity.block.BaseEntityBlock;
 import general.mechanics.api.util.data.PropertyHelper;
 import general.mechanics.entity.block.MatterFabricatorBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -104,20 +103,6 @@ public class MatterFabricatorBlock extends BaseEntityBlock<MatterFabricatorBlock
         if (random.nextDouble() < 0.1) {
             level.playLocalSound(xPos, yPos, zPos, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
         }
-
-        Direction direction = PropertyHelper.of(BlockStateProperties.FACING, state).getValue();
-        Direction.Axis axis = direction.getAxis();
-
-        double defaultOffset = random.nextDouble() * 0.6 - 0.3;
-        double xOffsets = axis == Direction.Axis.X ? (double) direction.getStepX() * 0.52 : defaultOffset;
-        double yOffsets = random.nextDouble() * 6.0 / 8.0;
-        double zOffsets = axis == Direction.Axis.Z ? (double) direction.getStepZ() * 0.52 : defaultOffset;
-
-        // No longer doing this,
-        /*if (level.getBlockEntity(pos) instanceof MatterFabricatorBlockEntity entity && !entity.getInventory().getStackInSlot(0).isEmpty()) {
-            var stack = entity.getInventory().getStackInSlot(0);
-            level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), xPos + xOffsets, yPos + yOffsets, zPos + zOffsets, 0d, 0d, 0d);
-        }*/
 
     }
 

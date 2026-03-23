@@ -6,7 +6,11 @@ import general.mechanics.gui.component.button.CloseTabButton;
 import general.mechanics.gui.component.button.SideModeFaceButtonComponent;
 import general.mechanics.gui.component.screen.TerminalWidget;
 import general.mechanics.gui.screen.base.BaseScreen;
-import general.mechanics.network.SetSideModeC2S;
+import general.mechanics.network.SetIoSideModeC2S;
+import general.mechanics.api.util.LocalSide;
+import general.mechanics.api.component.io.IoType;
+import general.mechanics.gui.util.IconButtonNoBG;
+import general.mechanics.GM;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,15 +21,29 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
+import general.mechanics.gui.component.TabComponent;
+
 import java.util.function.Supplier;
 
 public class SideConfigOverlay extends AbstractWidget {
+
+    private static final int TAB_SIZE = 19;
+    private static final int TAB_GAP = 1;
+    private static final int TAB_Y_OFFSET = 2;
+    private static final int TAB_X_OFFSET_UNSELECTED = 0;
+    private static final int TAB_X_OFFSET_SELECTED = 1;
+
+    private static final ResourceLocation ITEMS_TAB = GM.getResource("textures/gui/elements/tabs/items_tab.png");
+    private static final ResourceLocation ENERGY_TAB = GM.getResource("textures/gui/elements/tabs/energy_tab.png");
+    private static final ResourceLocation FLUIDS_TAB = GM.getResource("textures/gui/elements/tabs/fluid_tab.png");
 
     private final BaseScreen<?> parent;
     private final BlockPos bePos;
@@ -38,6 +56,12 @@ public class SideConfigOverlay extends AbstractWidget {
     private final TerminalWidget terminal;
 
     private final CloseTabButton closeButton;
+
+    private final TabComponent<IconButtonNoBG> itemsTab;
+    private final TabComponent<IconButtonNoBG> energyTab;
+    private final TabComponent<IconButtonNoBG> fluidsTab;
+
+    private IoType selectedType = IoType.ITEMS;
 
     private final SideModeFaceButtonComponent upButton;
     private final SideModeFaceButtonComponent leftButton;
@@ -55,6 +79,17 @@ public class SideConfigOverlay extends AbstractWidget {
         this.terminal = new TerminalWidget(0, 0, TerminalWidget.Preset.TERMINAL_64x64);
         this.closeButton = new CloseTabButton(0, 0, this::closeScreen);
 
+        this.itemsTab = new TabComponent<>(0, 0, null, new IconButtonNoBG(0, 0, TAB_SIZE, TAB_SIZE, ITEMS_TAB, 0, 0, TAB_SIZE, TAB_SIZE, TAB_SIZE, TAB_SIZE, 0, b -> selectedType = IoType.ITEMS)) {
+        };
+        this.energyTab = new TabComponent<>(0, 0, null, new IconButtonNoBG(0, 0, TAB_SIZE, TAB_SIZE, ENERGY_TAB, 0, 0, TAB_SIZE, TAB_SIZE, TAB_SIZE, TAB_SIZE, 0, b -> selectedType = IoType.ENERGY)) {
+        };
+        this.fluidsTab = new TabComponent<>(0, 0, null, new IconButtonNoBG(0, 0, TAB_SIZE, TAB_SIZE, FLUIDS_TAB, 0, 0, TAB_SIZE, TAB_SIZE, TAB_SIZE, TAB_SIZE, 0, b -> selectedType = IoType.FLUIDS)) {
+        };
+
+        itemsTab.getBuilder().setTooltip(Tooltip.create(Component.translatable("gui.gm.io.items")));
+        energyTab.getBuilder().setTooltip(Tooltip.create(Component.translatable("gui.gm.io.energy")));
+        fluidsTab.getBuilder().setTooltip(Tooltip.create(Component.translatable("gui.gm.io.fluids")));
+
         this.upButton = new SideModeFaceButtonComponent(0, 0, Direction.UP, () -> getMode(Direction.UP), () -> cycleSide(Direction.UP));
         this.leftButton = new SideModeFaceButtonComponent(0, 0, Direction.WEST, () -> getMode(getLocalLeft()), () -> cycleSide(getLocalLeft()));
         this.frontButton = new SideModeFaceButtonComponent(0, 0, Direction.NORTH, () -> getMode(getLocalFront()), () -> cycleSide(getLocalFront()));
@@ -63,6 +98,9 @@ public class SideConfigOverlay extends AbstractWidget {
         this.backButton = new SideModeFaceButtonComponent(0, 0, Direction.SOUTH, () -> getMode(getLocalBack()), () -> cycleSide(getLocalBack()));
 
         terminal.addComponent(closeButton, 0, 0, TerminalWidget.ClampMode.OUTER);
+        terminal.addComponent(itemsTab, 0, 0, TerminalWidget.ClampMode.NONE);
+        terminal.addComponent(energyTab, 0, 0, TerminalWidget.ClampMode.NONE);
+        terminal.addComponent(fluidsTab, 0, 0, TerminalWidget.ClampMode.NONE);
         terminal.addComponent(upButton, 0, 0, TerminalWidget.ClampMode.INNER);
         terminal.addComponent(leftButton, 0, 0, TerminalWidget.ClampMode.INNER);
         terminal.addComponent(frontButton, 0, 0, TerminalWidget.ClampMode.INNER);
@@ -113,6 +151,18 @@ public class SideConfigOverlay extends AbstractWidget {
         int closeX = terminal.getX() + terminal.getWidth() - 12;
         int closeY = terminal.getY() + 4;
         terminal.setComponentOffset(closeButton, closeX - terminal.getX(), closeY - terminal.getY());
+
+        layoutTab(itemsTab, 0, IoType.ITEMS);
+        layoutTab(energyTab, 1, IoType.ENERGY);
+        layoutTab(fluidsTab, 2, IoType.FLUIDS);
+    }
+
+    private void layoutTab(TabComponent<IconButtonNoBG> tab, int index, IoType type) {
+        int xOff = (selectedType == type) ? TAB_X_OFFSET_SELECTED : TAB_X_OFFSET_UNSELECTED;
+
+        int relX = -TAB_SIZE + xOff;
+        int relY = TAB_Y_OFFSET + index * (TAB_SIZE + TAB_GAP);
+        terminal.setComponentOffset(tab, relX, relY);
     }
 
     @Override
@@ -136,19 +186,19 @@ public class SideConfigOverlay extends AbstractWidget {
     }
 
     private Direction getLocalFront() {
-        return getFacing();
+        return LocalSide.FRONT.toWorld(getFacing());
     }
 
     private Direction getLocalBack() {
-        return getFacing().getOpposite();
+        return LocalSide.BACK.toWorld(getFacing());
     }
 
     private Direction getLocalLeft() {
-        return getFacing().getClockWise();
+        return LocalSide.LEFT.toWorld(getFacing());
     }
 
     private Direction getLocalRight() {
-        return getFacing().getCounterClockWise();
+        return LocalSide.RIGHT.toWorld(getFacing());
     }
 
     public void renderOnTop(GuiGraphics g, int mouseX, int mouseY, float pt) {
@@ -161,11 +211,14 @@ public class SideConfigOverlay extends AbstractWidget {
         pose.translate(0, 0, 200);
 
         RenderSystem.disableDepthTest();
+        layoutChildren();
         terminal.render(g, mouseX, mouseY, pt);
+
+        //int labelX = terminal.getInnerX() + 2;
+        //int labelY = terminal.getInnerY() + terminal.getInnerHeight() - 10;
+        //g.drawString(Minecraft.getInstance().font, selectedType.name(), labelX, labelY, 0xAAAAAA, false);
         RenderSystem.enableDepthTest();
 
-        //int rowY = terminal.getY() + terminal.getHeight() - 12 - 6;
-        //g.drawString(parent.getFont(), "[ESC] close", terminal.getX() + 6, rowY, 0xAAAAAA, false);
         pose.popPose();
     }
 
@@ -211,7 +264,7 @@ public class SideConfigOverlay extends AbstractWidget {
 
     private void cycleSide(Direction dir) {
         var next = getMode(dir).next();
-        PacketDistributor.sendToServer(new SetSideModeC2S(bePos, dir.get3DDataValue(), next.id()));
+        PacketDistributor.sendToServer(new SetIoSideModeC2S(bePos, selectedType.id(), dir.get3DDataValue(), next.id()));
 
         Minecraft.getInstance().getSoundManager()
                 .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -220,7 +273,7 @@ public class SideConfigOverlay extends AbstractWidget {
     private BasePoweredBlockEntity.SideMode getMode(Direction dir) {
         var ui = state.get();
         if (ui == null) return BasePoweredBlockEntity.SideMode.IGNORED;
-        return ui.sideMode(dir);
+        return ui.sideMode(selectedType, dir);
     }
 
 }

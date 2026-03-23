@@ -1,7 +1,6 @@
 package general.mechanics.api.item.element;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * This represents the entire known periodic table of elements.

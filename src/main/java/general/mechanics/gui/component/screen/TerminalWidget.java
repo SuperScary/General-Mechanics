@@ -203,12 +203,12 @@ public class TerminalWidget extends AbstractWidget implements SlotRenderBlocker 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!visible) return false;
-        if (!isMouseOver(mouseX, mouseY)) return false;
-
         updateChildPositions();
         for (Child child : children) {
             if (child.component.getBuilder().mouseClicked(mouseX, mouseY, button)) return true;
         }
+
+        if (!isMouseOver(mouseX, mouseY)) return false;
 
         if (draggable && button == GLFW.GLFW_MOUSE_BUTTON_1 && isInTitleBar(mouseX, mouseY)) {
             dragging = true;

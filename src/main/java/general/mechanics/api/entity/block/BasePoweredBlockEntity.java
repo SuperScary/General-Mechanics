@@ -1,6 +1,9 @@
 package general.mechanics.api.entity.block;
 
 import general.mechanics.api.attributes.Attribute;
+import general.mechanics.api.component.io.ISidedEnergyAccess;
+import general.mechanics.api.component.io.SidedEnergyIOComponent;
+import general.mechanics.api.component.io.IoType;
 import general.mechanics.api.energy.CoreEnergyStorage;
 import general.mechanics.api.energy.PoweredBlock;
 import general.mechanics.api.upgrade.Upgradeable;
@@ -29,10 +32,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements PoweredBlock, Upgradeable {
+public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements PoweredBlock, Upgradeable, ISidedEnergyAccess {
 
     private final CoreEnergyStorage energyStorage;
     private final ItemStackHandler upgradeInventory = new ItemStackHandler(4);
+
+    private SidedEnergyIOComponent sidedEnergyIO;
 
     @Getter
     private boolean enabled;
@@ -42,6 +47,9 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
     private RedstoneMode redstoneMode;
 
     private final SideMode[] sideModes;
+    private final SideMode[] itemSideModes;
+    private final SideMode[] energySideModes;
+    private final SideMode[] fluidSideModes;
 
     public BasePoweredBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState, Attribute.IntValue capacity, Attribute.IntValue maxReceive) {
         this(type, pos, blockState, capacity, maxReceive, Attribute.Builder.of(Keys.POWER, 0));
@@ -57,6 +65,15 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
 
         this.sideModes = new SideMode[Direction.values().length];
         Arrays.fill(this.sideModes, SideMode.IGNORED);
+
+        this.itemSideModes = new SideMode[Direction.values().length];
+        Arrays.fill(this.itemSideModes, SideMode.IGNORED);
+
+        this.energySideModes = new SideMode[Direction.values().length];
+        Arrays.fill(this.energySideModes, SideMode.IGNORED);
+
+        this.fluidSideModes = new SideMode[Direction.values().length];
+        Arrays.fill(this.fluidSideModes, SideMode.IGNORED);
     }
 
     @Override
@@ -68,7 +85,10 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         tag.putBoolean(Keys.AUTO_EXPORT, autoExport);
         tag.putBoolean(Keys.AUTO_IMPORT, autoImport);
         tag.putInt(Keys.REDSTONE_MODE, redstoneMode.id());
-        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes());
+        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes(sideModes));
+        tag.putIntArray(Keys.SIDE_MODES_ITEMS, serializeSideModes(itemSideModes));
+        tag.putIntArray(Keys.SIDE_MODES_ENERGY, serializeSideModes(energySideModes));
+        tag.putIntArray(Keys.SIDE_MODES_FLUIDS, serializeSideModes(fluidSideModes));
     }
 
     @Override
@@ -82,7 +102,18 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         if (tag.contains(Keys.AUTO_IMPORT)) autoImport = tag.getBoolean(Keys.AUTO_IMPORT);
         if (tag.contains(Keys.AUTO_EXPORT)) autoExport = tag.getBoolean(Keys.AUTO_EXPORT);
         if (tag.contains(Keys.REDSTONE_MODE)) redstoneMode = RedstoneMode.fromId(tag.getInt(Keys.REDSTONE_MODE));
-        if (tag.contains(Keys.SIDE_MODES)) deserializeSideModes(tag.getIntArray(Keys.SIDE_MODES));
+        if (tag.contains(Keys.SIDE_MODES_ITEMS) || tag.contains(Keys.SIDE_MODES_ENERGY) || tag.contains(Keys.SIDE_MODES_FLUIDS)) {
+            if (tag.contains(Keys.SIDE_MODES_ITEMS)) deserializeSideModes(itemSideModes, tag.getIntArray(Keys.SIDE_MODES_ITEMS));
+            if (tag.contains(Keys.SIDE_MODES_ENERGY)) deserializeSideModes(energySideModes, tag.getIntArray(Keys.SIDE_MODES_ENERGY));
+            if (tag.contains(Keys.SIDE_MODES_FLUIDS)) deserializeSideModes(fluidSideModes, tag.getIntArray(Keys.SIDE_MODES_FLUIDS));
+        } else if (tag.contains(Keys.SIDE_MODES)) {
+            // Backward compatibility: old saves had a single shared side mode array.
+            int[] legacy = tag.getIntArray(Keys.SIDE_MODES);
+            deserializeSideModes(sideModes, legacy);
+            deserializeSideModes(itemSideModes, legacy);
+            deserializeSideModes(energySideModes, legacy);
+            deserializeSideModes(fluidSideModes, legacy);
+        }
     }
 
     @Override
@@ -92,7 +123,10 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         tag.putBoolean(Keys.AUTO_EXPORT, autoExport);
         tag.putBoolean(Keys.AUTO_IMPORT, autoImport);
         tag.putInt(Keys.REDSTONE_MODE, redstoneMode.id());
-        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes());
+        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes(sideModes));
+        tag.putIntArray(Keys.SIDE_MODES_ITEMS, serializeSideModes(itemSideModes));
+        tag.putIntArray(Keys.SIDE_MODES_ENERGY, serializeSideModes(energySideModes));
+        tag.putIntArray(Keys.SIDE_MODES_FLUIDS, serializeSideModes(fluidSideModes));
     }
 
     @Override
@@ -102,7 +136,17 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         autoExport = tag.getBoolean(Keys.AUTO_EXPORT);
         autoImport = tag.getBoolean(Keys.AUTO_IMPORT);
         redstoneMode = RedstoneMode.fromId(tag.getInt(Keys.REDSTONE_MODE));
-        if (tag.contains(Keys.SIDE_MODES)) deserializeSideModes(tag.getIntArray(Keys.SIDE_MODES));
+        if (tag.contains(Keys.SIDE_MODES_ITEMS) || tag.contains(Keys.SIDE_MODES_ENERGY) || tag.contains(Keys.SIDE_MODES_FLUIDS)) {
+            if (tag.contains(Keys.SIDE_MODES_ITEMS)) deserializeSideModes(itemSideModes, tag.getIntArray(Keys.SIDE_MODES_ITEMS));
+            if (tag.contains(Keys.SIDE_MODES_ENERGY)) deserializeSideModes(energySideModes, tag.getIntArray(Keys.SIDE_MODES_ENERGY));
+            if (tag.contains(Keys.SIDE_MODES_FLUIDS)) deserializeSideModes(fluidSideModes, tag.getIntArray(Keys.SIDE_MODES_FLUIDS));
+        } else if (tag.contains(Keys.SIDE_MODES)) {
+            int[] legacy = tag.getIntArray(Keys.SIDE_MODES);
+            deserializeSideModes(sideModes, legacy);
+            deserializeSideModes(itemSideModes, legacy);
+            deserializeSideModes(energySideModes, legacy);
+            deserializeSideModes(fluidSideModes, legacy);
+        }
     }
 
     @Override
@@ -112,8 +156,32 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         tag.putBoolean(Keys.AUTO_IMPORT, autoImport);
         tag.putBoolean(Keys.AUTO_EXPORT, autoExport);
         tag.putInt(Keys.REDSTONE_MODE, redstoneMode.id());
-        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes());
+        tag.putIntArray(Keys.SIDE_MODES, serializeSideModes(sideModes));
+        tag.putIntArray(Keys.SIDE_MODES_ITEMS, serializeSideModes(itemSideModes));
+        tag.putIntArray(Keys.SIDE_MODES_ENERGY, serializeSideModes(energySideModes));
+        tag.putIntArray(Keys.SIDE_MODES_FLUIDS, serializeSideModes(fluidSideModes));
         return tag;
+    }
+
+    public SideMode getSideMode(IoType type, Direction dir) {
+        return switch (type) {
+            case ITEMS -> itemSideModes[dir.ordinal()];
+            case ENERGY -> energySideModes[dir.ordinal()];
+            case FLUIDS -> fluidSideModes[dir.ordinal()];
+        };
+    }
+
+    public void setSideMode(IoType type, Direction dir, SideMode mode) {
+        switch (type) {
+            case ITEMS -> itemSideModes[dir.ordinal()] = mode;
+            case ENERGY -> energySideModes[dir.ordinal()] = mode;
+            case FLUIDS -> fluidSideModes[dir.ordinal()] = mode;
+        }
+        setChanged();
+
+        if (getLevel() instanceof ServerLevel sl) {
+            sl.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+        }
     }
 
     public SideMode getSideMode(Direction dir) {
@@ -129,19 +197,19 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
         }
     }
 
-    private int[] serializeSideModes() {
+    private static int[] serializeSideModes(SideMode[] src) {
         int[] result = new int[Direction.values().length];
         for (Direction dir : Direction.values()) {
-            result[dir.ordinal()] = sideModes[dir.ordinal()].id();
+            result[dir.ordinal()] = src[dir.ordinal()].id();
         }
         return result;
     }
 
-    private void deserializeSideModes(int[] data) {
+    private static void deserializeSideModes(SideMode[] target, int[] data) {
         for (Direction dir : Direction.values()) {
             int idx = dir.ordinal();
             if (idx < data.length) {
-                sideModes[idx] = SideMode.fromId(data[idx]);
+                target[idx] = SideMode.fromId(data[idx]);
             }
         }
     }
@@ -149,6 +217,14 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
     @Override
     public CoreEnergyStorage getEnergyStorage() {
         return energyStorage;
+    }
+
+    @Override
+    public SidedEnergyIOComponent getSidedEnergyIO() {
+        if (sidedEnergyIO == null) {
+            sidedEnergyIO = new SidedEnergyIOComponent(this, getEnergyStorage());
+        }
+        return sidedEnergyIO;
     }
 
     public void updateBlockState(BlockState state) {

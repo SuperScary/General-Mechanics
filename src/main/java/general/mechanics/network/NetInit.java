@@ -1,6 +1,7 @@
 package general.mechanics.network;
 
 import general.mechanics.GM;
+import general.mechanics.api.component.io.IoType;
 import general.mechanics.api.entity.block.BasePoweredBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -79,6 +80,22 @@ public class NetInit {
                 var dir = net.minecraft.core.Direction.from3DDataValue(payload.direction());
                 var mode = BasePoweredBlockEntity.SideMode.fromId(payload.mode());
                 be.setSideMode(dir, mode);
+            });
+        });
+
+        reg.playToServer(SetIoSideModeC2S.TYPE, SetIoSideModeC2S.CODEC, (payload, ctx) -> {
+            ServerPlayer sp = (ServerPlayer) ctx.player();
+
+            sp.server.execute(() -> {
+                ServerLevel level = sp.serverLevel();
+                BlockPos pos = payload.pos();
+
+                if (!(level.getBlockEntity(pos) instanceof BasePoweredBlockEntity be)) return;
+
+                var type = IoType.fromId(payload.ioType());
+                var dir = net.minecraft.core.Direction.from3DDataValue(payload.direction());
+                var mode = BasePoweredBlockEntity.SideMode.fromId(payload.mode());
+                be.setSideMode(type, dir, mode);
             });
         });
     }

@@ -62,7 +62,6 @@ public class HeatingElementBlock extends BaseEntityBlock<HeatingElementBlockEnti
     @Override
     protected void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
         super.tick(state, level, pos, random);
-        System.out.println(state.getValue(HEATING));
         if (state.getValue(HEATING)) BubbleColumnBlock.updateColumn(level, pos.above(), state);
     }
 

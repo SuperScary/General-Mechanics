@@ -1,8 +1,16 @@
 package general.mechanics.registries;
 
+import java.util.function.BiFunction;
+
 import general.mechanics.GM;
 import general.mechanics.api.capability.heat.IHeater;
+import general.mechanics.api.capability.AutomationAccess;
+import general.mechanics.api.component.io.ISidedEnergyAccess;
+import general.mechanics.api.component.io.ISidedFluidAccess;
 import general.mechanics.api.component.io.ISidedItemAccess;
+import general.mechanics.api.energy.PoweredBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -17,20 +25,53 @@ public class CoreCapabilities {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        // Matter Fabricator
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CoreBlockEntities.MATTER_FABRICATOR.get(), (o, direction) -> {
-            var sided = ((ISidedItemAccess) o).getSidedItemIO();
-
-            if (direction == null) {
-                return sided.forAutomationWithoutSide();
-            }
-
-            return sided.forSide(direction);
-        });
-        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, CoreBlockEntities.MATTER_FABRICATOR.get(), (o, direction) -> o.getEnergyStorage());
+        registerSidedItemAccess(event);
+        registerSidedFluidAccess(event);
+        registerPoweredEnergy(event);
 
         // Heating Element
         event.registerBlockEntity(HEATER, CoreBlockEntities.HEATING_ELEMENT.get(), (be, ctx) -> be);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static <T> void registerForImplementors(RegisterCapabilitiesEvent event, Class<?> iface, BlockCapability<T, Direction> capability, BiFunction<Object, Direction, T> provider) {
+        for (var type : CoreBlockEntities.getImplementorsOf(iface)) {
+            event.registerBlockEntity(capability, (BlockEntityType) type, (be, direction) -> provider.apply(be, direction));
+        }
+    }
+
+    private static void registerSidedItemAccess(RegisterCapabilitiesEvent event) {
+        registerForImplementors(event, ISidedItemAccess.class, Capabilities.ItemHandler.BLOCK, (be, direction) -> {
+            var sided = ((ISidedItemAccess) be).getSidedItemIO();
+            if (!AutomationAccess.allow(direction)) {
+                return sided.forAutomationWithoutSide();
+            }
+            return sided.forSide(direction);
+        });
+    }
+
+    private static void registerPoweredEnergy(RegisterCapabilitiesEvent event) {
+        registerForImplementors(event, PoweredBlock.class, Capabilities.EnergyStorage.BLOCK, (be, direction) -> {
+            if (be instanceof ISidedEnergyAccess sided) {
+                var io = sided.getSidedEnergyIO();
+                if (!AutomationAccess.allow(direction)) {
+                    return io.forAutomationWithoutSide();
+                }
+                return io.forSide(direction);
+            }
+
+            return ((PoweredBlock) be).getEnergyStorage();
+        });
+    }
+
+    private static void registerSidedFluidAccess(RegisterCapabilitiesEvent event) {
+        registerForImplementors(event, ISidedFluidAccess.class, Capabilities.FluidHandler.BLOCK, (be, direction) -> {
+            var sided = ((ISidedFluidAccess) be).getSidedFluidIO();
+            if (!AutomationAccess.allow(direction)) {
+                return sided.forAutomationWithoutSide();
+            }
+            return sided.forSide(direction);
+        });
     }
 
 }

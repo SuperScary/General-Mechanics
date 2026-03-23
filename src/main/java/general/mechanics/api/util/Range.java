@@ -31,6 +31,18 @@ public class Range {
         this(value, value, true);
     }
 
+    public static Range inclusive(int from, int to) {
+        return new Range(from, to, true);
+    }
+
+    public static Range exclusive(int from, int to) {
+        return new Range(from, to, false);
+    }
+
+    public static Range single(int slot) {
+        return new Range(slot);
+    }
+
     /**
      * Returns the next number in the range.
      * If the range is inclusive, and we've reached `to`, return `to` again.

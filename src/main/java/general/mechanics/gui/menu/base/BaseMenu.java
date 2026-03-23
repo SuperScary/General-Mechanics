@@ -6,6 +6,7 @@ import general.mechanics.api.entity.block.BaseEntityBlock;
 import general.mechanics.api.entity.block.BasePoweredBlockEntity;
 import general.mechanics.api.energy.CoreEnergyStorage;
 import general.mechanics.api.energy.PoweredBlock;
+import general.mechanics.api.component.io.IoType;
 import general.mechanics.api.gui.IMachineMenuData;
 import general.mechanics.api.gui.MachineUiState;
 import general.mechanics.api.upgrade.Upgradeable;
@@ -34,12 +35,16 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
     protected static final int DATA_REDSTONE_MODE = 5;
     protected static final int DATA_ENERGY_STORED = 6;
     protected static final int DATA_ENERGY_CAPACITY = 7;
-    protected static final int DATA_SIDE_MODES = 8;
+    protected static final int DATA_SIDE_MODES_ITEMS = 8;
+    protected static final int DATA_SIDE_MODES_ENERGY = 9;
+    protected static final int DATA_SIDE_MODES_FLUIDS = 10;
 
     protected static final int DATA_POWERED_ENABLED_STATE = 0;
     protected static final int DATA_POWERED_ENERGY_STORED = 1;
     protected static final int DATA_POWERED_ENERGY_CAPACITY = 2;
-    protected static final int DATA_POWERED_SIDE_MODES = 3;
+    protected static final int DATA_POWERED_SIDE_MODES_ITEMS = 3;
+    protected static final int DATA_POWERED_SIDE_MODES_ENERGY = 4;
+    protected static final int DATA_POWERED_SIDE_MODES_FLUIDS = 5;
 
     public final B block;
     public final T blockEntity;
@@ -138,7 +143,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
     protected void initializeContainerData(Inventory inventory) {
         if (blockEntity instanceof Crafter<?> crafter) {
             this.data = new ContainerData() {
-                private final int[] data = new int[9];
+                private final int[] data = new int[11];
 
                 @Override
                 public int get(int index) {
@@ -154,9 +159,12 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
                             case DATA_REDSTONE_MODE -> (blockEntity instanceof BasePoweredBlockEntity entity) ? (entity.getRedstoneMode().id()) : BasePoweredBlockEntity.RedstoneMode.IGNORED.id();
                             case DATA_ENERGY_STORED -> (blockEntity instanceof PoweredBlock powered) ? powered.getEnergyStorage().getEnergyStored() : 0;
                             case DATA_ENERGY_CAPACITY -> (blockEntity instanceof PoweredBlock powered) ? powered.getEnergyStorage().getMaxEnergyStored() : 0;
-                            case DATA_SIDE_MODES -> getPackedSideModes();
+                            case DATA_SIDE_MODES_ITEMS -> getPackedSideModes(IoType.ITEMS);
+                            case DATA_SIDE_MODES_ENERGY -> getPackedSideModes(IoType.ENERGY);
+                            case DATA_SIDE_MODES_FLUIDS -> getPackedSideModes(IoType.FLUIDS);
                             default -> 0;
                         };
+
                         data[index] = value;
                         return value;
                     }
@@ -176,7 +184,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
         } else if (blockEntity instanceof BasePoweredBlockEntity poweredEntity) {
             // For non-crafter powered entities, only sync enabled state
             this.data = new ContainerData() {
-                private final int[] data = new int[4];
+                private final int[] data = new int[6];
 
                 @Override
                 public int get(int index) {
@@ -187,9 +195,12 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
                             case DATA_POWERED_ENABLED_STATE -> poweredEntity.isEnabled() ? 1 : 0;
                             case DATA_POWERED_ENERGY_STORED -> poweredEntity.getEnergyStorage().getEnergyStored();
                             case DATA_POWERED_ENERGY_CAPACITY -> poweredEntity.getEnergyStorage().getMaxEnergyStored();
-                            case DATA_POWERED_SIDE_MODES -> getPackedSideModes();
+                            case DATA_POWERED_SIDE_MODES_ITEMS -> getPackedSideModes(IoType.ITEMS);
+                            case DATA_POWERED_SIDE_MODES_ENERGY -> getPackedSideModes(IoType.ENERGY);
+                            case DATA_POWERED_SIDE_MODES_FLUIDS -> getPackedSideModes(IoType.FLUIDS);
                             default -> 0;
                         };
+
                         data[index] = value;
                         return value;
                     }
@@ -202,7 +213,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
 
                 @Override
                 public int getCount() {
-                    return 4;
+                    return 6;
                 }
             };
             addDataSlots(this.data);
@@ -217,11 +228,11 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
         this.settingsPanelOpen = settingsPanelOpen;
     }
 
-    private int getPackedSideModes() {
+    private int getPackedSideModes(IoType type) {
         if (blockEntity instanceof BasePoweredBlockEntity be) {
             int packed = 0;
             for (var dir : net.minecraft.core.Direction.values()) {
-                int id = be.getSideMode(dir).id() & 0b11;
+                int id = be.getSideMode(type, dir).id() & 0b11;
                 packed |= (id << (dir.ordinal() * 2));
             }
             return packed;
@@ -359,6 +370,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
 
     @Override
     public MachineUiState getUiState() {
+
         boolean hasPower = isPowered();
 
         boolean hasCrafting = blockEntity instanceof Crafter<?>;
@@ -369,12 +381,18 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
             maxProgress = crafter.getMaxProgress();
         }
 
-        int packedSideModes = 0;
+        int packedSideModesItems = 0;
+        int packedSideModesEnergy = 0;
+        int packedSideModesFluids = 0;
         if (data != null) {
-            if (blockEntity instanceof Crafter<?> && data.getCount() > DATA_SIDE_MODES) {
-                packedSideModes = data.get(DATA_SIDE_MODES);
-            } else if (!(blockEntity instanceof Crafter<?>) && data.getCount() > DATA_POWERED_SIDE_MODES) {
-                packedSideModes = data.get(DATA_POWERED_SIDE_MODES);
+            if (blockEntity instanceof Crafter<?>) {
+                if (data.getCount() > DATA_SIDE_MODES_ITEMS) packedSideModesItems = data.get(DATA_SIDE_MODES_ITEMS);
+                if (data.getCount() > DATA_SIDE_MODES_ENERGY) packedSideModesEnergy = data.get(DATA_SIDE_MODES_ENERGY);
+                if (data.getCount() > DATA_SIDE_MODES_FLUIDS) packedSideModesFluids = data.get(DATA_SIDE_MODES_FLUIDS);
+            } else {
+                if (data.getCount() > DATA_POWERED_SIDE_MODES_ITEMS) packedSideModesItems = data.get(DATA_POWERED_SIDE_MODES_ITEMS);
+                if (data.getCount() > DATA_POWERED_SIDE_MODES_ENERGY) packedSideModesEnergy = data.get(DATA_POWERED_SIDE_MODES_ENERGY);
+                if (data.getCount() > DATA_POWERED_SIDE_MODES_FLUIDS) packedSideModesFluids = data.get(DATA_POWERED_SIDE_MODES_FLUIDS);
             }
         }
 
@@ -390,7 +408,9 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
                 progress,
                 maxProgress,
                 crafting,
-                packedSideModes
+                packedSideModesItems,
+                packedSideModesEnergy,
+                packedSideModesFluids
         );
     }
 }
