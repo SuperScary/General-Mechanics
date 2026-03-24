@@ -1,5 +1,7 @@
 package general.mechanics.recipes;
 
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import general.mechanics.api.recipe.CoreRecipe;
@@ -15,16 +17,55 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack output) implements CoreRecipe<FabricationRecipe.FabricationRecipeInput> {
+public record FabricationRecipe(NonNullList<FabricationRecipe.CountedIngredient> inputItems, ItemStack output) implements CoreRecipe<FabricationRecipe.FabricationRecipeInput> {
 
     private static final int MAX_INGREDIENTS = 3;
 
+    public record CountedIngredient(Ingredient ingredient, int count) {
+        public CountedIngredient {
+            if (count <= 0) {
+                throw new IllegalArgumentException("Ingredient count must be > 0");
+            }
+        }
+
+        public static final Codec<CountedIngredient> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(CountedIngredient::ingredient),
+                Codec.INT.optionalFieldOf("count", 1).forGetter(CountedIngredient::count)
+        ).apply(inst, CountedIngredient::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, CountedIngredient> STREAM_CODEC = new StreamCodec<>() {
+            @Override
+            public void encode(RegistryFriendlyByteBuf buf, CountedIngredient value) {
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, value.ingredient());
+                buf.writeVarInt(value.count());
+            }
+
+            @Override
+            public @NotNull CountedIngredient decode(RegistryFriendlyByteBuf buf) {
+                Ingredient ingredient = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
+                int count = buf.readVarInt();
+                return new CountedIngredient(ingredient, count);
+            }
+        };
+    }
+
+    private static final Codec<CountedIngredient> COUNTED_INGREDIENT_OR_INGREDIENT_CODEC = Codec.either(
+            Ingredient.CODEC_NONEMPTY,
+            CountedIngredient.CODEC
+    ).xmap(
+            either -> either.map(ing -> new CountedIngredient(ing, 1), ci -> ci),
+            ci -> ci.count() == 1 ? Either.left(ci.ingredient()) : Either.right(ci)
+    );
+
     @Override
     public @NotNull NonNullList<Ingredient> getIngredients() {
-        return inputItems;
+        NonNullList<Ingredient> list = NonNullList.create();
+        for (CountedIngredient counted : inputItems) {
+            list.add(counted.ingredient());
+        }
+        return list;
     }
 
     @Override
@@ -37,30 +78,33 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
             if (!s.isEmpty()) provided.add(s);
         }
 
-        int needed = 0;
-        for (Ingredient ing : inputItems) {
-            if (!ing.isEmpty()) needed++;
-        }
-        if (provided.size() != needed) return false;
-
-        List<ItemStack> pool = new ArrayList<>(provided);
-        for (Ingredient req : inputItems) {
-            if (req.isEmpty()) continue;
-            boolean matchedOne = false;
-
-            Iterator<ItemStack> it = pool.iterator();
-            while (it.hasNext()) {
-                ItemStack candidate = it.next();
-                if (req.test(candidate)) {
-                    it.remove();
-                    matchedOne = true;
-                    break;
-                }
-            }
-            if (!matchedOne) return false;
+        List<CountedIngredient> required = new ArrayList<>();
+        for (CountedIngredient counted : inputItems) {
+            if (!counted.ingredient().isEmpty()) required.add(counted);
         }
 
-        return pool.isEmpty();
+        if (provided.size() != required.size()) return false;
+
+        boolean[] used = new boolean[provided.size()];
+        return matchesRecursive(required, 0, provided, used);
+    }
+
+    private static boolean matchesRecursive(List<CountedIngredient> required, int reqIndex, List<ItemStack> provided, boolean[] used) {
+        if (reqIndex >= required.size()) return true;
+
+        CountedIngredient req = required.get(reqIndex);
+        for (int i = 0; i < provided.size(); i++) {
+            if (used[i]) continue;
+
+            ItemStack candidate = provided.get(i);
+            if (candidate.getCount() < req.count()) continue;
+            if (!req.ingredient().test(candidate)) continue;
+
+            used[i] = true;
+            if (matchesRecursive(required, reqIndex + 1, provided, used)) return true;
+            used[i] = false;
+        }
+        return false;
     }
 
     @Override
@@ -71,7 +115,7 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
     @Override
     public boolean canCraftInDimensions(int width, int height) {
         int needed = 0;
-        for (Ingredient ing : inputItems) if (!ing.isEmpty()) needed++;
+        for (CountedIngredient ing : inputItems) if (!ing.ingredient().isEmpty()) needed++;
         return width * height >= needed;
     }
 
@@ -118,12 +162,12 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
     public static class Serializer implements RecipeSerializer<FabricationRecipe> {
 
         public static final MapCodec<FabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").xmap(
+                COUNTED_INGREDIENT_OR_INGREDIENT_CODEC.listOf().fieldOf("ingredients").xmap(
                         list -> {
                             if (list.size() > MAX_INGREDIENTS) {
                                 throw new IllegalArgumentException("Fabrication recipe supports at most " + MAX_INGREDIENTS + " ingredients");
                             }
-                            NonNullList<Ingredient> nn = NonNullList.create();
+                            NonNullList<CountedIngredient> nn = NonNullList.create();
                             nn.addAll(list);
                             return nn;
                         },
@@ -136,10 +180,10 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
                 new StreamCodec<>() {
                     @Override
                     public void encode(RegistryFriendlyByteBuf buf, FabricationRecipe recipe) {
-                        NonNullList<Ingredient> ingredients = recipe.inputItems();
+                        NonNullList<CountedIngredient> ingredients = recipe.inputItems();
                         buf.writeByte(ingredients.size());
-                        for (Ingredient ing : ingredients) {
-                            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ing);
+                        for (CountedIngredient ing : ingredients) {
+                            CountedIngredient.STREAM_CODEC.encode(buf, ing);
                         }
                         ItemStack.STREAM_CODEC.encode(buf, recipe.output());
                     }
@@ -149,9 +193,9 @@ public record FabricationRecipe(NonNullList<Ingredient> inputItems, ItemStack ou
                         int size = buf.readUnsignedByte();
                         if (size < 0 || size > MAX_INGREDIENTS)
                             throw new IllegalArgumentException("Invalid ingredient count: " + size);
-                        NonNullList<Ingredient> ingredients = NonNullList.withSize(size, Ingredient.EMPTY);
+                        NonNullList<CountedIngredient> ingredients = NonNullList.withSize(size, new CountedIngredient(Ingredient.EMPTY, 1));
                         for (int i = 0; i < size; i++) {
-                            ingredients.set(i, Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
+                            ingredients.set(i, CountedIngredient.STREAM_CODEC.decode(buf));
                         }
                         ItemStack out = ItemStack.STREAM_CODEC.decode(buf);
                         return new FabricationRecipe(ingredients, out);

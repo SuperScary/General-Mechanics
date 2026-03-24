@@ -19,9 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRecipe> {
 
     public MatterFabricatorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -80,24 +77,31 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
         var recipeValue = recipe.get().value();
         var inputSlots = getInputSlots();
         
-        // Get all non-empty input stacks
-        List<ItemStack> inputStacks = new ArrayList<>();
-        for (int slot : inputSlots.toArray()) {
-            var stack = getInventory().getStackInSlot(slot);
-            if (stack != ItemStack.EMPTY) {
-                inputStacks.add(stack);
-            }
-        }
+        boolean[] used = new boolean[inputSlots.toArray().length];
+        var required = recipeValue.inputItems();
 
-        for (var ingredient : recipeValue.getIngredients()) {
-            if (ingredient.isEmpty()) continue;
+        for (var req : required) {
+            if (req.ingredient().isEmpty()) continue;
 
-            for (int slot : inputSlots.toArray()) {
+            boolean matched = false;
+            int[] slotArr = inputSlots.toArray();
+            for (int i = 0; i < slotArr.length; i++) {
+                if (used[i]) continue;
+
+                int slot = slotArr[i];
                 var stack = getInventory().getStackInSlot(slot);
-                if (stack != ItemStack.EMPTY && ingredient.test(stack)) {
-                    getInventory().extractItem(slot, 1, false);
-                    break;
-                }
+                if (stack == ItemStack.EMPTY) continue;
+                if (stack.getCount() < req.count()) continue;
+                if (!req.ingredient().test(stack)) continue;
+
+                getInventory().extractItem(slot, req.count(), false);
+                used[i] = true;
+                matched = true;
+                break;
+            }
+
+            if (!matched) {
+                return;
             }
         }
     }

@@ -19,6 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MatterFabricatorCategory implements IRecipeCategory<FabricationRecipe> {
 
     public static final ResourceLocation UID = GM.getResource("refabrication");
@@ -70,18 +73,27 @@ public class MatterFabricatorCategory implements IRecipeCategory<FabricationReci
     public void setRecipe(@NotNull IRecipeLayoutBuilder builder, FabricationRecipe recipe, @NotNull IFocusGroup focuses) {
         final int baseX = 20, baseY = 35, step = 18, cols = 3;
 
-        var ingredients = recipe.getIngredients();
+        var ingredients = recipe.inputItems();
         int count = Math.min(ingredients.size(), 3);
 
         for (int i = 0; i < count; i++) {
             var ing = ingredients.get(i);
+            if (ing.ingredient().isEmpty()) continue;
 
             int col = i % cols;
             int x = baseX + col * step;
             int y = baseY;
 
+            List<ItemStack> displayed = new ArrayList<>();
+            for (ItemStack stack : ing.ingredient().getItems()) {
+                if (stack.isEmpty()) continue;
+                ItemStack copy = stack.copy();
+                copy.setCount(ing.count());
+                displayed.add(copy);
+            }
+
             builder.addSlot(RecipeIngredientRole.INPUT, x, y)
-                    .addIngredients(ing);
+                    .addItemStacks(displayed);
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 116, 35)
