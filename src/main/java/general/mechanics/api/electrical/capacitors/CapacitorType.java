@@ -17,7 +17,7 @@ public enum CapacitorType {
     UF_47(47e-6f, "47µF", "Used for bulk decoupling and energy storage"),
     UF_100(100e-6f, "100µF", "Power rail filtering and load stabilization"),
     UF_220(220e-6f, "220µF", "High-capacitance filtering for low-frequency circuits"),
-    UF_470(470e-6f, "470µF", "Large electrolytic capacitor for DC power filtering and reservoirs");
+    UF_470(470e-6f, "470µF", "Large electrolytic capacitor for DC fePerTick filtering and reservoirs");
 
     private final float value;          // value in farads
     private final String displayValue;  // display-friendly label

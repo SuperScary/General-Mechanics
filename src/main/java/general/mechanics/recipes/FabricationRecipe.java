@@ -5,6 +5,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import general.mechanics.api.recipe.CoreRecipe;
+import general.mechanics.recipes.ingredient.CraftingTime;
+import general.mechanics.recipes.ingredient.CountedIngredient;
+import general.mechanics.recipes.ingredient.PowerIngredient;
 import general.mechanics.registries.CoreRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -19,36 +22,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public record FabricationRecipe(NonNullList<FabricationRecipe.CountedIngredient> inputItems, ItemStack output) implements CoreRecipe<FabricationRecipe.FabricationRecipeInput> {
+public record FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemStack output, CraftingTime craftingTime, PowerIngredient powerIngredient) implements CoreRecipe<FabricationRecipe.FabricationRecipeInput> {
 
     private static final int MAX_INGREDIENTS = 3;
 
-    public record CountedIngredient(Ingredient ingredient, int count) {
-        public CountedIngredient {
-            if (count <= 0) {
-                throw new IllegalArgumentException("Ingredient count must be > 0");
-            }
-        }
+    public static final CraftingTime DEFAULT_CRAFTING_TIME = new CraftingTime(176);
+    public static final PowerIngredient DEFAULT_POWER = new PowerIngredient(8);
 
-        public static final Codec<CountedIngredient> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(CountedIngredient::ingredient),
-                Codec.INT.optionalFieldOf("count", 1).forGetter(CountedIngredient::count)
-        ).apply(inst, CountedIngredient::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, CountedIngredient> STREAM_CODEC = new StreamCodec<>() {
-            @Override
-            public void encode(RegistryFriendlyByteBuf buf, CountedIngredient value) {
-                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, value.ingredient());
-                buf.writeVarInt(value.count());
-            }
-
-            @Override
-            public @NotNull CountedIngredient decode(RegistryFriendlyByteBuf buf) {
-                Ingredient ingredient = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
-                int count = buf.readVarInt();
-                return new CountedIngredient(ingredient, count);
-            }
-        };
+    public FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemStack output) {
+        this(inputItems, output, DEFAULT_CRAFTING_TIME, DEFAULT_POWER);
     }
 
     private static final Codec<CountedIngredient> COUNTED_INGREDIENT_OR_INGREDIENT_CODEC = Codec.either(
@@ -161,6 +143,22 @@ public record FabricationRecipe(NonNullList<FabricationRecipe.CountedIngredient>
 
     public static class Serializer implements RecipeSerializer<FabricationRecipe> {
 
+        private static final Codec<CraftingTime> CRAFTING_TIME_OR_FLOAT_CODEC = Codec.either(
+                Codec.FLOAT,
+                CraftingTime.CODEC
+        ).xmap(
+                either -> either.map(CraftingTime::new, t -> t),
+                t -> Either.right(t)
+        );
+
+        private static final Codec<PowerIngredient> POWER_OR_FLOAT_CODEC = Codec.either(
+                Codec.FLOAT,
+                PowerIngredient.CODEC
+        ).xmap(
+                either -> either.map(PowerIngredient::new, p -> p),
+                p -> Either.right(p)
+        );
+
         public static final MapCodec<FabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
                 COUNTED_INGREDIENT_OR_INGREDIENT_CODEC.listOf().fieldOf("ingredients").xmap(
                         list -> {
@@ -173,7 +171,9 @@ public record FabricationRecipe(NonNullList<FabricationRecipe.CountedIngredient>
                         },
                         List::copyOf
                 ).forGetter(FabricationRecipe::inputItems),
-                ItemStack.CODEC.fieldOf("result").forGetter(FabricationRecipe::output)
+                ItemStack.CODEC.fieldOf("result").forGetter(FabricationRecipe::output),
+                CRAFTING_TIME_OR_FLOAT_CODEC.optionalFieldOf("crafting_time", DEFAULT_CRAFTING_TIME).forGetter(FabricationRecipe::craftingTime),
+                POWER_OR_FLOAT_CODEC.optionalFieldOf("power", DEFAULT_POWER).forGetter(FabricationRecipe::powerIngredient)
         ).apply(inst, FabricationRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> STREAM_CODEC =
@@ -186,6 +186,8 @@ public record FabricationRecipe(NonNullList<FabricationRecipe.CountedIngredient>
                             CountedIngredient.STREAM_CODEC.encode(buf, ing);
                         }
                         ItemStack.STREAM_CODEC.encode(buf, recipe.output());
+                        CraftingTime.STREAM_CODEC.encode(buf, recipe.craftingTime());
+                        PowerIngredient.STREAM_CODEC.encode(buf, recipe.powerIngredient());
                     }
 
                     @Override
@@ -198,7 +200,9 @@ public record FabricationRecipe(NonNullList<FabricationRecipe.CountedIngredient>
                             ingredients.set(i, CountedIngredient.STREAM_CODEC.decode(buf));
                         }
                         ItemStack out = ItemStack.STREAM_CODEC.decode(buf);
-                        return new FabricationRecipe(ingredients, out);
+                        CraftingTime time = CraftingTime.STREAM_CODEC.decode(buf);
+                        PowerIngredient power = PowerIngredient.STREAM_CODEC.decode(buf);
+                        return new FabricationRecipe(ingredients, out, time, power);
                     }
                 };
 

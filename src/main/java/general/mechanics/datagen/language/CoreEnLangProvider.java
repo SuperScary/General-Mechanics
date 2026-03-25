@@ -92,6 +92,7 @@ public class CoreEnLangProvider extends LanguageProvider implements IDataProvide
         add("gui.gm.info", "Info");
         add("gui.gm.locked", "Locked");
         add("gui.gm.unlocked", "Unlocked");
+        add("gui.gm.seconds", "%s seconds");
 
         add("gui.gm.io.items", "Items");
         add("gui.gm.io.fluids", "Fluids");

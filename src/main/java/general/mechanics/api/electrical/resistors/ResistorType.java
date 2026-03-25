@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ResistorType {
 
-    OHM_10(10f, "10Ω", "Used for current limiting and power applications"),
+    OHM_10(10f, "10Ω", "Used for current limiting and fePerTick applications"),
     OHM_100(100f, "100Ω", "Common for LED current limiting and small load resistors"),
     OHM_220(220f, "220Ω", "Standard LED resistor for 5V logic circuits"),
     OHM_330(330f, "330Ω", "Typical for logic-level current limiting or pull-downs"),

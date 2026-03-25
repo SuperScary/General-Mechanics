@@ -29,15 +29,16 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
 
     protected static final int DATA_PROGRESS = 0;
     protected static final int DATA_CRAFTING_STATE = 1;
-    protected static final int DATA_ENABLED_STATE = 2;
-    protected static final int DATA_EXPORT_STATE = 3;
-    protected static final int DATA_IMPORT_STATE = 4;
-    protected static final int DATA_REDSTONE_MODE = 5;
-    protected static final int DATA_ENERGY_STORED = 6;
-    protected static final int DATA_ENERGY_CAPACITY = 7;
-    protected static final int DATA_SIDE_MODES_ITEMS = 8;
-    protected static final int DATA_SIDE_MODES_ENERGY = 9;
-    protected static final int DATA_SIDE_MODES_FLUIDS = 10;
+    protected static final int DATA_MAX_PROGRESS = 2;
+    protected static final int DATA_ENABLED_STATE = 3;
+    protected static final int DATA_EXPORT_STATE = 4;
+    protected static final int DATA_IMPORT_STATE = 5;
+    protected static final int DATA_REDSTONE_MODE = 6;
+    protected static final int DATA_ENERGY_STORED = 7;
+    protected static final int DATA_ENERGY_CAPACITY = 8;
+    protected static final int DATA_SIDE_MODES_ITEMS = 9;
+    protected static final int DATA_SIDE_MODES_ENERGY = 10;
+    protected static final int DATA_SIDE_MODES_FLUIDS = 11;
 
     protected static final int DATA_POWERED_ENABLED_STATE = 0;
     protected static final int DATA_POWERED_ENERGY_STORED = 1;
@@ -143,7 +144,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
     protected void initializeContainerData(Inventory inventory) {
         if (blockEntity instanceof Crafter<?> crafter) {
             this.data = new ContainerData() {
-                private final int[] data = new int[11];
+                private final int[] data = new int[12];
 
                 @Override
                 public int get(int index) {
@@ -153,6 +154,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
                         int value = (int) switch (index) {
                             case DATA_PROGRESS -> crafter.getProgress();
                             case DATA_CRAFTING_STATE -> crafter.isCrafting() ? 1 : 0;
+                            case DATA_MAX_PROGRESS -> crafter.getMaxProgress();
                             case DATA_ENABLED_STATE -> (blockEntity instanceof BasePoweredBlockEntity entity) ? (entity.isEnabled() ? 1 : 0) : 1;
                             case DATA_EXPORT_STATE -> (blockEntity instanceof BasePoweredBlockEntity entity) ? (entity.isExportEnabled() ? 1 : 0) : 1;
                             case DATA_IMPORT_STATE -> (blockEntity instanceof BasePoweredBlockEntity entity) ? (entity.isImportEnabled() ? 1 : 0) : 1;
@@ -279,8 +281,8 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
      */
     public boolean getSyncedEnabledState() {
         if (data != null) {
-            if (blockEntity instanceof Crafter<?> && data.getCount() >= 3) {
-                return data.get(DATA_ENABLED_STATE) == 1; // For crafters, the enabled state is at index 2
+            if (blockEntity instanceof Crafter<?> && data.getCount() >= 4) {
+                return data.get(DATA_ENABLED_STATE) == 1; // For crafters, the enabled state is at index 3
             } else if (data.getCount() >= 1) {
                 return data.get(DATA_POWERED_ENABLED_STATE) == 1; // For non-crafters, the enabled state is at index 0
             }
@@ -293,7 +295,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
     }
 
     public boolean getSyncedExportState() {
-        if (data != null && blockEntity instanceof Crafter<?> && data.getCount() >= 4) {
+        if (data != null && blockEntity instanceof Crafter<?> && data.getCount() >= 5) {
             return data.get(DATA_EXPORT_STATE) == 1;
         }
 
@@ -305,7 +307,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
     }
 
     public boolean getSyncedImportState() {
-        if (data != null && blockEntity instanceof Crafter<?> && data.getCount() >= 5) {
+        if (data != null && blockEntity instanceof Crafter<?> && data.getCount() >= 6) {
             return data.get(DATA_IMPORT_STATE) == 1;
         }
 
@@ -317,7 +319,7 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
     }
 
     public int getSyncedRedstoneModeId() {
-        if (data != null && blockEntity instanceof Crafter<?> && data.getCount() >= 6) {
+        if (data != null && blockEntity instanceof Crafter<?> && data.getCount() >= 7) {
             return data.get(DATA_REDSTONE_MODE);
         }
 
@@ -377,8 +379,12 @@ public abstract class BaseMenu<B extends BaseEntityBlock<?>, T extends BaseBlock
         int progress = getSyncedProgress();
         int maxProgress = 176;
         boolean crafting = getSyncedCraftingState();
-        if (blockEntity instanceof Crafter<?> crafter) {
-            maxProgress = crafter.getMaxProgress();
+        if (hasCrafting) {
+            if (data != null && data.getCount() > DATA_MAX_PROGRESS) {
+                maxProgress = data.get(DATA_MAX_PROGRESS);
+            } else if (blockEntity instanceof Crafter<?> crafter) {
+                maxProgress = crafter.getMaxProgress();
+            }
         }
 
         int packedSideModesItems = 0;

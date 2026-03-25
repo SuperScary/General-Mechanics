@@ -353,7 +353,7 @@ public abstract class BasePoweredBlockEntity extends BaseBlockEntity implements 
 
     public boolean redstoneAllowsRunning() {
         if (level == null) return false;
-        boolean powered = level.hasNeighborSignal(worldPosition); // true if any side gives power
+        boolean powered = level.hasNeighborSignal(worldPosition); // true if any side gives fePerTick
         return switch (redstoneMode) {
             case IGNORED -> true;
             case HIGH -> powered;

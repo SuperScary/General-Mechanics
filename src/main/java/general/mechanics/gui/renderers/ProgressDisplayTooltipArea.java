@@ -1,5 +1,6 @@
 package general.mechanics.gui.renderers;
 
+import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 public class ProgressDisplayTooltipArea extends BarRenderer {
 
+    @Getter
     private int progress = 0;
 
     public ProgressDisplayTooltipArea(int xMin, int yMin) {
@@ -18,7 +20,7 @@ public class ProgressDisplayTooltipArea extends BarRenderer {
     }
 
     public List<Component> getTooltips () {
-        return List.of(Component.literal(progress * 100 / 22 + "%"));
+        return List.of(Component.literal(progress * 100 / getHeight() + "%"));
     }
 
     @Override

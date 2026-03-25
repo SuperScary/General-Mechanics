@@ -211,7 +211,6 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         super.render(guiGraphics, mouseX, mouseY, delta);
 
         if (shouldHideSlots()) {
-            // AbstractContainerScreen computes hoveredSlot during render; clear it so slot/item tooltips don't show.
             this.hoveredSlot = null;
         }
 
@@ -317,10 +316,11 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
             int maxProgress = state.maxProgress();
             int arrowSize = 26;
 
-            int scaledProgress = progress != 0 ? progress * arrowSize / maxProgress : 0;
+            int scaledProgress = (progress != 0 && maxProgress > 0) ? (progress * arrowSize / maxProgress) : 0;
+            scaledProgress = Math.max(0, Math.min(arrowSize, scaledProgress));
 
-            if (scaledProgress >= 0) {
-                graphics.blit(progressArrow, posX + 79, posY + 35, 0, 0, scaledProgress, 17, 24, 17);
+            if (scaledProgress > 0) {
+                graphics.blit(progressArrow, posX + 79, posY + 35, 0, 0, scaledProgress, 17, 26, 17);
             }
         }
     }
@@ -334,9 +334,11 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
             int top = topPos + 32;
             int progress = state.progress();
             int maxProgress = state.maxProgress();
-            float prog = (progress != 0 && maxProgress > 0) ? (progress * 22f) / maxProgress + 1 : 0; // Add 1 or else it technically never reaches the top.
+            int barHeight = 22;
+            int prog = (progress != 0 && maxProgress > 0) ? (int) Math.floor((progress * (float) barHeight) / maxProgress) : 0;
+            prog = Math.max(0, Math.min(barHeight, prog));
 
-            progressDisplayTooltipArea.render(graphics, (int) prog, left, top);
+            progressDisplayTooltipArea.render(graphics, prog, left, top);
         }
     }
 

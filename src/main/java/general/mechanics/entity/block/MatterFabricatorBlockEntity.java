@@ -46,7 +46,22 @@ public class MatterFabricatorBlockEntity extends BaseEnergyCrafter<FabricationRe
 
     @Override
     public int getEnergyAmount () {
-        return 8;
+        var recipe = getCurrentRecipe();
+        if (recipe.isPresent()) {
+            float fePerTick = recipe.get().value().powerIngredient().fePerTick();
+            return Math.max(0, (int) Math.ceil(fePerTick));
+        }
+        return Math.max(0, (int) Math.ceil(FabricationRecipe.DEFAULT_POWER.fePerTick()));
+    }
+
+    @Override
+    public int getMaxProgress() {
+        var recipe = getCurrentRecipe();
+        if (recipe.isPresent()) {
+            float ticks = recipe.get().value().craftingTime().ticks();
+            return Math.max(1, (int) Math.ceil(ticks));
+        }
+        return Math.max(1, (int) Math.ceil(FabricationRecipe.DEFAULT_CRAFTING_TIME.ticks()));
     }
 
     @Override
