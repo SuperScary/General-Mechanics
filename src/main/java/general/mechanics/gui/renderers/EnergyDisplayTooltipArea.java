@@ -1,7 +1,7 @@
 package general.mechanics.gui.renderers;
 
 import general.mechanics.api.energy.CoreEnergyStorage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -17,8 +17,8 @@ public class EnergyDisplayTooltipArea extends BarRenderer {
 
     public EnergyDisplayTooltipArea(int xMin, int yMin, CoreEnergyStorage energy, int width, int height) {
         super(xMin, yMin, width, height);
-        this.energyStored = energy::getEnergyStored;
-        this.energyCapacity = energy::getMaxEnergyStored;
+        this.energyStored = energy::getAmountAsInt;
+        this.energyCapacity = energy::getCapacityAsInt;
     }
 
     public EnergyDisplayTooltipArea(int xMin, int yMin, IntSupplier energyStored, IntSupplier energyCapacity) {
@@ -38,14 +38,14 @@ public class EnergyDisplayTooltipArea extends BarRenderer {
     }
 
     @Override
-    public void render (GuiGraphics guiGraphics) {
+    public void render (GuiGraphicsExtractor guiGraphics) {
         int cap = energyCapacity.getAsInt();
         if (cap <= 0) return;
         int storedPx = (int) (getHeight() * (energyStored.getAsInt() / (float) cap));
         guiGraphics.fillGradient(getXPos(), getYPos() + (getHeight() - storedPx), getXPos() + getWidth(), getYPos() + getHeight(), Color.BRIGHT_RED.getArgb(), Color.RED.getArgb());
     }
 
-    public void render (GuiGraphics guiGraphics, int x, int y) {
+    public void render (GuiGraphicsExtractor guiGraphics, int x, int y) {
         int cap = energyCapacity.getAsInt();
         if (cap <= 0) return;
         int storedPx = (int) (getHeight() * (energyStored.getAsInt() / (float) cap));

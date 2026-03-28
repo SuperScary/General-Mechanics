@@ -7,7 +7,7 @@ import general.mechanics.api.item.element.ElementType;
 import general.mechanics.api.item.element.metallic.*;
 import general.mechanics.tab.CoreTab;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -206,7 +206,7 @@ public class CoreElements {
         return item(name, GM.getResource(resourceFriendly), factory, CoreTab.ELEMENTS);
     }
 
-    static <T extends ElementItem> ItemDefinition<T> item(String name, ResourceLocation id, Function<Item.Properties, T> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static <T extends ElementItem> ItemDefinition<T> item(String name, Identifier id, Function<Item.Properties, T> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -224,7 +224,7 @@ public class CoreElements {
         return itemDust(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementDustItem> itemDust(String name, ResourceLocation id, Function<Item.Properties, ElementDustItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementDustItem> itemDust(String name, Identifier id, Function<Item.Properties, ElementDustItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -242,7 +242,7 @@ public class CoreElements {
         return itemPlate(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementPlateItem> itemPlate(String name, ResourceLocation id, Function<Item.Properties, ElementPlateItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementPlateItem> itemPlate(String name, Identifier id, Function<Item.Properties, ElementPlateItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -260,7 +260,7 @@ public class CoreElements {
         return itemPile(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementPileItem> itemPile(String name, ResourceLocation id, Function<Item.Properties, ElementPileItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementPileItem> itemPile(String name, Identifier id, Function<Item.Properties, ElementPileItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -278,7 +278,7 @@ public class CoreElements {
         return itemRod(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementRodItem> itemRod(String name, ResourceLocation id, Function<Item.Properties, ElementRodItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementRodItem> itemRod(String name, Identifier id, Function<Item.Properties, ElementRodItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -296,7 +296,7 @@ public class CoreElements {
         return itemElementRaw(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementRawItem> itemElementRaw(String name, ResourceLocation id, Function<Item.Properties, ElementRawItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementRawItem> itemElementRaw(String name, Identifier id, Function<Item.Properties, ElementRawItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -314,7 +314,7 @@ public class CoreElements {
         return itemElementNugget(name, GM.getResource(resourceName), factory, CoreTab.ELEMENTS);
     }
 
-    static ItemDefinition<ElementNuggetItem> itemElementNugget(String name, ResourceLocation id, Function<Item.Properties, ElementNuggetItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ElementNuggetItem> itemElementNugget(String name, Identifier id, Function<Item.Properties, ElementNuggetItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 

@@ -1,7 +1,7 @@
 package general.mechanics.api.item.base;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public class BaseItem extends Item {
     }
 
     @Nullable
-    public ResourceLocation getRegistryName () {
+    public Identifier getRegistryName () {
         var id = BuiltInRegistries.ITEM.getKey(this);
         return id != BuiltInRegistries.ITEM.getDefaultKey() ? id : null;
     }

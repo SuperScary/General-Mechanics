@@ -1,8 +1,8 @@
 package general.mechanics.api.energy;
 
-import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
 
-public class CoreEnergyStorage extends EnergyStorage {
+public class CoreEnergyStorage extends SimpleEnergyHandler {
 
     /**
      * Default constructor

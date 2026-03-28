@@ -1,7 +1,6 @@
 package general.mechanics.compat.jei.categories;
 
 import general.mechanics.GM;
-import general.mechanics.api.gui.MachineUiState;
 import general.mechanics.gui.renderers.EnergyDisplayTooltipArea;
 import general.mechanics.recipes.FabricationRecipe;
 import general.mechanics.registries.CoreBlocks;
@@ -14,29 +13,38 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class MatterFabricatorCategory implements IRecipeCategory<FabricationRecipe> {
 
-    public static final ResourceLocation UID = GM.getResource("refabrication");
-    public static final ResourceLocation TEXTURE = GM.getResource("textures/gui/matter_fabricator.png");
-    private final ResourceLocation progressArrow = GM.getResource("textures/gui/elements/arrow.png");
+    public static final Identifier UID = GM.getResource("refabrication");
+    public static final Identifier TEXTURE = GM.getResource("textures/gui/matter_fabricator.png");
+    private final Identifier progressArrow = GM.getResource("textures/gui/elements/arrow.png");
 
-    public static final RecipeType<FabricationRecipe> TYPE =
-            new RecipeType<>(UID, FabricationRecipe.class);
+    public static final IRecipeType<FabricationRecipe> TYPE = new IRecipeType<>(UID, FabricationRecipe.class) {
+                @Override
+                public @NonNull Identifier getUid() {
+                    return UID;
+                }
+
+                @Override
+                public @NonNull Class<? extends FabricationRecipe> getRecipeClass() {
+                    return FabricationRecipe.class;
+                }
+            };
 
     private final IDrawable background;
     private final IDrawable icon;
@@ -47,7 +55,7 @@ public class MatterFabricatorCategory implements IRecipeCategory<FabricationReci
     }
 
     @Override
-    public @NotNull RecipeType<FabricationRecipe> getRecipeType() {
+    public @NotNull IRecipeType<FabricationRecipe> getRecipeType() {
         return TYPE;
     }
 
@@ -72,7 +80,7 @@ public class MatterFabricatorCategory implements IRecipeCategory<FabricationReci
     }
 
     @Override
-    public void draw(@NotNull FabricationRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(@NotNull FabricationRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         IRecipeCategory.super.draw(recipe, recipeSlotsView, graphics, mouseX, mouseY);
         background.draw(graphics);
 

@@ -2,7 +2,7 @@ package general.mechanics.api.block;
 
 import general.mechanics.api.item.ItemDefinition;
 import lombok.Getter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ public class BlockDefinition<T extends Block> implements ItemLike {
         return englishName.toLowerCase().replace(' ', '_');
     }
 
-    public ResourceLocation id() {
+    public Identifier id() {
         return block.getId();
     }
 

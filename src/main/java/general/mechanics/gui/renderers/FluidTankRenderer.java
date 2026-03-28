@@ -7,9 +7,11 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import general.mechanics.GM;
+import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
@@ -35,8 +37,10 @@ public class FluidTankRenderer {
 
 	private final long capacity;
 	private final TooltipMode tooltipMode;
-	private final int width;
-	private final int height;
+	@Getter
+    private final int width;
+	@Getter
+    private final int height;
 
 	public FluidTankRenderer(long capacity, boolean showCapacity, int width, int height) {
 		this(capacity, showCapacity ? TooltipMode.SHOW_AMOUNT_AND_CAPACITY : TooltipMode.SHOW_AMOUNT, width, height);
@@ -53,8 +57,9 @@ public class FluidTankRenderer {
 		this.height = height;
 	}
 
-	public void render (GuiGraphics graphics, int x, int y, FluidStack stack) {
+	public void render (GuiGraphicsExtractor graphics, int x, int y, FluidStack stack) {
 		RenderSystem.enableBlend();
+        RenderSystem.
 		graphics.pose().pushPose();
 		{
 			graphics.pose().translate(x, y, 0);
@@ -65,7 +70,7 @@ public class FluidTankRenderer {
 		RenderSystem.disableBlend();
 	}
 
-	private void drawFluid (GuiGraphics graphics, final int width, final int height, FluidStack stack) {
+	private void drawFluid (GuiGraphicsExtractor graphics, final int width, final int height, FluidStack stack) {
 		var fluid = stack.getFluid();
 		if (fluid.isSame(Fluids.EMPTY)) {
 			return;
@@ -103,7 +108,7 @@ public class FluidTankRenderer {
 		return renderProperties.getTintColor(stack);
 	}
 
-	private static void drawTiledSprite (GuiGraphics graphics, final int tiledWidth, final int tiledHeight, int color, long scaledAmount, TextureAtlasSprite sprite) {
+	private static void drawTiledSprite (GuiGraphicsExtractor graphics, final int tiledWidth, final int tiledHeight, int color, long scaledAmount, TextureAtlasSprite sprite) {
 		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 		var matrix = graphics.pose().last().pose();
 		setGLColorFromInt(color);
@@ -166,7 +171,7 @@ public class FluidTankRenderer {
 		try {
 			if (fluidType.isSame(Fluids.EMPTY)) {
 				tooltip.add(Component.literal("Empty"));
-				tooltip.add(Component.translatable("dimensionalcore.tooltip.liquid.amount.with.capacity", 0, nf.format(capacity)).withStyle(ChatFormatting.GRAY));
+				tooltip.add(Component.translatable("gm.tooltip.liquid.amount.with.capacity", 0, nf.format(capacity)).withStyle(ChatFormatting.GRAY));
 				return tooltip;
 			}
 
@@ -177,10 +182,10 @@ public class FluidTankRenderer {
 			long milliBuckets = (amount * 1000) / FluidType.BUCKET_VOLUME;
 
 			if (tooltipMode == TooltipMode.SHOW_AMOUNT_AND_CAPACITY) {
-				MutableComponent amountString = Component.translatable("dimensionalcore.tooltip.liquid.amount.with.capacity", nf.format(milliBuckets), nf.format(capacity));
+				MutableComponent amountString = Component.translatable("gm.tooltip.liquid.amount.with.capacity", nf.format(milliBuckets), nf.format(capacity));
 				tooltip.add(amountString.withStyle(ChatFormatting.GRAY));
 			} else if (tooltipMode == TooltipMode.SHOW_AMOUNT) {
-				MutableComponent amountString = Component.translatable("dimensionalcore.tooltip.liquid.amount", nf.format(milliBuckets));
+				MutableComponent amountString = Component.translatable("gm.tooltip.liquid.amount", nf.format(milliBuckets));
 				tooltip.add(amountString.withStyle(ChatFormatting.GRAY));
 			}
 		} catch (RuntimeException e) {
@@ -190,15 +195,7 @@ public class FluidTankRenderer {
 		return tooltip;
 	}
 
-	public int getWidth () {
-		return width;
-	}
-
-	public int getHeight () {
-		return height;
-	}
-
-	public enum TooltipMode {
+    public enum TooltipMode {
 		SHOW_AMOUNT,
 		SHOW_AMOUNT_AND_CAPACITY,
 		ITEM_LIST

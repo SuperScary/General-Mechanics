@@ -6,8 +6,8 @@ import general.mechanics.api.energy.CoreEnergyStorage;
 import general.mechanics.api.entity.block.BasePoweredBlockEntity;
 import general.mechanics.api.gui.MachineUiState;
 import general.mechanics.gui.GuiFluid;
-import general.mechanics.gui.menu.base.BaseMenu;
 import general.mechanics.gui.component.MachineSettingsTab;
+import general.mechanics.gui.menu.base.BaseMenu;
 import general.mechanics.gui.overlay.SideConfigOverlay;
 import general.mechanics.gui.renderers.EnergyDisplayTooltipArea;
 import general.mechanics.gui.renderers.FluidTankRenderer;
@@ -17,7 +17,7 @@ import general.mechanics.gui.util.UpgradeSlot;
 import general.mechanics.util.MouseUtil;
 import lombok.Getter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -25,13 +25,15 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2d;
+import org.joml.Matrix3x2f;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -55,14 +57,14 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
     private IconButtonNoBG lockedButton = null;
 
-    private final ResourceLocation progressArrow = GM.getResource("textures/gui/elements/arrow.png");
-    private final ResourceLocation progressBar = GM.getResource("textures/gui/elements/progress_bar.png");
-    private final ResourceLocation machineActive = GM.getResource("textures/gui/elements/machine_active.png");
-    private final ResourceLocation machineInactive = GM.getResource("textures/gui/elements/machine_inactive.png");
-    private final ResourceLocation machineError = GM.getResource("textures/gui/elements/machine_warning.png");
-    private final ResourceLocation infoIcon = GM.getResource("textures/gui/elements/info.png");
-    private final ResourceLocation lockedIcon = GM.getResource("textures/gui/elements/locked.png");
-    private final ResourceLocation unlockedIcon = GM.getResource("textures/gui/elements/unlocked.png");
+    private final Identifier progressArrow = GM.getResource("textures/gui/elements/arrow.png");
+    private final Identifier progressBar = GM.getResource("textures/gui/elements/progress_bar.png");
+    private final Identifier machineActive = GM.getResource("textures/gui/elements/machine_active.png");
+    private final Identifier machineInactive = GM.getResource("textures/gui/elements/machine_inactive.png");
+    private final Identifier machineError = GM.getResource("textures/gui/elements/machine_warning.png");
+    private final Identifier infoIcon = GM.getResource("textures/gui/elements/info.png");
+    private final Identifier lockedIcon = GM.getResource("textures/gui/elements/locked.png");
+    private final Identifier unlockedIcon = GM.getResource("textures/gui/elements/unlocked.png");
 
     @Getter
     protected int imageWidth;
@@ -107,20 +109,20 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     /**
      * Returns the gui texture to render.
      *
-     * @return {@link ResourceLocation} of a gui texture.
+     * @return {@link Identifier} of a gui texture.
      */
-    public abstract ResourceLocation getGuiTexture();
+    public abstract Identifier getGuiTexture();
 
     /**
      * Renders the main background for the screen.
      *
-     * @param guiGraphics {@link GuiGraphics}
+     * @param guiGraphics {@link GuiGraphicsExtractor}
      * @param v           {@link Float}
      * @param mouseX      Mouse Position X
      * @param mouseY      Mouse Position Y
      */
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float v, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull GuiGraphicsExtractor guiGraphics, float v, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.setShaderTexture(0, getGuiTexture());
@@ -141,7 +143,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         addAdditionalScreenElements(guiGraphics, v, mouseX, mouseY);
     }
 
-    protected void renderMachineStatus(GuiGraphics graphics, float v, int mouseX, int mouseY) {
+    protected void renderMachineStatus(GuiGraphicsExtractor graphics, float v, int mouseX, int mouseY) {
         if (!showMachineStatus()) return;
 
         final int x = leftPos + 5;
@@ -151,11 +153,11 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
 
         var pose = graphics.pose();
         pose.pushPose();
-        pose.translate(x, y, 0);
+        pose.translate(x, y, new Matrix3x2f()); // 0
         pose.scale(scale, scale, 1.0f);
 
         var machineState = ((BasePoweredBlockEntity) menu.blockEntity).getMachineState();
-        ResourceLocation texture = switch (machineState) {
+        Identifier texture = switch (machineState) {
             case ACTIVE -> machineActive;
             case INACTIVE -> machineInactive;
             case ERROR -> machineError;
@@ -166,19 +168,19 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         pose.popPose();
 
         if (MouseUtil.isMouseOver(mouseX, mouseY, x, y, (int) (16 * scale), (int) (16 * scale))) {
-            graphics.renderTooltip(this.font, Component.translatable("gui.gm.status", Component.translatable("gui.gm.status." + machineState.name().toLowerCase())), mouseX, mouseY);
+            graphics.tooltip(this.font, List.of(Component.translatable("gui.gm.status", Component.translatable("gui.gm.status." + machineState.name().toLowerCase()))), mouseX, mouseY);
         }
     }
 
     /**
      * Handles rendering the labels for objects.
      *
-     * @param graphics {@link GuiGraphics}
+     * @param graphics {@link GuiGraphicsExtractor}
      * @param mouseX   Mouse Position X
      * @param mouseY   Mouse Position Y
      */
     @Override
-    protected void renderLabels(@NotNull GuiGraphics graphics, int mouseX, int mouseY) {
+    protected void renderLabels(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         renderTitles(graphics, mouseX, mouseY);
 
         int x = (width - imageWidth) / 2;
@@ -192,7 +194,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         }
     }
 
-    public void renderTitles(GuiGraphics graphics, int mouseX, int mouseY) {
+    public void renderTitles(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.drawString(font, title, ((imageWidth / 2) - font.width(title) / 2) - modifiedWidth(), titleLabelY, 4210752, false);
         graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX - modifiedWidth(), this.inventoryLabelY, 4210752, false);
     }
@@ -200,13 +202,13 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     /**
      * Main render method.
      *
-     * @param guiGraphics {@link GuiGraphics}
+     * @param guiGraphics {@link GuiGraphicsExtractor}
      * @param mouseX      Mouse Position X
      * @param mouseY      Mouse Position Y
      * @param delta       Delta movement.
      */
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
         renderBackground(guiGraphics, mouseX, mouseY, delta);
         super.render(guiGraphics, mouseX, mouseY, delta);
 
@@ -229,7 +231,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     }
 
     @Override
-    protected void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
+    protected void renderSlot(@NotNull GuiGraphicsExtractor guiGraphics, @NotNull Slot slot) {
         if (shouldHideSlots()) return;
         super.renderSlot(guiGraphics, slot);
     }
@@ -270,31 +272,31 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     /**
      * Currently for rendering custom objects onto the settings pane
      *
-     * @param graphics {@link GuiGraphics}
+     * @param graphics {@link GuiGraphicsExtractor}
      * @param mouseX   Mouse Position X
      * @param mouseY   Mouse Position Y
      * @param x        X position
      * @param y        Y position
      */
-    public abstract void addAdditionalTabElements(GuiGraphics graphics, int mouseX, int mouseY, int x, int y);
+    public abstract void addAdditionalTabElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y);
 
     /**
      * Render additional elements to the screen without overriding the parent.
      *
-     * @param guiGraphics {@link GuiGraphics}
+     * @param guiGraphics {@link GuiGraphicsExtractor}
      * @param v           {@link Float}
      * @param mouseX      Mouse Position X
      * @param mouseY      Mouse Position Y
      */
-    public void addAdditionalScreenElements(@NotNull GuiGraphics guiGraphics, float v, int mouseX, int mouseY) {
+    public void addAdditionalScreenElements(@NotNull GuiGraphicsExtractor guiGraphics, float v, int mouseX, int mouseY) {
     }
 
     /**
      * Renders the energy info onto the screen.
      *
-     * @param guiGraphics {@link GuiGraphics}
+     * @param guiGraphics {@link GuiGraphicsExtractor}
      */
-    public void renderEnergyArea(GuiGraphics guiGraphics) {
+    public void renderEnergyArea(GuiGraphicsExtractor guiGraphics) {
         if (isPoweredMenu()) {
             int left = leftPos + energyLeft + guiOffset;
             int top = topPos + energyTop;
@@ -305,11 +307,11 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     /**
      * Renders the progress arrow for progress crafting.
      *
-     * @param graphics {@link GuiGraphics}
+     * @param graphics {@link GuiGraphicsExtractor}
      * @param posX     X position of the arrow
      * @param posY     Y position of the arrow
      */
-    public void renderArrow(GuiGraphics graphics, int posX, int posY) {
+    public void renderArrow(GuiGraphicsExtractor graphics, int posX, int posY) {
         MachineUiState state = menu.getUiState();
         if (state.hasCrafting()) {
             int progress = state.progress();
@@ -325,7 +327,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
         }
     }
 
-    public void renderProgressBar(GuiGraphics graphics, int posX, int posY) {
+    public void renderProgressBar(GuiGraphicsExtractor graphics, int posX, int posY) {
         MachineUiState state = menu.getUiState();
         if (state.hasCrafting()) {
             graphics.blit(progressBar, posX + 138, posY + 31, 0, 0, 5, 24, 5, 24);
@@ -372,19 +374,19 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     /**
      * Renders the settings area tooltip
      *
-     * @param guiGraphics {@link GuiGraphics}
+     * @param guiGraphics {@link GuiGraphicsExtractor}
      * @param mouseX      Mouse Position X
      * @param mouseY      Mouse Position Y
      * @param x           X position
      * @param y           Y position
      */
-    private void renderOptionsAreaTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
+    private void renderOptionsAreaTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int x, int y) {
         if (isMouseAboveArea(mouseX, mouseY, x + imageWidth + guiOffset, y, 0, 0, 12, 176)) {
             guiGraphics.renderTooltip(this.font, getOptionsTooltips(), Optional.empty(), mouseX - x + (guiOffset / 2), mouseY - y);
         }
     }
 
-    private void renderProgressAreaTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
+    private void renderProgressAreaTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int x, int y) {
         int left = leftPos + (139 - guiOffset / 2) + guiOffset;
         int top = topPos + 32;
 
@@ -396,19 +398,19 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
     /**
      * Renders the energy area tooltip
      *
-     * @param guiGraphics {@link GuiGraphics}
+     * @param guiGraphics {@link GuiGraphicsExtractor}
      * @param mouseX      Mouse Position X
      * @param mouseY      Mouse Position Y
      * @param x           X position
      * @param y           Y position
      */
-    private void renderEnergyAreaTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
+    private void renderEnergyAreaTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int x, int y) {
         if (isPoweredMenu() && menu.getUiState().energyCapacity() > 0 && isMouseAboveArea(mouseX, mouseY, x, y, energyLeft, energyTop, energyWidth, energyHeight)) {
             guiGraphics.renderTooltip(this.font, getEnergyTooltips(), Optional.empty(), mouseX - x, mouseY - y);
         }
     }
 
-    private void renderUpgradeSlotTooltips(GuiGraphics graphics, int mouseX, int mouseY, int x, int y) {
+    private void renderUpgradeSlotTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, int x, int y) {
         if (!menu.isUpgradeable() || !isSettingsPanelOpen()) {
             return;
         }
@@ -438,7 +440,7 @@ public abstract class BaseScreen<T extends BaseMenu<?, ?>> extends AbstractConta
      * @param renderer    {@link FluidTankRenderer}
      */
     @SuppressWarnings("SameParameterValue")
-    protected void renderFluidTooltipArea(GuiGraphics guiGraphics, int pMouseX, int pMouseY, int x, int y, FluidStack stack, int offsetX, int offsetY, FluidTankRenderer renderer) {
+    protected void renderFluidTooltipArea(GuiGraphicsExtractor guiGraphics, int pMouseX, int pMouseY, int x, int y, FluidStack stack, int offsetX, int offsetY, FluidTankRenderer renderer) {
         if (isMouseAboveArea(pMouseX, pMouseY, x, y, offsetX, offsetY, renderer.getWidth(), renderer.getHeight())) {
             guiGraphics.renderTooltip(font, renderer.getTooltip(stack, TooltipFlag.NORMAL), Optional.empty(), pMouseX - x, pMouseY - y);
         }

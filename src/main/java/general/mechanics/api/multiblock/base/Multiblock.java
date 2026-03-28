@@ -6,7 +6,7 @@ import general.mechanics.api.multiblock.MultiblockDefinition;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -51,7 +51,7 @@ public abstract class Multiblock {
      * Gets the resource location for this multiblock.
      * Override this to provide a custom resource location.
      */
-    protected ResourceLocation getResourceLocation() {
+    protected Identifier getIdentifier() {
         String resourceName = name.toLowerCase().replace(' ', '_');
         return GM.getResource(resourceName);
     }
@@ -63,7 +63,7 @@ public abstract class Multiblock {
         if (definition == null) {
             // Create the definition with the layout
             this.definition = new MultiblockDefinition(
-                    getResourceLocation(),
+                    getIdentifier(),
                     createLayout(),
                     () -> this
             );

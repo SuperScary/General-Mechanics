@@ -1,7 +1,9 @@
 package general.mechanics.gui.renderers;
 
-import net.minecraft.client.gui.GuiGraphics;
+import lombok.Getter;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
+@Getter
 public abstract class BarRenderer {
 
 	private final int xPos;
@@ -16,25 +18,10 @@ public abstract class BarRenderer {
 		this.height = height;
 	}
 
-	public abstract void render (GuiGraphics guiGraphics);
+	public abstract void render (GuiGraphicsExtractor guiGraphics);
 
-	public int getXPos () {
-		return xPos;
-	}
-
-	public int getYPos () {
-		return yPos;
-	}
-
-	public int getWidth () {
-		return width;
-	}
-
-	public int getHeight () {
-		return height;
-	}
-
-	public enum Color {
+    @Getter
+    public enum Color {
 		RED   (0xFF600B00),
 		BRIGHT_RED (0xFFB51500),
 		ORANGE (0xFFFF4500),
@@ -45,20 +32,13 @@ public abstract class BarRenderer {
 		BLACK (0xFF000000),
 		WHITE (0xFFFFFFFF);
 
-		private final int argb;
+        private final int argb;
 
 		Color(int argb) {
 			this.argb = argb;
 		}
 
-		/**
-		 * @return the ARGB color as an int (0xAARRGGBB)
-		 */
-		public int getArgb() {
-			return argb;
-		}
-
-		@Override
+        @Override
 		public String toString() {
 			return String.format("#%08X", argb);
 		}

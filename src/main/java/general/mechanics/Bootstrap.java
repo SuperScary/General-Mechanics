@@ -9,7 +9,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 public class Bootstrap {
 
     public Bootstrap(ModContainer container, IEventBus modEventBus) {
-        switch (FMLEnvironment.dist) {
+        switch (FMLEnvironment.getDist()) {
             case CLIENT -> new CoreClient(container, modEventBus);
             case DEDICATED_SERVER -> new CoreServer(container, modEventBus);
         }

@@ -1,6 +1,6 @@
 package general.mechanics;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
@@ -22,16 +22,16 @@ public interface GM {
         return CoreBase.INSTANCE;
     }
 
-    static ResourceLocation getResource(String name) {
+    static Identifier getResource(String name) {
         return custom(MODID, name);
     }
 
-    static ResourceLocation getMinecraftResource(String name) {
-        return ResourceLocation.withDefaultNamespace(name);
+    static Identifier getMinecraftResource(String name) {
+        return Identifier.withDefaultNamespace(name);
     }
 
-    static ResourceLocation custom(String id, String name) {
-        return ResourceLocation.fromNamespaceAndPath(id, name);
+    static Identifier custom(String id, String name) {
+        return Identifier.fromNamespaceAndPath(id, name);
     }
 
     static Path gameDirectory() {

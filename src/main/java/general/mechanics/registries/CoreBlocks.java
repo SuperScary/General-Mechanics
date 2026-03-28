@@ -16,8 +16,8 @@ import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.block.machine.HeatingElementBlock;
 import general.mechanics.block.machine.MatterFabricatorBlock;
 import general.mechanics.tab.CoreTab;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -276,11 +276,11 @@ public class CoreBlocks {
         return register(name, GM.getResource(resourceName), supplier, null, true);
     }
 
-    public static <T extends Block> BlockDefinition<T> register(final String name, ResourceLocation id, final Supplier<T> supplier, @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory, boolean addToTab) {
+    public static <T extends Block> BlockDefinition<T> register(final String name, Identifier id, final Supplier<T> supplier, @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory, boolean addToTab) {
         return register(name, id, supplier, itemFactory, addToTab, CoreTab.MAIN);
     }
 
-    public static <T extends Block> BlockDefinition<T> register(final String name, ResourceLocation id, final Supplier<T> supplier, @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory, boolean addToTab, @Nullable ResourceKey<CreativeModeTab> group) {
+    public static <T extends Block> BlockDefinition<T> register(final String name, Identifier id, final Supplier<T> supplier, @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory, boolean addToTab, @Nullable ResourceKey<CreativeModeTab> group) {
         var deferredBlock = REGISTRY.register(id.getPath(), supplier);
         var deferredItem = CoreItems.REGISTRY.register(id.getPath(), () -> {
             var block = deferredBlock.get();

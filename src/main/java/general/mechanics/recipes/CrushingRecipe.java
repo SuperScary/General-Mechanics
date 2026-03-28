@@ -3,18 +3,16 @@ package general.mechanics.recipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import general.mechanics.api.recipe.CoreRecipe;
+import general.mechanics.registries.CoreRecipeCategories;
 import general.mechanics.registries.CoreRecipes;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public record CrushingRecipe(Ingredient input, ItemStack output) implements CoreRecipe<CrushingRecipe.CrushingRecipeInput> {
 
@@ -30,18 +28,18 @@ public record CrushingRecipe(Ingredient input, ItemStack output) implements Core
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull CrushingRecipe.CrushingRecipeInput crushingRecipeInput, HolderLookup.@NotNull Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull CrushingRecipe.CrushingRecipeInput crushingRecipeInput) {
         return output.copy();
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return true;
+    public boolean showNotification() {
+        return false;
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
-        return output;
+    public @NonNull String group() {
+        return "";
     }
 
     @Override
@@ -52,6 +50,16 @@ public record CrushingRecipe(Ingredient input, ItemStack output) implements Core
     @Override
     public @NotNull RecipeType<?> getType() {
         return CoreRecipes.CRUSHING_RECIPE_TYPE.get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return null;
+    }
+
+    @Override
+    public @NonNull RecipeBookCategory recipeBookCategory() {
+        return CoreRecipeCategories.CRUSHING.get();
     }
 
     public record CrushingRecipeInput(ItemStack input) implements RecipeInput {
@@ -67,10 +75,10 @@ public record CrushingRecipe(Ingredient input, ItemStack output) implements Core
         }
     }
 
-    public static class Serializer implements RecipeSerializer<CrushingRecipe> {
+    public static class Serializer {
 
         public static final MapCodec<CrushingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-                Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(CrushingRecipe::input),
+                Ingredient.CODEC.fieldOf("ingredient").forGetter(CrushingRecipe::input),
                 ItemStack.CODEC.fieldOf("result").forGetter(CrushingRecipe::output)
         ).apply(inst, CrushingRecipe::new));
 
@@ -81,15 +89,7 @@ public record CrushingRecipe(Ingredient input, ItemStack output) implements Core
                         CrushingRecipe::new
                 );
 
-        @Override
-        public @NotNull MapCodec<CrushingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, CrushingRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+        public static final RecipeSerializer<CrushingRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
     }
 
 }

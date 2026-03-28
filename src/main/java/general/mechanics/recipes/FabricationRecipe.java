@@ -8,6 +8,7 @@ import general.mechanics.api.recipe.CoreRecipe;
 import general.mechanics.recipes.ingredient.CraftingTime;
 import general.mechanics.recipes.ingredient.CountedIngredient;
 import general.mechanics.recipes.ingredient.PowerIngredient;
+import general.mechanics.registries.CoreRecipeCategories;
 import general.mechanics.registries.CoreRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +35,8 @@ public record FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemS
         this(inputItems, output, DEFAULT_CRAFTING_TIME, DEFAULT_POWER);
     }
 
-    private static final Codec<CountedIngredient> COUNTED_INGREDIENT_OR_INGREDIENT_CODEC = Codec.either(
-            Ingredient.CODEC_NONEMPTY,
-            CountedIngredient.CODEC
-    ).xmap(
-            either -> either.map(ing -> new CountedIngredient(ing, 1), ci -> ci),
+    private static final Codec<CountedIngredient> COUNTED_INGREDIENT_OR_INGREDIENT_CODEC = Codec.either(Ingredient.CODEC, CountedIngredient.CODEC)
+            .xmap(either -> either.map(ing -> new CountedIngredient(ing, 1), ci -> ci),
             ci -> ci.count() == 1 ? Either.left(ci.ingredient()) : Either.right(ci)
     );
 
@@ -90,20 +89,19 @@ public record FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemS
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull FabricationRecipe.FabricationRecipeInput fabricationRecipeInput, HolderLookup.@NotNull Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull FabricationRecipe.FabricationRecipeInput fabricationRecipeInput) {
         return output.copy();
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        int needed = 0;
-        for (CountedIngredient ing : inputItems) if (!ing.ingredient().isEmpty()) needed++;
-        return width * height >= needed;
+    public boolean showNotification() {
+        return false;
     }
 
+    // TODO: wtf is this?
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
-        return output;
+    public String group() {
+        return "";
     }
 
     @Override
@@ -114,6 +112,17 @@ public record FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemS
     @Override
     public @NotNull RecipeType<?> getType() {
         return CoreRecipes.FABRICATION_RECIPE_TYPE.get();
+    }
+
+    // TODO: ngl i have no idea what this is for.
+    @Override
+    public PlacementInfo placementInfo() {
+        return null;
+    }
+
+    @Override
+    public @NonNull RecipeBookCategory recipeBookCategory() {
+        return CoreRecipeCategories.MATTER_FABRICATOR.get();
     }
 
     public record FabricationRecipeInput(ItemStack... slots) implements RecipeInput {
@@ -141,14 +150,14 @@ public record FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemS
         }
     }
 
-    public static class Serializer implements RecipeSerializer<FabricationRecipe> {
+    public static class Serializer {
 
         private static final Codec<CraftingTime> CRAFTING_TIME_OR_FLOAT_CODEC = Codec.either(
                 Codec.FLOAT,
                 CraftingTime.CODEC
         ).xmap(
                 either -> either.map(CraftingTime::new, t -> t),
-                t -> Either.right(t)
+                Either::right
         );
 
         private static final Codec<PowerIngredient> POWER_OR_FLOAT_CODEC = Codec.either(
@@ -156,7 +165,7 @@ public record FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemS
                 PowerIngredient.CODEC
         ).xmap(
                 either -> either.map(PowerIngredient::new, p -> p),
-                p -> Either.right(p)
+                Either::right
         );
 
         public static final MapCodec<FabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
@@ -206,15 +215,7 @@ public record FabricationRecipe(NonNullList<CountedIngredient> inputItems, ItemS
                     }
                 };
 
-        @Override
-        public @NotNull MapCodec<FabricationRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+        public static final RecipeSerializer<FabricationRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
     }
 
 }

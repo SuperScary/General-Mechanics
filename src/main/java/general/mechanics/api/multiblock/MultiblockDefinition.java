@@ -3,7 +3,7 @@ package general.mechanics.api.multiblock;
 import general.mechanics.api.multiblock.base.Multiblock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +14,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public record MultiblockDefinition(ResourceLocation id, Layout layout, Supplier<Multiblock> objectFactory) {
+public record MultiblockDefinition(Identifier id, Layout layout, Supplier<Multiblock> objectFactory) {
 
-    public MultiblockDefinition(ResourceLocation id, Layout layout) {
+    public MultiblockDefinition(Identifier id, Layout layout) {
         this(id, layout, null);
     }
 
-    public MultiblockDefinition(ResourceLocation id, Layout layout, Supplier<Multiblock> objectFactory) {
+    public MultiblockDefinition(Identifier id, Layout layout, Supplier<Multiblock> objectFactory) {
         this.id = Objects.requireNonNull(id, "id");
         this.layout = Objects.requireNonNull(layout, "layout");
         this.objectFactory = objectFactory;

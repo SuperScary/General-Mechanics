@@ -16,13 +16,9 @@ import general.mechanics.registries.CoreElements;
 import general.mechanics.registries.CoreFluids;
 import general.mechanics.registries.CoreItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.BucketItem;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class CoreItemModelProvider extends ItemModelProvider implements IDataProvider {
 
@@ -30,8 +26,8 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
         super(packOutput, GM.MODID, existingFileHelper);
     }
 
-    private static ResourceLocation makeId(String id) {
-        return id.contains(":") ? ResourceLocation.parse(id) : GM.getResource(id);
+    private static Identifier makeId(String id) {
+        return id.contains(":") ? Identifier.parse(id) : GM.getResource(id);
     }
 
     @Override

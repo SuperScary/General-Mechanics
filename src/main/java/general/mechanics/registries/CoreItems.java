@@ -19,8 +19,8 @@ import general.mechanics.api.item.plastic.ColoredPlasticItem;
 import general.mechanics.api.item.plastic.PlasticType;
 import general.mechanics.api.item.tools.*;
 import general.mechanics.tab.CoreTab;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
@@ -201,7 +201,7 @@ public class CoreItems {
         return register(name, GM.getResource(resourceName), factory, CoreTab.MAIN);
     }
 
-    public static <T extends Item> ItemDefinition<T> register(String name, ResourceLocation id, Function<Item.Properties, T> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    public static <T extends Item> ItemDefinition<T> register(String name, Identifier id, Function<Item.Properties, T> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 
@@ -217,7 +217,7 @@ public class CoreItems {
         return definition;
     }
 
-    static ItemDefinition<ColoredPlasticItem> itemColoredPlastic(String name, ResourceLocation id, Function<Item.Properties, ColoredPlasticItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
+    static ItemDefinition<ColoredPlasticItem> itemColoredPlastic(String name, Identifier id, Function<Item.Properties, ColoredPlasticItem> factory, @Nullable ResourceKey<CreativeModeTab> group) {
         Preconditions.checkArgument(id.getNamespace().equals(GM.MODID), "Can only register items in " + GM.MODID);
         var definition = new ItemDefinition<>(name, REGISTRY.registerItem(id.getPath(), factory));
 

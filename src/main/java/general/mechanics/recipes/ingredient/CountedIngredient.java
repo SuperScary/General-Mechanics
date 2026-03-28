@@ -21,7 +21,7 @@ public record CountedIngredient(Ingredient ingredient, int count) {
     }
 
     public static final Codec<CountedIngredient> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(CountedIngredient::ingredient),
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(CountedIngredient::ingredient),
             Codec.INT.optionalFieldOf("count", 1).forGetter(CountedIngredient::count)
     ).apply(inst, CountedIngredient::new));
 

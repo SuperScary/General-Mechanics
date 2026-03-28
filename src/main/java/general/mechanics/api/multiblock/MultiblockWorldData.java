@@ -6,14 +6,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * World data for persisting multiblocks across sessions.
@@ -48,15 +48,15 @@ public class MultiblockWorldData extends SavedData {
     public static MultiblockWorldData load(CompoundTag tag, net.minecraft.core.HolderLookup.Provider provider) {
         Map<BlockPos, MultiblockInfo> multiblocks = new HashMap<>();
         
-        ListTag multiblockList = tag.getList("multiblocks", Tag.TAG_COMPOUND);
-        for (int i = 0; i < multiblockList.size(); i++) {
-            CompoundTag multiblockTag = multiblockList.getCompound(i);
+        Optional<ListTag> multiblockList = tag.getList("multiblocks");
+        for (int i = 0; i < multiblockList.get().size(); i++) {
+            CompoundTag multiblockTag = multiblockList.get().getCompound(i).get();
             
             // Load position
-            BlockPos pos = BlockPos.of(multiblockTag.getLong("pos"));
+            BlockPos pos = BlockPos.of(multiblockTag.getLong("pos").get());
             
             // Load definition ID
-            ResourceLocation definitionId = ResourceLocation.parse(multiblockTag.getString("definition"));
+            Identifier definitionId = Identifier.parse(multiblockTag.getString("definition").get());
             MultiblockDefinition definition = CoreRegistries.MULTIBLOCK_DEFINITIONS.get(definitionId);
             if (definition == null) {
                 System.err.println("WARNING: Could not find multiblock definition " + definitionId + " when loading world data");

@@ -44,7 +44,7 @@ public record FluidMixingRecipe(List<SizedFluidIngredient> inputs, FluidStack re
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull MixingInput in, HolderLookup.@NotNull Provider p) {
+    public @NotNull ItemStack assemble(@NotNull MixingInput in) {
         return ItemStack.EMPTY;
     }
 
@@ -65,7 +65,7 @@ public record FluidMixingRecipe(List<SizedFluidIngredient> inputs, FluidStack re
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return CoreRecipes.FLUID_MIXING_SERIALIZER.get();
+        return CoreRecipes.FLUID_MIXING_SERIALIZER.value();
     }
 
     @Override
@@ -94,8 +94,7 @@ public record FluidMixingRecipe(List<SizedFluidIngredient> inputs, FluidStack re
         }
     }
 
-    // ----- Serializer (JSON + network) -----
-    public static class Serializer implements RecipeSerializer<FluidMixingRecipe> {
+    public static class Serializer {
 
         public static final MapCodec<FluidMixingRecipe> CODEC =
                 RecordCodecBuilder.mapCodec(inst -> inst.group(
@@ -112,14 +111,6 @@ public record FluidMixingRecipe(List<SizedFluidIngredient> inputs, FluidStack re
                         FluidMixingRecipe::new
                 );
 
-        @Override
-        public @NotNull MapCodec<FluidMixingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, FluidMixingRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+        public static final RecipeSerializer<FluidMixingRecipe> INSTANCE = new RecipeSerializer<>(CODEC, STREAM_CODEC);
     }
 }

@@ -33,7 +33,7 @@ public final class ItemHelper {
     public static void giveOrDropBucket (Player player, ItemStack filledBucket) {
         ItemStack heldItem = player.getMainHandItem();
 
-        if (heldItem.getCapability(Capabilities.FluidHandler.ITEM) != null) {
+        if (heldItem.getCapability(Capabilities.Fluid.ITEM) != null) {
             if (heldItem.getCount() == 1) {
                 player.setItemInHand(InteractionHand.MAIN_HAND, filledBucket);
             } else {

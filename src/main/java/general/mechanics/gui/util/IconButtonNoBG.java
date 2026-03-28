@@ -2,21 +2,21 @@ package general.mechanics.gui.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 public class IconButtonNoBG extends Button {
 
-    private ResourceLocation texture;
+    private Identifier texture;
     private int u, v, iconW, iconH, texW, texH;
     private int hoverVOffset;
     private float scale = 1f;
 
-    public IconButtonNoBG(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int iconW, int iconH, int texW, int texH, int hoverVOffset, OnPress onPress) {
+    public IconButtonNoBG(int x, int y, int width, int height, Identifier texture, int u, int v, int iconW, int iconH, int texW, int texH, int hoverVOffset, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, DEFAULT_NARRATION);
         this.texture = texture;
         this.u = u;
@@ -28,12 +28,12 @@ public class IconButtonNoBG extends Button {
         this.hoverVOffset = hoverVOffset;
     }
 
-    public IconButtonNoBG(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int iconW, int iconH, int texW, int texH, int hoverVOffset, float scale, OnPress onPress) {
+    public IconButtonNoBG(int x, int y, int width, int height, Identifier texture, int u, int v, int iconW, int iconH, int texW, int texH, int hoverVOffset, float scale, OnPress onPress) {
         this(x, y, width, height, texture, u, v, iconW, iconH, texW, texH, hoverVOffset, onPress);
         this.scale = scale;
     }
 
-    public void setIcon(ResourceLocation newTexture, int newU, int newV,
+    public void setIcon(Identifier newTexture, int newU, int newV,
                         int newIconW, int newIconH, int newTexW, int newTexH, int newHoverVOffset) {
         this.texture = newTexture;
         this.u = newU;
@@ -45,12 +45,12 @@ public class IconButtonNoBG extends Button {
         this.hoverVOffset = newHoverVOffset;
     }
 
-    public void setIcon(ResourceLocation newTexture) {
+    public void setIcon(Identifier newTexture) {
         setIcon(newTexture, u, v, iconW, iconH, texW, texH, hoverVOffset);
     }
 
     @Override
-    protected void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float pt) {
+    protected void renderWidget(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pt) {
         Minecraft minecraft = Minecraft.getInstance();
         graphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();

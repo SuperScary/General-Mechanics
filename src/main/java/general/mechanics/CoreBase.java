@@ -63,6 +63,7 @@ public abstract class CoreBase implements GM {
         CoreFluidTypes.REGISTRY.register(modEventBus);
         CoreFluids.REGISTRY.register(modEventBus);
         CoreSounds.REGISTRY.register(modEventBus);
+        CoreRecipeCategories.REGISTRY.register(modEventBus);
         CoreRecipes.SERIALIZER_REGISTRY.register(modEventBus);
         CoreRecipes.RECIPE_REGISTRY.register(modEventBus);
         CoreMenus.REGISTRY.register(modEventBus);

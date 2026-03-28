@@ -15,13 +15,13 @@ public class CoreRecipes {
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTRY = DeferredRegister.create(Registries.RECIPE_SERIALIZER, GM.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_REGISTRY = DeferredRegister.create(Registries.RECIPE_TYPE, GM.MODID);
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FabricationRecipe>> FABRICATION_SERIALIZER = SERIALIZER_REGISTRY.register("fabrication", FabricationRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FabricationRecipe>> FABRICATION_SERIALIZER = SERIALIZER_REGISTRY.register("fabrication", () -> FabricationRecipe.Serializer.INSTANCE);
     public static final DeferredHolder<RecipeType<?>, RecipeType<FabricationRecipe>> FABRICATION_RECIPE_TYPE = RECIPE_REGISTRY.register("fabrication", () -> RecipeType.simple(GM.getResource("fabrication")));
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CrushingRecipe>> CRUSHING_SERIALIZER = SERIALIZER_REGISTRY.register("crushing", CrushingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CrushingRecipe>> CRUSHING_SERIALIZER = SERIALIZER_REGISTRY.register("crushing", () -> CrushingRecipe.Serializer.INSTANCE);
     public static final DeferredHolder<RecipeType<?>, RecipeType<CrushingRecipe>> CRUSHING_RECIPE_TYPE = RECIPE_REGISTRY.register("crushing", () -> RecipeType.simple(GM.getResource("crushing")));
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FluidMixingRecipe>> FLUID_MIXING_SERIALIZER = SERIALIZER_REGISTRY.register("fluid_mixing", FluidMixingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<FluidMixingRecipe>> FLUID_MIXING_SERIALIZER = SERIALIZER_REGISTRY.register("fluid_mixing", () -> FluidMixingRecipe.Serializer.INSTANCE);
     public static final DeferredHolder<RecipeType<?>, RecipeType<FluidMixingRecipe>> FLUID_MIXING_RECIPE_TYPE = RECIPE_REGISTRY.register("fluid_mixing", () -> RecipeType.simple(GM.getResource("fluid_mixing")));
 
 }

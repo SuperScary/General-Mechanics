@@ -15,7 +15,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 public class ClientColors {
 
-    public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+    public static void registerItemColors(RegisterColorHandlersEvent.ItemTintSources event) {
         for (var item : CoreItems.getItems()) {
             if (item.get() instanceof ColoredPlasticItem coloredPlastic) {
                 event.register(ColoredPlasticItem::getColor, coloredPlastic);
@@ -49,7 +49,7 @@ public class ClientColors {
         }
     }
 
-    public static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+    public static void registerBlockColors(RegisterColorHandlersEvent.BlockTintSources event) {
         for (var block : CoreBlocks.getAllColoredPlasticBlocks()) {
             event.register(ColoredPlasticBlock::getColor, block);
         }
@@ -63,7 +63,7 @@ public class ClientColors {
         }
     }
 
-    public static void registerElementColors(RegisterColorHandlersEvent.Item event) {
+    public static void registerElementColors(RegisterColorHandlersEvent.ItemTintSources event) {
         for (var itemDef : CoreElements.getElements()) {
             var item = itemDef.get();
             switch (item) {

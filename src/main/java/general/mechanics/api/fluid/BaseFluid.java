@@ -1,28 +1,27 @@
 package general.mechanics.api.fluid;
 
-import com.mojang.blaze3d.shaders.FogShape;
-import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
+import org.jspecify.annotations.NonNull;
 
 public class BaseFluid extends FluidType implements IClientFluidExtensions {
 
     @Getter
-    private final ResourceLocation stillTexture;
+    private final Identifier stillTexture;
 
     @Getter
-    private final ResourceLocation flowingTexture;
+    private final Identifier flowingTexture;
 
     @Getter
-    private final ResourceLocation overlayTexture;
+    private final Identifier overlayTexture;
 
     @Getter
     private final int tintColor;
@@ -42,7 +41,7 @@ public class BaseFluid extends FluidType implements IClientFluidExtensions {
     @Setter
     private long temp; // kelvin
 
-    public BaseFluid(Properties properties, ResourceLocation stillTexture, ResourceLocation flowingTexture, ResourceLocation overlayTexture, int tintColor, Vector3f fogColor, boolean isAcidic, boolean isBasic, long temp) {
+    public BaseFluid(Properties properties, Identifier stillTexture, Identifier flowingTexture, Identifier overlayTexture, int tintColor, Vector3f fogColor, boolean isAcidic, boolean isBasic, long temp) {
         super(properties);
         this.stillTexture = stillTexture;
         this.flowingTexture = flowingTexture;
@@ -55,6 +54,11 @@ public class BaseFluid extends FluidType implements IClientFluidExtensions {
     }
 
     @Override
+    public int getTemperature() {
+        return Math.toIntExact(this.temp);
+    }
+
+    @Override
     public IClientFluidTypeExtensions getFluidTypeExtensions() {
         var still = stillTexture;
         var flowing = flowingTexture;
@@ -64,17 +68,17 @@ public class BaseFluid extends FluidType implements IClientFluidExtensions {
 
         return new IClientFluidTypeExtensions() {
             @Override
-            public @NotNull ResourceLocation getStillTexture() {
+            public @NotNull Identifier getStillTexture() {
                 return still;
             }
 
             @Override
-            public @NotNull ResourceLocation getFlowingTexture() {
+            public @NotNull Identifier getFlowingTexture() {
                 return flowing;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return overlay;
             }
 
@@ -84,15 +88,15 @@ public class BaseFluid extends FluidType implements IClientFluidExtensions {
             }
 
             @Override
-            public @NotNull Vector3f modifyFogColor(@NotNull Camera cam, float pt, @NotNull ClientLevel lvl, int renderDistance, float darken, @NotNull Vector3f original) {
-                return fog;
+            public void modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, @NonNull Vector4f fluidFogColor) {
+
             }
 
-            @Override
-            public void modifyFogRender(@NotNull Camera camera, FogRenderer.@NotNull FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance, @NotNull FogShape shape) {
+            /*@Override
+            public void modifyFogRender(@NonNull Camera camera, @Nullable FogEnvironment environment, float renderDistance, float partialTick, @NonNull FogData fogData) {
                 RenderSystem.setShaderFogStart(1f);
                 RenderSystem.setShaderFogEnd(6f);
-            }
+            }*/
 
         };
     }

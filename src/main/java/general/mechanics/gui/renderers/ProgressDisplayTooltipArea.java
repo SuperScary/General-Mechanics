@@ -1,7 +1,7 @@
 package general.mechanics.gui.renderers;
 
 import lombok.Getter;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -24,14 +24,14 @@ public class ProgressDisplayTooltipArea extends BarRenderer {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics) {
+    public void render(GuiGraphicsExtractor guiGraphics) {
     }
 
-    public void render (GuiGraphics guiGraphics, int amount) {
+    public void render (GuiGraphicsExtractor guiGraphics, int amount) {
         render(guiGraphics, amount, 0, 0);
     }
 
-    public void render (GuiGraphics guiGraphics, int amount, int x, int y) {
+    public void render (GuiGraphicsExtractor guiGraphics, int amount, int x, int y) {
         this.progress = amount;
         guiGraphics.fillGradient(x, y + (getHeight() - amount), x + getWidth(), y + getHeight(), Color.GREEN.getArgb(), Color.BRIGHT_GREEN.getArgb());
     }

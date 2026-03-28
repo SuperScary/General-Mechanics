@@ -1,7 +1,7 @@
 package general.mechanics.api.item;
 
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public record ItemDefinition<T extends Item>(String englishName, DeferredItem<T> item) implements ItemLike, Supplier<T> {
 
-    public ResourceLocation id() {
+    public Identifier id() {
         return this.item.getId();
     }
 

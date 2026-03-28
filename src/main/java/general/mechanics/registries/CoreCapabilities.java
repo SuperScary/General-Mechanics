@@ -30,18 +30,18 @@ public class CoreCapabilities {
         registerPoweredEnergy(event);
 
         // Heating Element
-        event.registerBlockEntity(HEATER, CoreBlockEntities.HEATING_ELEMENT.get(), (be, ctx) -> be);
+        event.registerBlockEntity(HEATER, CoreBlockEntities.HEATING_ELEMENT.get(), (be, _) -> be);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static <T> void registerForImplementors(RegisterCapabilitiesEvent event, Class<?> iface, BlockCapability<T, Direction> capability, BiFunction<Object, Direction, T> provider) {
         for (var type : CoreBlockEntities.getImplementorsOf(iface)) {
-            event.registerBlockEntity(capability, (BlockEntityType) type, (be, direction) -> provider.apply(be, direction));
+            event.registerBlockEntity(capability, (BlockEntityType) type, provider::apply);
         }
     }
 
     private static void registerSidedItemAccess(RegisterCapabilitiesEvent event) {
-        registerForImplementors(event, ISidedItemAccess.class, Capabilities.ItemHandler.BLOCK, (be, direction) -> {
+        registerForImplementors(event, ISidedItemAccess.class, Capabilities.Item.BLOCK, (be, direction) -> {
             var sided = ((ISidedItemAccess) be).getSidedItemIO();
             if (!AutomationAccess.allow(direction)) {
                 return sided.forAutomationWithoutSide();
@@ -51,7 +51,7 @@ public class CoreCapabilities {
     }
 
     private static void registerPoweredEnergy(RegisterCapabilitiesEvent event) {
-        registerForImplementors(event, PoweredBlock.class, Capabilities.EnergyStorage.BLOCK, (be, direction) -> {
+        registerForImplementors(event, PoweredBlock.class, Capabilities.Energy.BLOCK, (be, direction) -> {
             if (be instanceof ISidedEnergyAccess sided) {
                 var io = sided.getSidedEnergyIO();
                 if (!AutomationAccess.allow(direction)) {
@@ -65,7 +65,7 @@ public class CoreCapabilities {
     }
 
     private static void registerSidedFluidAccess(RegisterCapabilitiesEvent event) {
-        registerForImplementors(event, ISidedFluidAccess.class, Capabilities.FluidHandler.BLOCK, (be, direction) -> {
+        registerForImplementors(event, ISidedFluidAccess.class, Capabilities.Fluid.BLOCK, (be, direction) -> {
             var sided = ((ISidedFluidAccess) be).getSidedFluidIO();
             if (!AutomationAccess.allow(direction)) {
                 return sided.forAutomationWithoutSide();

@@ -4,7 +4,7 @@ import general.mechanics.GM;
 import general.mechanics.api.multiblock.MultiblockDefinition;
 import general.mechanics.api.multiblock.base.Multiblock;
 import general.mechanics.multiblocks.EmptyMachineMultiblock;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -31,7 +31,7 @@ public class CoreMultiblocks {
     /**
      * Registers a multiblock with a custom resource location.
      */
-    public static <T extends Multiblock> DeferredHolder<MultiblockDefinition, MultiblockDefinition> reg(final String name, ResourceLocation id, final Supplier<T> supplier) {
+    public static <T extends Multiblock> DeferredHolder<MultiblockDefinition, MultiblockDefinition> reg(final String name, Identifier id, final Supplier<T> supplier) {
         return REGISTRY.register(id.getPath(), () -> {
             T multiblockObject = supplier.get();
             return new MultiblockDefinition(id, multiblockObject.createLayout(), () -> multiblockObject);

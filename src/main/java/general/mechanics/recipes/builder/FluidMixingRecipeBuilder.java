@@ -2,7 +2,7 @@ package general.mechanics.recipes.builder;
 
 import general.mechanics.recipes.FluidMixingRecipe;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
@@ -14,20 +14,20 @@ public final class FluidMixingRecipeBuilder {
     private FluidMixingRecipeBuilder() {
     }
 
-    public static void build(RecipeOutput out, ResourceLocation id, SizedFluidIngredient input, FluidStack result) {
+    public static void build(RecipeOutput out, Identifier id, SizedFluidIngredient input, FluidStack result) {
         List<SizedFluidIngredient> list = new ArrayList<>();
         list.add(input);
         out.accept(id, new FluidMixingRecipe(list, result), null);
     }
 
-    public static void build(RecipeOutput out, ResourceLocation id, SizedFluidIngredient inputA, SizedFluidIngredient inputB, FluidStack result) {
+    public static void build(RecipeOutput out, Identifier id, SizedFluidIngredient inputA, SizedFluidIngredient inputB, FluidStack result) {
         List<SizedFluidIngredient> list = new ArrayList<>();
         list.add(inputA);
         list.add(inputB);
         out.accept(id, new FluidMixingRecipe(list, result), null);
     }
 
-    public static void build(RecipeOutput out, ResourceLocation id, SizedFluidIngredient inputA, SizedFluidIngredient inputB, SizedFluidIngredient inputC, FluidStack result) {
+    public static void build(RecipeOutput out, Identifier id, SizedFluidIngredient inputA, SizedFluidIngredient inputB, SizedFluidIngredient inputC, FluidStack result) {
         List<SizedFluidIngredient> list = new ArrayList<>();
         list.add(inputA);
         list.add(inputB);
@@ -35,7 +35,7 @@ public final class FluidMixingRecipeBuilder {
         out.accept(id, new FluidMixingRecipe(list, result), null);
     }
 
-    public static void build(RecipeOutput out, ResourceLocation id, List<SizedFluidIngredient> inputs, FluidStack result) {
+    public static void build(RecipeOutput out, Identifier id, List<SizedFluidIngredient> inputs, FluidStack result) {
         if (inputs.isEmpty() || inputs.size() > 3) {
             throw new IllegalArgumentException("FluidMixingRecipe must have between 1 and 3 inputs");
         }
