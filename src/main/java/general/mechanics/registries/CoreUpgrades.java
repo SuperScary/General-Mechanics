@@ -31,8 +31,8 @@ public class CoreUpgrades {
     public static final ItemDefinition<UpgradeBase> EMPTY = create("Upgrade Base", "", UpgradeEmpty::new, null);
     public static final ItemDefinition<UpgradeBase> SPEED = create("Speed Upgrade", "Increases machine operation speed.", UpgradeBase::new, SpeedUpgrade::new);
     public static final ItemDefinition<UpgradeBase> CAPACITY = create("Capacity Upgrade", "Expands the operational size of machines.", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> EFFICIENCY = create("Efficiency Upgrade", "Reduces fePerTick consumption per operation.", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> OVERCLOCK = create("Overclock Upgrade", "Greatly increases speed but at a fePerTick efficiency cost.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> EFFICIENCY = create("Efficiency Upgrade", "Reduces power consumption per operation.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> OVERCLOCK = create("Overclock Upgrade", "Greatly increases speed but at a power efficiency cost.", UpgradeBase::new, null);
     public static final ItemDefinition<UpgradeBase> THERMAL_BUFFER = create("Thermal Buffer", "Allows the machine to operate under extreme conditions.", UpgradeBase::new, null);
     public static final ItemDefinition<UpgradeBase> AUTO_EJECTOR = create("Auto Ejector", "Automatically pushes output to connected inventories.", UpgradeBase::new, null);
     public static final ItemDefinition<UpgradeBase> INPUT_EXPANDER = create("Input Expander", "Allows the machine to accept input from multiple sides.", UpgradeBase::new, null);
@@ -41,9 +41,9 @@ public class CoreUpgrades {
     public static final ItemDefinition<UpgradeBase> NANITE_INJECTOR = create("Nanite Injector", "Increases yield of byproducts or rare drops.", UpgradeBase::new, null);
     public static final ItemDefinition<UpgradeBase> PRECISION_GEARBOX = create("Precision Gearbox", "Increases accuracy for machines with chance-based outputs.", UpgradeBase::new, null);
     public static final ItemDefinition<UpgradeBase> REDSTONE_INTERFACE = create("Redstone Interface", "Adds advanced redstone control options.", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> ECO_DRIVE = create("Eco-Drive", "Idle machines draw near-zero fePerTick.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> ECO_DRIVE = create("Eco-Drive", "Idle machines draw near-zero power.", UpgradeBase::new, null);
     public static final ItemDefinition<UpgradeBase> VOID_MOD = create("Void Mod", "Destroys overflow items instead of clogging the machine.", UpgradeBase::new, null);
-    public static final ItemDefinition<UpgradeBase> REPLICATION_NODE = create("Replication Node", "Duplicates output at a high fePerTick cost.", UpgradeBase::new, null);
+    public static final ItemDefinition<UpgradeBase> REPLICATION_NODE = create("Replication Node", "Duplicates output at a high power cost.", UpgradeBase::new, null);
 
     public static List<ItemDefinition<?>> getUpgrades () {
         return Collections.unmodifiableList(UPGRADES);
