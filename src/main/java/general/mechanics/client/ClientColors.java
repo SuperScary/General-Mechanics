@@ -1,5 +1,7 @@
 package general.mechanics.client;
 
+import general.mechanics.api.block.base.DeepslateOreBlock;
+import general.mechanics.api.block.base.NetherOreBlock;
 import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.plastic.ColoredPlasticBlock;
 import general.mechanics.api.block.plastic.PlasticTypeBlock;
@@ -36,6 +38,14 @@ public class ClientColors {
             event.register(OreBlock::getColorForItemStack, block);
         }
 
+        for (var block : CoreBlocks.getBlocks()) {
+            if (block.block() instanceof DeepslateOreBlock b) {
+                event.register(DeepslateOreBlock::getColorForItemStack, b);
+            } else if (block.block() instanceof NetherOreBlock n) {
+                event.register(NetherOreBlock::getColorForItemStack, n);
+            }
+        }
+
         // Fluid bucket item tinting: apply fluid color to overlay layer (layer1)
         for (var fluid : CoreFluids.getFluids()) {
             var type = fluid.type().get();
@@ -60,6 +70,14 @@ public class ClientColors {
 
         for (var block : CoreBlocks.getOreBlocks()) {
             event.register(OreBlock::getColor, block);
+        }
+
+        for (var block : CoreBlocks.getBlocks()) {
+            if (block.block() instanceof DeepslateOreBlock b) {
+                event.register(DeepslateOreBlock::getColor, b);
+            } else if (block.block() instanceof NetherOreBlock n) {
+                event.register(NetherOreBlock::getColor, n);
+            }
         }
     }
 

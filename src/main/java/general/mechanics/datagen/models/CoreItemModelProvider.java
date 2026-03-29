@@ -19,6 +19,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.BlockItem;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -37,6 +38,10 @@ public class CoreItemModelProvider extends ItemModelProvider implements IDataPro
     @Override
     protected void registerModels() {
         for (var item : CoreItems.getItems()) {
+            if (item.asItem() instanceof BlockItem) {
+                continue;
+            }
+
             if (item.asItem() instanceof ElectricalComponent) {
                 if (item.get() instanceof ResistorItem) {
                     electricalComponentItem(item, "resistor");

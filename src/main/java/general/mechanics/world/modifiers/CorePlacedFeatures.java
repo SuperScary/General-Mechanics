@@ -1,6 +1,8 @@
 package general.mechanics.world.modifiers;
 
 import general.mechanics.GM;
+import general.mechanics.api.block.base.OreBlock;
+import general.mechanics.registries.CoreBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -12,25 +14,54 @@ import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
+import general.mechanics.api.item.element.ElementType;
+import java.util.HashMap;
 import java.util.List;
 
 public class CorePlacedFeatures {
 
-    public static final ResourceKey<PlacedFeature> DRAKIUM_ORE_KEY = registerKey("drakium_ore");
-    public static final ResourceKey<PlacedFeature> DRAKIUM_END_ORE_KEY = registerKey("drakium_ore_end");
-    public static final ResourceKey<PlacedFeature> DRAKIUM_NETHER_ORE_KEY = registerKey("drakium_ore_nether");
+    public static final HashMap<String, ResourceKey<PlacedFeature>> ORE_PLACED_FEATURES = new HashMap<>();
+    
+    static {
+        for (ElementType type : ElementType.values()) {
+            if (!type.isAlloy() && type.isNatural()) {
+                final String baseName = type.name().toLowerCase() + "_ore";
+                final String deepslateName = "deepslate_" + baseName;
+                final String netherName = "nether_" + baseName;
+
+                ORE_PLACED_FEATURES.put("block.gm." + baseName, registerKey(baseName));
+                ORE_PLACED_FEATURES.put("block.gm." + deepslateName, registerKey(deepslateName));
+                ORE_PLACED_FEATURES.put("block.gm." + netherName, registerKey(netherName));
+            }
+        }
+    }
 
     public static void bootstrap (BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
-        register(context, DRAKIUM_ORE_KEY, configuredFeatures.getOrThrow(CoreConfiguredFeatures.DRAKIUM_ORE_KEY),
-                CoreOrePlacement.rareOrePlacement(16, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(64))));
+        for (OreBlock oreBlock : CoreBlocks.getOreBlocks()) {
+            final String baseDesc = oreBlock.getDescriptionId();
+            final String typeName = oreBlock.getType().name().toLowerCase();
+            final String deepslateDesc = "block.gm.deepslate_" + typeName + "_ore";
+            final String netherDesc = "block.gm.nether_" + typeName + "_ore";
 
-        register(context, DRAKIUM_END_ORE_KEY, configuredFeatures.getOrThrow(CoreConfiguredFeatures.DRAKIUM_END_ORE_KEY),
-                CoreOrePlacement.commonOrePlacement(12, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(64))));
+            var placement = CoreOrePlacement.commonOrePlacement(12, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(80)));
 
-        register(context, DRAKIUM_NETHER_ORE_KEY, configuredFeatures.getOrThrow(CoreConfiguredFeatures.DRAKIUM_NETHER_ORE_KEY),
-                CoreOrePlacement.commonOrePlacement(16, HeightRangePlacement.uniform(VerticalAnchor.absolute(-64), VerticalAnchor.absolute(64))));
+            register(context,
+                    ORE_PLACED_FEATURES.get(baseDesc),
+                    configuredFeatures.getOrThrow(CoreConfiguredFeatures.ORE_CONFIGURED_FEATURES.get(baseDesc)),
+                    placement);
+
+            register(context,
+                    ORE_PLACED_FEATURES.get(deepslateDesc),
+                    configuredFeatures.getOrThrow(CoreConfiguredFeatures.ORE_CONFIGURED_FEATURES.get(deepslateDesc)),
+                    placement);
+
+            register(context,
+                    ORE_PLACED_FEATURES.get(netherDesc),
+                    configuredFeatures.getOrThrow(CoreConfiguredFeatures.ORE_CONFIGURED_FEATURES.get(netherDesc)),
+                    placement);
+        }
     }
 
     public static ResourceKey<PlacedFeature> registerKey (String name) {

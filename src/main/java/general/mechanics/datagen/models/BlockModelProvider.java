@@ -3,6 +3,8 @@ package general.mechanics.datagen.models;
 import general.mechanics.GM;
 import general.mechanics.api.block.BlockDefinition;
 import general.mechanics.api.block.base.DecorativeBlock;
+import general.mechanics.api.block.base.DeepslateOreBlock;
+import general.mechanics.api.block.base.NetherOreBlock;
 import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.IceBlock;
 import general.mechanics.api.block.machine.MachineFrameBlock;
@@ -51,6 +53,10 @@ public class BlockModelProvider extends CoreBlockStateProvider {
                 machineFrame(block);
             } else if (block.block() instanceof OreBlock) {
                 oreBlock(block);
+            } else if (block.block() instanceof NetherOreBlock) {
+                netherOreBlock((BlockDefinition<NetherOreBlock>) block);
+            } else if (block.block() instanceof DeepslateOreBlock) {
+                deepslateOreBlock((BlockDefinition<DeepslateOreBlock>) block);
             } else if (block.block() instanceof LiquidBlock) {
                 simpleItem(block);
             } else if (block.block() instanceof HeatingElementBlock) {
@@ -128,9 +134,25 @@ public class BlockModelProvider extends CoreBlockStateProvider {
     private void oreBlock(BlockDefinition<?> def) {
         var base = modLoc("block/ore/ore_block_base");
         var overlay = modLoc("block/ore/ore_block_overlay");
-        ModelFile blockModel = twoLayerCubeBlockModel(def.getRegistryFriendlyName(), base, overlay);
+        ModelFile blockModel = twoLayerCubeBlockModel("block/ore/base/" + def.id().getPath(), base, overlay);
         simpleBlock(def.block(), blockModel);
-        twoLayerCubeItemModel(def.getRegistryFriendlyName());
+        twoLayerCubeItemModel(def.id().getPath(), "block/ore/base/" + def.id().getPath());
+    }
+
+    private void netherOreBlock(BlockDefinition<NetherOreBlock> def) {
+        var base = modLoc("block/ore/nether_ore_block_base");
+        var overlay = modLoc("block/ore/nether_ore_block_overlay");
+        ModelFile blockModel = twoLayerCubeBlockModel("block/ore/nether/" + def.id().getPath(), base, overlay);
+        simpleBlock(def.block(), blockModel);
+        twoLayerCubeItemModel(def.id().getPath(), "block/ore/nether/" + def.id().getPath());
+    }
+
+    private void deepslateOreBlock(BlockDefinition<DeepslateOreBlock> def) {
+        var base = modLoc("block/ore/deepslate_ore_block_base");
+        var overlay = modLoc("block/ore/deepslate_ore_block_overlay");
+        ModelFile blockModel = twoLayerCubeBlockModel("block/ore/deepslate/" + def.id().getPath(), base, overlay);
+        simpleBlock(def.block(), blockModel);
+        twoLayerCubeItemModel(def.id().getPath(), "block/ore/deepslate/" + def.id().getPath());
     }
 
     /**
@@ -138,7 +160,7 @@ public class BlockModelProvider extends CoreBlockStateProvider {
      */
     private ModelFile twoLayerCubeBlockModel(String name, ResourceLocation baseTex, ResourceLocation overlayTex) {
         float eps = 0.001f;
-        BlockModelBuilder b = models().getBuilder("block/" + name)
+        BlockModelBuilder b = models().getBuilder(name)
                 .parent(new ModelFile.ExistingModelFile(mcLoc("block/block"), existingFileHelper))
                 .renderType("minecraft:cutout")
                 .texture("base", baseTex)
@@ -159,11 +181,10 @@ public class BlockModelProvider extends CoreBlockStateProvider {
         return b;
     }
 
-    private void twoLayerCubeItemModel(String name) {
-        itemModels().getBuilder(name)
-                .parent(models().getExistingFile(modLoc("block/" + name)));
+    private void twoLayerCubeItemModel(String itemName, String blockModelName) {
+        itemModels().getBuilder(itemName)
+                .parent(new ModelFile.UncheckedModelFile(modLoc(blockModelName)));
     }
-
 
     private void machineFrame(BlockDefinition<?> def) {
         // Base fill for the cube (underlay for overlays)

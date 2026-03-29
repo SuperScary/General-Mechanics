@@ -12,6 +12,7 @@ import general.mechanics.datagen.recipes.MachineRecipes;
 import general.mechanics.datagen.recipes.SmeltingRecipes;
 import general.mechanics.datagen.tags.CoreBlockTagGenerator;
 import general.mechanics.datagen.tags.CoreItemTagGenerator;
+import general.mechanics.datagen.world.WorldGenProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -36,7 +37,7 @@ public class DataGenerators {
         var localization = new CoreEnLangProvider(generator);
 
         // WORLD GENERATION
-        //pack.addProvider(output -> new WorldGenProvider(output, registries));
+        pack.addProvider(output -> new WorldGenProvider(output, registries));
 
         // SOUNDS
         pack.addProvider(packOutput -> new SoundProvider(packOutput, existingFileHelper));

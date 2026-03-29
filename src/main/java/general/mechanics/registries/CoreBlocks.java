@@ -3,6 +3,8 @@ package general.mechanics.registries;
 import general.mechanics.GM;
 import general.mechanics.api.block.BlockDefinition;
 import general.mechanics.api.block.base.BaseBlock;
+import general.mechanics.api.block.base.DeepslateOreBlock;
+import general.mechanics.api.block.base.NetherOreBlock;
 import general.mechanics.api.block.base.OreBlock;
 import general.mechanics.api.block.ice.Ice7Block;
 import general.mechanics.api.block.ice.IceBlock;
@@ -259,8 +261,33 @@ public class CoreBlocks {
         String name = element.getDisplayName() + " Ore";
         String resourceName = name.toLowerCase().replace(' ', '_');
         BlockDefinition<OreBlock> definition = register(name, GM.getResource(resourceName), () -> new OreBlock(element), null, false);
+
+        registerDeepslateOre(definition, element);
+        registerNetherOre(definition, element);
+
         CoreTab.addElements(definition.item());
+
         return definition;
+    }
+
+    private static void registerDeepslateOre(BlockDefinition<OreBlock> oreDefinition, ElementType element) {
+        if (element.isAlloy() || !element.isNatural()) {
+            throw new IllegalArgumentException("Attempted to register ore for invalid element: " + element.name());
+        }
+        String name = "Deepslate " + element.getDisplayName() + " Ore";
+        String resourceName = name.toLowerCase().replace(' ', '_');
+        BlockDefinition<DeepslateOreBlock> definition = register(name, GM.getResource(resourceName), () -> oreDefinition.block().getDeepslateOreBlock(), null, false);
+        CoreTab.addElements(definition.item());
+    }
+
+    private static void registerNetherOre(BlockDefinition<OreBlock> oreDefinition, ElementType element) {
+        if (element.isAlloy() || !element.isNatural()) {
+            throw new IllegalArgumentException("Attempted to register ore for invalid element: " + element.name());
+        }
+        String name = "Nether " + element.getDisplayName() + " Ore";
+        String resourceName = name.toLowerCase().replace(' ', '_');
+        BlockDefinition<NetherOreBlock> definition = register(name, GM.getResource(resourceName), () -> oreDefinition.block().getNetherOreBlock(), null, false);
+        CoreTab.addElements(definition.item());
     }
 
     public static List<BlockDefinition<?>> getBlocks () {
@@ -298,6 +325,7 @@ public class CoreBlocks {
             }
         });
         var itemDef = new ItemDefinition<>(name, deferredItem);
+        BlockDefinition<T> definition = new BlockDefinition<>(name, deferredBlock, itemDef);
         if (addToTab) {
             if (Objects.equals(group, CoreTab.MAIN)) {
                 CoreTab.add(itemDef);
@@ -307,7 +335,6 @@ public class CoreBlocks {
                 CoreTab.addExternal(group, itemDef);
             }
         }
-        BlockDefinition<T> definition = new BlockDefinition<>(name, deferredBlock, itemDef);
         BLOCKS.add(definition);
         return definition;
     }

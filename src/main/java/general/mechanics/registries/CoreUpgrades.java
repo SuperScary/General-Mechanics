@@ -12,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import javax.annotation.Nullable;
@@ -55,7 +56,7 @@ public class CoreUpgrades {
 
     /**
      * Returns a list of registered upgrades for a given block.
-     * @param block the block to check. This should be the main block and linked to a {@link net.minecraft.world.level.block.entity.BlockEntity}
+     * @param block the block to check. This should be the main block and linked to a {@link BlockEntity}
      * @return an {@link ImmutableList} of upgrade pairs.
      */
     public static ImmutableList<Pair<ItemDefinition<UpgradeBase>, Integer>> getCompatibleUpgrades (Block block) {
