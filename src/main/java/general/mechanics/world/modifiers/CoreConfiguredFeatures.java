@@ -45,6 +45,7 @@ public class CoreConfiguredFeatures {
         //RuleTest endReplaceable = new BlockMatchTest(Blocks.END_STONE);
         
         for (OreBlock oreBlock : CoreBlocks.getOreBlocks()) {
+            if (!oreBlock.getType().isNatural()) return;
             final String baseDesc = oreBlock.getDescriptionId();
             final String typeName = oreBlock.getType().name().toLowerCase();
             final String deepslateDesc = "block.gm.deepslate_" + typeName + "_ore";

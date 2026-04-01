@@ -231,6 +231,26 @@ public class CoreBlocks {
         return ores;
     }
 
+    public static List<DeepslateOreBlock> getDeepslateOreBlocks() {
+        List<DeepslateOreBlock> ores = new ArrayList<>();
+        for (var block : BLOCKS) {
+            if (block.block() instanceof DeepslateOreBlock ore) {
+                ores.add(ore);
+            }
+        }
+        return ores;
+    }
+
+    public static List<NetherOreBlock> getNetherOreBlocks() {
+        List<NetherOreBlock> ores = new ArrayList<>();
+        for (var block : BLOCKS) {
+            if (block.block() instanceof NetherOreBlock ore) {
+                ores.add(ore);
+            }
+        }
+        return ores;
+    }
+
     /**
      * Get all colored plastic blocks
      */

@@ -13,16 +13,15 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 
 public class CoreElements {
 
     public static final DeferredRegister.Items REGISTRY = DeferredRegister.createItems(GM.MODID);
     private static final List<ItemDefinition<?>> ITEMS = new ArrayList<>();
+    private static final Map<ElementType, ItemDefinition<ElementItem>> ELEMENTS_BY_TYPE = new EnumMap<>(ElementType.class);
+
     // Alkali Metals
     public static final ItemDefinition<ElementItem> LITHIUM_INGOT = elementIngot(ElementType.LITHIUM);
     public static final ItemDefinition<ElementItem> SODIUM_INGOT = elementIngot(ElementType.SODIUM);
@@ -139,7 +138,9 @@ public class CoreElements {
      */
     public static ItemDefinition<ElementItem> elementIngot(ElementType element) {
         String name = element.getDisplayName() + " Ingot";
-        return ingot(name, (properties) -> new ElementItem(properties, element));
+        ItemDefinition<ElementItem> elementDef = ingot(name, (properties) -> new ElementItem(properties, element));
+        ELEMENTS_BY_TYPE.put(element, elementDef);
+        return elementDef;
     }
 
     static <T extends ElementItem> ItemDefinition<T> ingot(String name, Function<Item.Properties, T> factory) {
@@ -199,6 +200,10 @@ public class CoreElements {
 
     public static List<ItemDefinition<?>> getElements() {
         return Collections.unmodifiableList(ITEMS);
+    }
+
+    public static ItemDefinition<ElementItem> getElementByType(ElementType type) {
+        return ELEMENTS_BY_TYPE.get(type);
     }
 
     static <T extends ElementItem> ItemDefinition<T> item(String name, Function<Item.Properties, T> factory) {

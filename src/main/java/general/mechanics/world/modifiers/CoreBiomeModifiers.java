@@ -45,6 +45,7 @@ public class CoreBiomeModifiers {
 
     private static void registerAllOres(BootstrapContext<BiomeModifier> context, HolderGetter<PlacedFeature> placedFeatures, HolderGetter<Biome> biomes) {
         for (var oreBlock : CoreBlocks.getOreBlocks()) {
+            if (!oreBlock.getType().isNatural()) return;
             final String baseDesc = oreBlock.getDescriptionId();
             final String typeName = oreBlock.getType().name().toLowerCase();
             final String deepslateDesc = "block.gm.deepslate_" + typeName + "_ore";

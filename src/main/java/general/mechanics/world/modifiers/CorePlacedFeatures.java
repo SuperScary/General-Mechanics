@@ -40,6 +40,7 @@ public class CorePlacedFeatures {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
         for (OreBlock oreBlock : CoreBlocks.getOreBlocks()) {
+            if (!oreBlock.getType().isNatural()) return;
             final String baseDesc = oreBlock.getDescriptionId();
             final String typeName = oreBlock.getType().name().toLowerCase();
             final String deepslateDesc = "block.gm.deepslate_" + typeName + "_ore";

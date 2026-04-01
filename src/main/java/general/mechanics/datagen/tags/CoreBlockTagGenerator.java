@@ -50,9 +50,9 @@ public class CoreBlockTagGenerator extends BlockTagsProvider implements IDataPro
         }
 
         for (var block : CoreBlocks.getOreBlocks()) {
-            this.tag(BlockTags.NEEDS_STONE_TOOL).add(block);
-            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block);
-            this.tag(Tags.Blocks.ORES).add(block);
+            this.tag(BlockTags.NEEDS_STONE_TOOL).add(block).add(block.getDeepslateOreBlock()).add(block.getNetherOreBlock());
+            this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block).add(block.getDeepslateOreBlock()).add(block.getNetherOreBlock());
+            this.tag(Tags.Blocks.ORES).add(block).add(block.getDeepslateOreBlock()).add(block.getNetherOreBlock());
         }
 
         this.tag(BlockTags.ICE)
